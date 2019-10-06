@@ -1,22 +1,22 @@
-.App {
-  text-align: center;
+#file {
+  position: fixed;
+  left: 25%;
+  top: 5%;
+  z-index: 100;
 }
 
-.App-logo {
-  height: 40vmin;
+#canvas {
+  position: fixed;
+  background-color: #000;
+  left: 25%;
+  top: 5%;
+  width: 50%;
+  height: 25%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
+audio {
+  position: fixed;
+  left: 25%;
+  top: 30%;
+  width: 50%;
 }
