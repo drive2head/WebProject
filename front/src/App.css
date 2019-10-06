@@ -5,18 +5,30 @@
   z-index: 100;
 }
 
-#canvas {
+#waveform {
   position: fixed;
-  background-color: #000;
-  left: 25%;
-  top: 5%;
   width: 50%;
-  height: 25%;
+  left: 25%;
+  top: 10%;
 }
 
-audio {
+#timeline {
   position: fixed;
+  width: 50%;
+  left: 25%;
+  top: 25%;
+}
+
+#playpause {
+  position: fixed;
+  width: 50%;
+  left: 25%;
+  top: 45%;
+}
+
+#slider {
+  position: fixed;
+  width: 50%;
   left: 25%;
   top: 30%;
-  width: 50%;
 }

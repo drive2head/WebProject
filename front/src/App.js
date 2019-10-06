@@ -1,80 +1,91 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
-import AudioPlayerDOM from './components/AudioPlayerDOM.js';
+import WaveSurfer from 'wavesurfer.js';
+import RegionPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.min.js';
+import Timeline from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 
 class AudioVizualization extends React.Component {
   constructor(props)
   {
     super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.createWavePlayer = this.createWavePlayer.bind(this);
     this.state = {
       play: false
     };
+    this.startTime = 0;
+    this.endTime = 0;
   }
 
-  handleChange(e) {
-    var audio = document.getElementById("audio");
-    audio.src = URL.createObjectURL(e.target.files[0]);
-    
-    var context = new AudioContext();
-    var src = context.createMediaElementSource(audio);
-    var analyser = context.createAnalyser();
+  createWavePlayer(url)
+  {
+    var wavesurfer = WaveSurfer.create({
+      container: '#waveform',
+      waveColor: 'red',
+      progressColor: 'red',
+      backend: 'MediaElement',
+      plugins: [
+        RegionPlugin.create({
+          dragSelection: true,
+        }),
+        Timeline.create({
+          primaryLabelInterval: 10,
+          timeInterval: 1,
+          container: "#timeline"
+        })
+      ]
+    });
+    wavesurfer.on('ready', function ()
+    {
+      document.getElementById('slider').oninput = function()
+      {
+        var slider = document.getElementById('slider');
+        var zoomLevel = Number(slider.value);
+        wavesurfer.zoom(zoomLevel);
+      };
+    });
 
-    var canvas = document.getElementById("canvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    var ctx = canvas.getContext("2d");
-
-    src.connect(analyser);
-    analyser.connect(context.destination);
-
-    analyser.fftSize = 256;
-
-    var bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
-
-    var dataArray = new Uint8Array(bufferLength);
-
-    var WIDTH = canvas.width;
-    var HEIGHT = canvas.height;
-
-    var barWidth = (WIDTH / bufferLength) * 2.5;
-    var barHeight;
-    var x = 0;
-
-    function renderFrame() {
-      requestAnimationFrame(renderFrame);
-
-      x = 0;
-
-      analyser.getByteFrequencyData(dataArray);
-
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      for (var i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i];
-        
-        var r = barHeight + (25 * (i/bufferLength));
-        var g = 250 * (i/bufferLength);
-        var b = 50;
-
-        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-
-        x += barWidth + 1;
+    document.onkeydown = function (e) {
+      var keyCode = e.keyCode;
+      if(keyCode == 32) {
+        wavesurfer.playPause();
       }
-    }
-    renderFrame();
+    };
+
+    wavesurfer.on('region-update-end', (region) => {
+      document.getElementById('startTime').innerHTML = region.start.toFixed(3);
+      document.getElementById('endTime').innerHTML = region.end.toFixed(3);
+    });
+
+    wavesurfer.on('region-created', (region) => {
+      wavesurfer.clearRegions();
+    });
+
+    wavesurfer.on('region-click', function(region, e) {
+      e.stopImmediatePropagation();
+      region.play();
+    });
+
+    wavesurfer.load(url);
+  }
+
+  handleChange(e)
+  {
+    this.createWavePlayer(URL.createObjectURL(e.target.files[0]));
   }
 
   render()
   {
     return (
       <div>
-        <canvas id="canvas"></canvas>
+        <div id="waveform"></div>
+        <div id="timeline"></div>
+        <input id="slider" type="range" min="1" max="200" defaultValue="1"/>
         <input type="file" id="file" onChange={this.handleChange} />
-        <audio id="audio" controls> </audio>
+        <p id="startTime">Start time: </p>
+        <p id="endTime">End time: </p>
       </div>
     );
   }
