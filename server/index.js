@@ -10,8 +10,17 @@ var session = driver.session();
 app.use(express.urlencoded());
 app.use(express.json());
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Port: ${port}`));
+// const port = process.env.PORT || 5000;
+// app.listen(port, () => console.log(`Port: ${port}`));
+
+/*
+match (p:Person {fullname:'Alexandr Testovich'})
+match (rec:Record)-[p_rel_rec]-(p)
+match (ph:Phoneme)-[ph_rel_rec]-(rec)
+match (dis:Disorder)-[dis_rel_p]-(p)
+match (p)-[p_rel_city]-(city:City)
+delete p, rec, ph, p_rel_rec, ph_rel_rec, dis_rel_p, p_rel_city
+*/
 
 /*
 MATCH (rec:Record {description:"/Users/demo/Desktop/Coursework Databases/voice1.wav"})
@@ -22,7 +31,7 @@ RETURN rec, person, city, country,
 collect(ph {ph, id: ID(ph)}) as phonemes
 */
 
-function getDataQuery_text(recname, person, phonemes) {
+function addDataQuery_text(recname, person, phonemes) {
 	let text = `create (rec:Record {description:'${recname}'})\n`+
 	`create (person: Person {fullname:'${person.fullName}',\n\t`+
 		`nativeLanguage:'${person.nativeLanguage}', accent:${person.accent}})\n`+
@@ -49,12 +58,14 @@ function getDataQuery_text(recname, person, phonemes) {
 	return text;
 };
 
-app.post('/add_speaker', (req, res) => {
+app.post('/add_data', (req, res) => {
 	let recname = '/testFileName.wav';
-	let person1 = new entity.Speaker('Alexandr Testovich', 'RU', 'Moscow', 'Russia', false, ['Д1', 'Д2']);
-	let phoneme1 = new entity.Phoneme('a', '00:00:01.234', '00:00:02.345', 'RU', 'None')
-	let phoneme2 = new entity.Phoneme('б', '00:00:04.321', '00:00:05.432', 'RU', 'None')
-	let queryText = getDataQuery_text(recname, person1, [phoneme1, phoneme2]);
+	// let person1 = new entity.Speaker('Alexandr Testovich', 'RU', 'Moscow', 'Russia', false, ['Д1', 'Д2']);
+	// let phoneme1 = new entity.Phoneme('a', '00:00:01.234', '00:00:02.345', 'RU', 'None')
+	// let phoneme2 = new entity.Phoneme('б', '00:00:04.321', '00:00:05.432', 'RU', 'None')
+	// let queryText = getDataQuery_text(recname, person1, [phoneme1, phoneme2]);
+	let queryText = addDataQuery_text(recname, req.body.person, req.body.sounds);
+
 	console.log("Trying to process the query...");
 	console.log("\n~ ~ ~ ~ ~ ~ ~")
 	console.log(queryText);
@@ -74,4 +85,4 @@ app.get('/get_data', (req, res) => {
 
 session.close();
 driver.close();
-console.log("end");
+console.log(json);
