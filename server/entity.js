@@ -11,7 +11,7 @@ exports.Speaker = function (fullname, native_lang, city, country,
 		this.disorders = disorders;
 	};
 
-exports.Phoneme = function(notation, start, end, lang, dialect=null) {
+exports.Phoneme = function(notation, start, end, language, dialect=null) {
 		/*
 			Здесь должна быть проверка значений на ошибки
 		*/

@@ -22,7 +22,7 @@ RETURN rec, person, city, country,
 collect(ph {ph, id: ID(ph)}) as phonemes
 */
 
-function getDataQuery_text(recname, person) {
+function getDataQuery_text(recname, person, phonemes) {
 	let text = `create (rec:Record {description:'${recname}'})\n`+
 	`create (person: Person {fullname:'${person.fullName}',\n\t`+
 		`nativeLanguage:'${person.nativeLanguage}', accent:${person.accent}})\n`+
@@ -30,28 +30,35 @@ function getDataQuery_text(recname, person) {
 	`merge (city: City {name:'${person.city}'})\n`+
 	`create (rec)-[:SPOKEN_BY]->(person)\n`+
 	`create (person)-[:LIVES_IN]->(city)\n`+
-	`merge (city)-[:LOCATED_IN]->(country)\n`
+	`merge (city)-[:LOCATED_IN]->(country)\n\n`
 
-	// для каждого нарушения речи 
-	// "merge (dis{n}: Disorder {{name:'{name}'}})\n"+
-	// "create (person)-[:HAS]->(dis{n})\n"+
-
+	// для каждого нарушения речи
+	if (person.disorders != null) { 
+		person.disorders.forEach((disorder, i) => {
+			text += `merge (dis${i}: Disorder {name:'${disorder}'})\n`+
+					`create (person)-[:HAS]->(dis${i})\n`
+		});
+	};
 	// для каждой фонемы
-	// "create (ph{n}: Phoneme {{notation:'{notation}', start:time('{start}'), end:time('{end}'),\n\t"+
-		// "language:'{language}', dialect:'{dialect}'}})\n"+
+	phonemes.forEach((phoneme, i) => {
+		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:time('${phoneme.start}'),\n\t`+
+				`end:time('${phoneme.end}'), language:'${phoneme.language}', dialect:'${phoneme.dialect}'})\n`+
+				`create (ph${i})-[:CONTAINED_IN]->(rec)`
+	});
 
-	// "create (ph{n})-[:CONTAINED_IN]->(rec)"
-
-	// console.log(text);
 	return text;
 };
 
 app.post('/add_speaker', (req, res) => {
 	let recname = '/testFileName.wav';
-	let person1 = new entity.Speaker('Alexandr Testovich', 'RU', 'Moscow', 'Russia', false, null);
-	let queryText = getDataQuery_text(recname, person1);
+	let person1 = new entity.Speaker('Alexandr Testovich', 'RU', 'Moscow', 'Russia', false, ['Д1', 'Д2']);
+	let phoneme1 = new entity.Phoneme('a', '00:00:01.234', '00:00:02.345', 'RU', 'None')
+	let phoneme2 = new entity.Phoneme('б', '00:00:04.321', '00:00:05.432', 'RU', 'None')
+	let queryText = getDataQuery_text(recname, person1, [phoneme1, phoneme2]);
 	console.log("Trying to process the query...");
+	console.log("\n~ ~ ~ ~ ~ ~ ~")
 	console.log(queryText);
+	console.log("~ ~ ~ ~ ~ ~ ~\n")
 	session.run(queryText)
 	.then((result) => {
 		res.send("Data was successfully added!");
@@ -62,25 +69,6 @@ app.post('/add_speaker', (req, res) => {
 });
 
 app.get('/get_data', (req, res) => {
-	// console.log(req.body.recname);
-	// res.send("got it!")
-	// let description = req.body.recname;
-	// console.log(description);
-	// let result = session.run(
-		// 'MATCH (rec:Record {description:{d}}) ' +
-		// 'RETURN rec', {d: description});
-	
-	// result.then((result) => {
-		// result.records.forEach((record) => {
-			// console.log(record.keys);
-			// let node = record[0];
-			// console.log(node)
-			// console.log(record.get('rec')['description']);
-		// });
-	// })
-	// .catch(function (error) {
-		// console.log(error)
-	// });
 	res.send("Nothing has happend, prekin'?")
 });
 
