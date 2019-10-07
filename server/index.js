@@ -10,8 +10,8 @@ var session = driver.session();
 app.use(express.urlencoded());
 app.use(express.json());
 
-// const port = process.env.PORT || 5000;
-// app.listen(port, () => console.log(`Port: ${port}`));
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log(`Port: ${port}`));
 
 /*
 match (p:Person {fullname:'Alexandr Testovich'})
@@ -64,6 +64,7 @@ app.post('/add_data', (req, res) => {
 	// let phoneme1 = new entity.Phoneme('a', '00:00:01.234', '00:00:02.345', 'RU', 'None')
 	// let phoneme2 = new entity.Phoneme('б', '00:00:04.321', '00:00:05.432', 'RU', 'None')
 	// let queryText = getDataQuery_text(recname, person1, [phoneme1, phoneme2]);
+	console.log(type(req.body.person));
 	let queryText = addDataQuery_text(recname, req.body.person, req.body.sounds);
 
 	console.log("Trying to process the query...");
@@ -85,4 +86,4 @@ app.get('/get_data', (req, res) => {
 
 session.close();
 driver.close();
-console.log(json);
+// console.log(json);

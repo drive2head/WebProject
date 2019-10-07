@@ -8,7 +8,7 @@ import Timeline from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 
-var entity = require("../server/entity.js")
+var entity = require("./entity.js")
 
 class App extends React.Component {
   constructor(props)
@@ -121,7 +121,7 @@ class App extends React.Component {
 
     let person = entity.Speaker(name, language, city, country);
 
-    axios.post('/add_speaker', {
+    axios.post('/add_data', {
       person: person,
       sounds: this.sounds
     });
