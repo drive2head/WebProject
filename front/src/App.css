@@ -1,34 +1,34 @@
 #file {
-  position: fixed;
+/*  position: fixed;
   left: 25%;
-  top: 5%;
+  top: 5%;*/
   z-index: 100;
 }
 
 #waveform {
-  position: fixed;
-  width: 50%;
-  left: 25%;
-  top: 10%;
+/*  position: fixed;
+*/  width: 100%;
+/*  left: 25%;
+  top: 10%;*/
 }
 
 #timeline {
-  position: fixed;
-  width: 50%;
-  left: 25%;
-  top: 25%;
+/*  position: fixed;
+*/  width: 100%;
+/*  left: 25%;
+  top: 25%;*/
 }
 
 #playpause {
-  position: fixed;
-  width: 50%;
-  left: 25%;
-  top: 45%;
+/*  position: fixed;
+*/  width: 100%;
+/*  left: 25%;
+  top: 45%;*/
 }
 
 #slider {
-  position: fixed;
-  width: 50%;
-  left: 25%;
-  top: 30%;
+/*  position: fixed;
+*/  width: 100%;
+/*  left: 25%;
+  top: 30%;*/
 }
