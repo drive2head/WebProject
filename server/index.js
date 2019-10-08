@@ -34,8 +34,8 @@ collect(ph {ph, id: ID(ph)}) as phonemes
 function addDataQuery_text(recname, person, phonemes) {
 	console.log(person.fullName);
 	let text = `create (rec:Record {description:'${recname}'})\n`+
-	`create (person: Person {fullname:'${person.name}',\n\t`+
-		`nativeLanguage:'${person.language}', accent:'${person.defect}'})\n`+
+	`create (person: Person {fullname:'${person.fullName}',\n\t`+
+		`nativeLanguage:'${person.nativeLanguage}', accent:'${person.disorders}'})\n`+
 	`merge (country: Country {name:'${person.country}'})\n`+
 	`merge (city: City {name:'${person.city}'})\n`+
 	`create (rec)-[:SPOKEN_BY]->(person)\n`+
@@ -43,12 +43,12 @@ function addDataQuery_text(recname, person, phonemes) {
 	`merge (city)-[:LOCATED_IN]->(country)\n\n`
 
 	// для каждого нарушения речи
-	if (person.disorders != null) { 
-		person.disorders.forEach((disorder, i) => {
-			text += `merge (dis${i}: Disorder {name:'${disorder}'})\n`+
-					`create (person)-[:HAS]->(dis${i})\n`
-		});
-	};
+	// if (person.disorders != null) { 
+	// 	person.disorders.forEach((disorder, i) => {
+	// 		text += `merge (dis${i}: Disorder {name:'${disorder}'})\n`+
+	// 				`create (person)-[:HAS]->(dis${i})\n`
+	// 	});
+	// };
 	// для каждой фонемы
 	phonemes.forEach((phoneme, i) => {
 		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',\n\t`+
@@ -62,7 +62,6 @@ function addDataQuery_text(recname, person, phonemes) {
 app.post('/add_data', (req, res) => {
 	let recname = '/testFileName.wav';
 
-	console.log(req.body.person, req.body.sounds);
 	let queryText = addDataQuery_text(recname, req.body.person, req.body.sounds);
 
 	console.log("Trying to process the query...");

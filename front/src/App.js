@@ -82,13 +82,13 @@ class App extends React.Component {
 
   handleSaveSoundButton()
   {
-    var object = {
-      start: document.getElementById('startTime').innerHTML,
-      end: document.getElementById('endTime').innerHTML,
-      language: document.getElementById('soundLang').value,
-      dialect: document.getElementById('soundDialect').value,
-      notation: document.getElementById('soundValue').value
-    }
+    var object = entity.Phoneme(
+      document.getElementById('soundValue').value,
+      document.getElementById('startTime').innerHTML,
+      document.getElementById('endTime').innerHTML,
+      document.getElementById('soundLang').value,
+      document.getElementById('soundDialect').value,
+    );
     this.sounds.push(object);
   }
 
@@ -99,13 +99,14 @@ class App extends React.Component {
 
   handleSaveButton()
   {
-    var person = {
-      name: document.getElementById('dictorName').value,
-      city: document.getElementById('dictorCity').value,
-      country: document.getElementById('dictorCountry').value,
-      language: document.getElementById('dictorLang').value,
-      defect: document.getElementById('dictorDefect').value,
-    };
+    var person = entity.Speaker(
+      document.getElementById('dictorName').value,
+      document.getElementById('dictorLang').value,
+      document.getElementById('dictorCity').value,
+      document.getElementById('dictorCountry').value,
+      document.getElementById('dictorAccent').value,
+      document.getElementById('dictorDefect').value,
+    );
 
     axios.post('/add_data', {
       person: person,
@@ -136,6 +137,7 @@ class App extends React.Component {
                   City: <input id="dictorCity" type="text"/><br/>
                   Country: <input id="dictorCountry" type="text"/><br/>
                   Lang: <input id="dictorLang" type="text"/><br/>
+                  Accent: <input id="dictorAccent" type="text"/>
                   Defect: <input id="dictorDefect" type="text"/>
                 </div>
               </div>
