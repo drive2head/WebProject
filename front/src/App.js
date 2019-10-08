@@ -82,21 +82,14 @@ class App extends React.Component {
 
   handleSaveSoundButton()
   {
-    // var object = {
-    //   start: document.getElementById('startTime').innerHTML,
-    //   end: document.getElementById('endTime').innerHTML,
-    //   lang: document.getElementById('soundLang').value,
-    //   dialect: document.getElementById('soundDialect').value,
-    //   value: document.getElementById('soundValue').value
-    // }
-    // this.sounds.push(object);
-    let notation = document.getElementById('soundValue').value;
-    let start = document.getElementById('startTime').innerHTML;
-    let end = document.getElementById('endTime').innerHTML;
-    let language = document.getElementById('soundLang').value;
-    let dialect = document.getElementById('soundDialect').value;
-
-    this.sounds.push(entity.Phoneme(notation, start, end, language, dialect));
+    var object = {
+      start: document.getElementById('startTime').innerHTML,
+      end: document.getElementById('endTime').innerHTML,
+      language: document.getElementById('soundLang').value,
+      dialect: document.getElementById('soundDialect').value,
+      notation: document.getElementById('soundValue').value
+    }
+    this.sounds.push(object);
   }
 
   handleChange(e)
@@ -106,20 +99,13 @@ class App extends React.Component {
 
   handleSaveButton()
   {
-    // var person = {
-    //   name: document.getElementById('dictorName').value,
-    //   city: document.getElementById('dictorName').value,
-    //   country: document.getElementById('dictorName').value,
-    //   lang: document.getElementById('dictorName').value,
-    //   defect: document.getElementById('dictorName').value,
-    // };
-    let name = document.getElementById('dictorName').value;
-    let city = document.getElementById('dictorName').value;
-    let country = document.getElementById('dictorName').value;
-    let language = document.getElementById('dictorName').value;
-    let defect = document.getElementById('dictorName').value;
-
-    let person = entity.Speaker(name, language, city, country);
+    var person = {
+      name: document.getElementById('dictorName').value,
+      city: document.getElementById('dictorCity').value,
+      country: document.getElementById('dictorCountry').value,
+      language: document.getElementById('dictorLang').value,
+      defect: document.getElementById('dictorDefect').value,
+    };
 
     axios.post('/add_data', {
       person: person,
