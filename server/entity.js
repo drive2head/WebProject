@@ -1,4 +1,4 @@
-exports.Speaker = function (fullname, native_lang, city, country,
+exports.Person = function (fullname, native_lang, city, country,
 		accent=false, disorders=null) {
 		/*
 			Здесь должна быть проверка значений на ошибки
