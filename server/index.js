@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 
 var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic("editor", "editor"));
+var driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic("neo4j", "lotusflower99"));
 var session = driver.session();
 
 app.use(express.urlencoded());
@@ -32,9 +32,10 @@ collect(ph {ph, id: ID(ph)}) as phonemes
 */
 
 function addDataQuery_text(recname, person, phonemes) {
+	console.log(person.fullName);
 	let text = `create (rec:Record {description:'${recname}'})\n`+
-	`create (person: Person {fullname:'${person.fullName}',\n\t`+
-		`nativeLanguage:'${person.nativeLanguage}', accent:${person.accent}})\n`+
+	`create (person: Person {fullname:'${person.name}',\n\t`+
+		`nativeLanguage:'${person.language}', accent:'${person.defect}'})\n`+
 	`merge (country: Country {name:'${person.country}'})\n`+
 	`merge (city: City {name:'${person.city}'})\n`+
 	`create (rec)-[:SPOKEN_BY]->(person)\n`+
@@ -50,8 +51,8 @@ function addDataQuery_text(recname, person, phonemes) {
 	};
 	// для каждой фонемы
 	phonemes.forEach((phoneme, i) => {
-		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:time('${phoneme.start}'),\n\t`+
-				`end:time('${phoneme.end}'), language:'${phoneme.language}', dialect:'${phoneme.dialect}'})\n`+
+		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',\n\t`+
+				`end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})\n`+
 				`create (ph${i})-[:CONTAINED_IN]->(rec)`
 	});
 
@@ -60,11 +61,8 @@ function addDataQuery_text(recname, person, phonemes) {
 
 app.post('/add_data', (req, res) => {
 	let recname = '/testFileName.wav';
-	// let person1 = new entity.Speaker('Alexandr Testovich', 'RU', 'Moscow', 'Russia', false, ['Д1', 'Д2']);
-	// let phoneme1 = new entity.Phoneme('a', '00:00:01.234', '00:00:02.345', 'RU', 'None')
-	// let phoneme2 = new entity.Phoneme('б', '00:00:04.321', '00:00:05.432', 'RU', 'None')
-	// let queryText = getDataQuery_text(recname, person1, [phoneme1, phoneme2]);
-	console.log(type(req.body.person));
+
+	console.log(req.body.person, req.body.sounds);
 	let queryText = addDataQuery_text(recname, req.body.person, req.body.sounds);
 
 	console.log("Trying to process the query...");
