@@ -1,10 +1,11 @@
 var entity = require("./entity.js")
+var user_cfg = require("./user_cfg.js")
 
 const express = require('express');
 const app = express();
 
 var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic("neo4j", "lotusflower99"));
+var driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(user_cfg.login, user_cfg.password));
 var session = driver.session();
 
 app.use(express.urlencoded());
@@ -30,8 +31,16 @@ MATCH (person)-[:LIVES_IN]-(city)-[:LOCATED_IN]-(country)
 RETURN rec, person, city, country, 
 collect(ph {ph, id: ID(ph)}) as phonemes
 */
+function changePhonemeQuery(phoneme, id) {
+	let text = `match (n)\nwhere ID(n) = ${id}\n`+
+	`set n = {notation:'${phoneme.notation}', start:'${phoneme.start}',\n\t`+
+			`end:'${phoneme.end}', language:'${phoneme.language}', `+
+			`dialect:'${phoneme.dialect}'}`
 
-function addDataQuery_text(recname, person, phonemes) {
+	return text;
+};
+
+function addDataQuery(recname, person, phonemes) {
 	console.log(person.fullName);
 	let text = `create (rec:Record {description:'${recname}'})\n`+
 	`create (person: Person {fullname:'${person.fullName}',\n\t`+
@@ -62,7 +71,7 @@ function addDataQuery_text(recname, person, phonemes) {
 app.post('/add_data', (req, res) => {
 	let recname = '/testFileName.wav';
 
-	let queryText = addDataQuery_text(recname, req.body.person, req.body.sounds);
+	let queryText = addDataQuery(recname, req.body.person, req.body.sounds);
 
 	console.log("Trying to process the query...");
 	console.log("\n~ ~ ~ ~ ~ ~ ~")
@@ -71,6 +80,19 @@ app.post('/add_data', (req, res) => {
 	session.run(queryText)
 	.then((result) => {
 		res.send("Data was successfully added!");
+	})
+	.catch((err) => {
+		console.log('err', err);
+	});
+});
+
+app.post('/change_phoneme', (req, res) => {
+	let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
+	let queryText = changePhonemeQuery(phoneme, 252);
+
+	session.run(queryText)
+	.then((result) => {
+		res.send("Phoneme was successfully changed!");
 	})
 	.catch((err) => {
 		console.log('err', err);
