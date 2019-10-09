@@ -107,7 +107,6 @@ class App extends React.Component {
       document.getElementById('dictorAccent').value,
       document.getElementById('dictorDefect').value,
     );
-
     axios.post('/add_data', {
       person: person,
       sounds: this.sounds
@@ -137,7 +136,7 @@ class App extends React.Component {
                   City: <input id="dictorCity" type="text"/><br/>
                   Country: <input id="dictorCountry" type="text"/><br/>
                   Lang: <input id="dictorLang" type="text"/><br/>
-                  Accent: <input id="dictorAccent" type="text"/>
+                  Accent: <input id="dictorAccent" type="text"/><br/>
                   Defect: <input id="dictorDefect" type="text"/>
                 </div>
               </div>
@@ -150,7 +149,7 @@ class App extends React.Component {
                   <p id="endTime">End time: </p>
                   Lang: <input id="soundLang" type="text"/><br/>
                   Dialect: <input id="soundDialect" type="text"/><br/>
-                  Value: <input id="soundValue" type="text"/>
+                  Value: <input id="soundValue" type="text"/><br/>
                   <button id="saveData" onClick={this.handleSaveSoundButton}>Save sound</button>
                 </div>
               </div>
