@@ -131,13 +131,20 @@ class App extends React.Component {
             <div className="col-md-6">
               <div className="card flex-md-row mb-4 box-shadow h-md-250">
                 <div className="card-body d-flex flex-column align-items-start">
-                  <p> Dictor info: </p>
-                  Name: <input id="dictorName" type="text"/><br/>
-                  City: <input id="dictorCity" type="text"/><br/>
-                  Country: <input id="dictorCountry" type="text"/><br/>
-                  Lang: <input id="dictorLang" type="text"/><br/>
-                  Accent: <input id="dictorAccent" type="text"/><br/>
-                  Defect: <input id="dictorDefect" type="text"/>
+                  <p> Описание диктора: </p>
+                  Имя: <input id="dictorName" type="text"/><br/>
+                  Город: <input id="dictorCity" type="text"/><br/>
+                  Страна: <input id="dictorCountry" type="text"/><br/>
+                  Родной язык: <input id="dictorLang" type="text"/><br/>
+                  Акцент: <input id="accent" type="checkbox"/><br/>
+                  Нарушения речи:
+                  <select multiple name="disorder[]">
+                    <option selected>Отсутствуют</option>
+                    <option value="Д1">Д1</option>
+                    <option value="Д2">Д2</option>
+                    <option value="Д3">Д3</option>
+                    <option value="Д4">Д4</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -150,12 +157,12 @@ class App extends React.Component {
                   Lang: <input id="soundLang" type="text"/><br/>
                   Dialect: <input id="soundDialect" type="text"/><br/>
                   Value: <input id="soundValue" type="text"/><br/>
-                  <button id="saveData" onClick={this.handleSaveSoundButton}>Save sound</button>
+                  <button id="saveSound" onClick={this.handleSaveSoundButton}>Save sound</button>
                 </div>
               </div>
             </div>
           </div>
-          <button id="saveData" onClick={this.handleSaveButton}>Save</button>
+          <button class="btn btn-dark" id="saveData" onClick={this.handleSaveButton}>Save</button>
         </div>
       </div>
     );
