@@ -18,6 +18,7 @@ class App extends React.Component {
     this.handleSaveButton = this.handleSaveButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.createWavePlayer = this.createWavePlayer.bind(this);
+
     this.options = [{value:"Д1", label:"Д1"}, {value:"Д2", label:"Д2"}, {value:"Д3", label:"Д3"}]
     this.startTime = 0;
     this.endTime = 0;
@@ -137,15 +138,15 @@ class App extends React.Component {
                   Акцент: <input id="accent" type="checkbox"/><br/>
                   Нарушения речи:
                   <div id="select">
-                  <Select
-                    style={{width: '300px'}}
-                    placeholder="Нет"
-                    isMulti
-                    autoFocus
-                    name="Дефекты"
-                    options={this.options}
-                    closeMenuOnSelect={false}
-                  />
+                    <Select
+                      style={{width: '300px'}}
+                      placeholder="Нет"
+                      isMulti
+                      autoFocus
+                      name="Дефекты"
+                      options={this.options}
+                      closeMenuOnSelect={false}
+                    />
                   </div>
                 </div>
               </div>
