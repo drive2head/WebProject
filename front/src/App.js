@@ -150,7 +150,7 @@ class App extends React.Component {
                   Lang: <input id="soundLang" type="text"/><br/>
                   Dialect: <input id="soundDialect" type="text"/><br/>
                   Value: <input id="soundValue" type="text"/><br/>
-                  <button id="saveData" onClick={this.handleSaveSoundButton}>Save sound</button>
+                  <button class="btn btn-dark" id="saveData" onClick={this.handleSaveSoundButton}>Save sound</button>
                 </div>
               </div>
             </div>
