@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import logo from './logo.svg';
+import Select from 'react-select';
 import './App.css';
 import WaveSurfer from 'wavesurfer.js';
 import RegionPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.min.js';
@@ -18,9 +18,7 @@ class App extends React.Component {
     this.handleSaveButton = this.handleSaveButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.createWavePlayer = this.createWavePlayer.bind(this);
-    this.state = {
-      play: false
-    };
+    this.options = [{value:"Д1", label:"Д1"}, {value:"Д2", label:"Д2"}, {value:"Д3", label:"Д3"}]
     this.startTime = 0;
     this.endTime = 0;
     this.sounds = [];
@@ -138,13 +136,17 @@ class App extends React.Component {
                   Родной язык: <input id="dictorLang" type="text"/><br/>
                   Акцент: <input id="accent" type="checkbox"/><br/>
                   Нарушения речи:
-                  <select multiple name="disorder[]">
-                    <option selected>Отсутствуют</option>
-                    <option value="Д1">Д1</option>
-                    <option value="Д2">Д2</option>
-                    <option value="Д3">Д3</option>
-                    <option value="Д4">Д4</option>
-                  </select>
+                  <div id="select">
+                  <Select
+                    style={{width: '300px'}}
+                    placeholder="Нет"
+                    isMulti
+                    autoFocus
+                    name="Дефекты"
+                    options={this.options}
+                    closeMenuOnSelect={false}
+                  />
+                  </div>
                 </div>
               </div>
             </div>
