@@ -167,7 +167,7 @@ class App extends React.Component {
 
   handleSaveButton()
   {
-    if(isAuth)
+    if(this.state.userAuth)
     {
       let person = entity.Speaker(
         document.getElementById('dictorName').value,
