@@ -86,12 +86,15 @@ class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.createWavePlayer = this.createWavePlayer.bind(this);
 
-    this.options = [{value:"Д1", label:"Д1"}, {value:"Д2", label:"Д2"}, {value:"Д3", label:"Д3"}]
+    this.options = [{value:"Д1", label:"Д1"}, {value:"Д2", label:"Д2"}, {value:"Д3", label:"Д3"}];
     this.startTime = 0;
     this.endTime = 0;
     this.sounds = [];
 
-    this.state = { showPopup: false, userAuth: false };  
+    this.state = {  showPopup: false,
+                    userAuth: false,
+                    selectedOptions: [],
+                  };  
   }
 
   createWavePlayer(url)
@@ -167,6 +170,8 @@ class App extends React.Component {
 
   handleSaveButton()
   {
+    console.log(this.state.selectedOptions);
+
     if(this.state.userAuth)
     {
       let person = entity.Speaker(
@@ -175,15 +180,19 @@ class App extends React.Component {
         document.getElementById('dictorCity').value,
         document.getElementById('dictorCountry').value,
         document.getElementById('dictorAccent').value,
-        document.getElementById('dictorDefect').value,
+        this.selectedOptions,
+        // document.getElementById('dictorDefect').value,
       );
+
       axios.post('/add_data', {
         person: person,
         sounds: this.sounds
       });
     }
     else
-      this.popUpWindow();
+    {
+      // this.popUpWindow();
+    }
   }
 
   popUpWindow()
@@ -198,6 +207,11 @@ class App extends React.Component {
     this.setState({
       userAuth: true
     })
+  }
+
+  handleChange = (selectedOptions) => {
+    this.setState({ selectedOptions });
+    this.selectedOptions = selectedOptions;
   }
 
   render()
@@ -223,10 +237,10 @@ class App extends React.Component {
                   Город: <input id="dictorCity" type="text"/><br/>
                   Страна: <input id="dictorCountry" type="text"/><br/>
                   Родной язык: <input id="dictorLang" type="text"/><br/>
-                  Акцент: <input id="accent" type="checkbox"/><br/>
+                  Акцент: <input id="dictorAccent" type="checkbox"/><br/>
                   Нарушения речи:
                   <div id="select">
-                    <Select
+                    <Select id="dictorDisorders"
                       style={{width: '300px'}}
                       placeholder="Нет"
                       isMulti
@@ -234,6 +248,8 @@ class App extends React.Component {
                       name="Дефекты"
                       options={this.options}
                       closeMenuOnSelect={false}
+                      value={this.selectedOptions}
+                      onChange={this.handleChange}
                     />
                   </div>
                 </div>
