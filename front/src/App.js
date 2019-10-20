@@ -7,8 +7,75 @@ import RegionPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.min.js';
 import Timeline from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.min.css';
 
-var entity = require("./entity.js")
+let entity = require("./entity.js")
+
+let isAuth = false;
+class Popup extends React.Component {  
+  constructor(props)
+  {
+    super(props);
+  }
+
+  logIn = async () => {
+    var response = await fetch('/login', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+      })
+    });
+    var body = await response.json();
+    if (body == true)
+    {
+      this.props.userAuth();
+      this.props.closePopup();
+    }
+    else
+      alert('wrong data!11!!');
+  }
+
+  render() {  
+    return (  
+      <div className='popup'>  
+        <div className='popup_inner'>
+          <div className="d-flex justify-content-center h-100">
+            <div className="card">
+              <div className="card-header">
+                <h3 style={{display: 'inline'}}>Sign In</h3>
+                <div className="d-flex social_icon">
+                  <button type="submit" onClick={this.props.closePopup} className="btn"><span><i className="fa fa-times-circle"></i></span></button>
+                </div>
+              </div>
+              <div className="card-body">
+                <div className="input-group form-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text"><i className="fa fa-user"></i></span>
+                  </div>
+                  <input id="username" type="text" className="form-control" placeholder="username"/>
+                  
+                </div>
+                <div className="input-group form-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text"><i className="fa fa-key"></i></span>
+                  </div>
+                  <input id="password" type="password" className="form-control" placeholder="password"/>
+                </div>
+                <div className="form-group">
+                  <button onClick={this.logIn} className="btn float-right login_btn">Login</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>  
+    );  
+  }  
+} 
 
 class App extends React.Component {
   constructor(props)
@@ -23,12 +90,14 @@ class App extends React.Component {
     this.startTime = 0;
     this.endTime = 0;
     this.sounds = [];
+
+    this.state = { showPopup: false, userAuth: false };  
   }
 
   createWavePlayer(url)
   {
     document.getElementById('waveform').innerHTML = '';
-    var wavesurfer = WaveSurfer.create({
+    let wavesurfer = WaveSurfer.create({
       container: '#waveform',
       waveColor: 'red',
       progressColor: 'red',
@@ -49,14 +118,14 @@ class App extends React.Component {
     {
       document.getElementById('slider').oninput = function()
       {
-        var slider = document.getElementById('slider');
-        var zoomLevel = Number(slider.value);
+        let slider = document.getElementById('slider');
+        let zoomLevel = Number(slider.value);
         wavesurfer.zoom(zoomLevel);
       };
     });
 
     document.onkeydown = function (e) {
-      var keyCode = e.keyCode;
+      let keyCode = e.keyCode;
       if(keyCode == 32) {
         wavesurfer.playPause();
       }
@@ -81,7 +150,7 @@ class App extends React.Component {
 
   handleSaveSoundButton()
   {
-    var object = entity.Phoneme(
+    let object = entity.Phoneme(
       document.getElementById('soundValue').value,
       document.getElementById('startTime').innerHTML,
       document.getElementById('endTime').innerHTML,
@@ -98,18 +167,37 @@ class App extends React.Component {
 
   handleSaveButton()
   {
-    var person = entity.Speaker(
-      document.getElementById('dictorName').value,
-      document.getElementById('dictorLang').value,
-      document.getElementById('dictorCity').value,
-      document.getElementById('dictorCountry').value,
-      document.getElementById('dictorAccent').value,
-      document.getElementById('dictorDefect').value,
-    );
-    axios.post('/add_data', {
-      person: person,
-      sounds: this.sounds
-    });
+    if(isAuth)
+    {
+      let person = entity.Speaker(
+        document.getElementById('dictorName').value,
+        document.getElementById('dictorLang').value,
+        document.getElementById('dictorCity').value,
+        document.getElementById('dictorCountry').value,
+        document.getElementById('dictorAccent').value,
+        document.getElementById('dictorDefect').value,
+      );
+      axios.post('/add_data', {
+        person: person,
+        sounds: this.sounds
+      });
+    }
+    else
+      this.popUpWindow();
+  }
+
+  popUpWindow()
+  {
+    this.setState({  
+      showPopup: !this.state.showPopup,
+    });  
+  }
+
+  userAuth()
+  {
+    this.setState({
+      userAuth: true
+    })
   }
 
   render()
@@ -160,12 +248,20 @@ class App extends React.Component {
                   Lang: <input id="soundLang" type="text"/><br/>
                   Dialect: <input id="soundDialect" type="text"/><br/>
                   Value: <input id="soundValue" type="text"/><br/>
-                  <button class="btn btn-dark" id="saveSound" onClick={this.handleSaveSoundButton}>Save sound</button>
+                  <button className="btn btn-dark" id="saveSound" onClick={this.handleSaveSoundButton}>Save sound</button>
                 </div>
               </div>
             </div>
           </div>
-          <button class="btn btn-dark" id="saveData" onClick={this.handleSaveButton}>Save</button>
+          <button className="btn btn-dark" id="saveData" onClick={this.handleSaveButton}>Save</button>
+
+          <button className="btn btn-dark" onClick={this.popUpWindow.bind(this)}>Login</button>  
+
+          {this.state.showPopup ?  
+          <Popup  
+            closePopup={this.popUpWindow.bind(this)}  
+            userAuth={this.userAuth.bind(this)}
+          /> : null}  
         </div>
       </div>
     );
