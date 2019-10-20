@@ -1,17 +1,17 @@
-var entity = require("./entity.js")
-var user_cfg = require("./user_cfg.js")
+let entity = require("./entity.js")
+let user_cfg = require("./user_cfg.js")
 
 const express = require('express');
 const app = express();
 
-var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(user_cfg.login, user_cfg.password));
-var session = driver.session();
+let neo4j = require('neo4j-driver').v1;
+let driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(user_cfg.login, user_cfg.password));
+let session = driver.session();
 
 app.use(express.urlencoded());
 app.use(express.json());
 
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
 /*
@@ -31,6 +31,28 @@ MATCH (person)-[:LIVES_IN]-(city)-[:LOCATED_IN]-(country)
 RETURN rec, person, city, country, 
 collect(ph {ph, id: ID(ph)}) as phonemes
 */
+
+let Users = [];
+Users.push({'name':'Videot4pe', 'pass':'tape123'});
+
+function userExist(username, password)
+{
+	for (let i = 0; i < Users.length; i++)
+	{
+		if (Users[i]['name'] == username && Users[i]['pass'] == password)
+			return true;
+	}
+	return false;
+}
+
+app.post('/login', (req, res) => {
+    let username = req.body.username,
+        password = req.body.password;
+    if (userExist(username, password))
+        res.send('true');
+    else
+        res.send('false');
+});
 
 function changePersonQuery(person, id) {
 	let text = `match (person)\n`+
