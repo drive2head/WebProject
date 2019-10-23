@@ -193,7 +193,7 @@ class App extends React.Component {
     }
     else
     {
-      // this.popUpWindow();
+      this.popUpWindow();
     }
   }
 
@@ -221,10 +221,10 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="container">
-          <div className="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+          <div className="jumbotron p-3 p-md-5 text-white rounded bg-dark zindex">
             <div className="col-md-12 px-0">
-              <div id="waveform"></div>
-              <div id="timeline"></div>
+              <div id="waveform" className=""></div>
+              <div id="timeline" className=""></div>
               <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
               <input type="file" id="file" onChange={this.handleChangePlayer} />
             </div>
