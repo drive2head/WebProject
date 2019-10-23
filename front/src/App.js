@@ -84,6 +84,7 @@ class App extends React.Component {
     this.handleSaveSoundButton = this.handleSaveSoundButton.bind(this);
     this.handleSaveButton = this.handleSaveButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangePlayer = this.handleChangePlayer.bind(this);
     this.createWavePlayer = this.createWavePlayer.bind(this);
 
     this.options = [{value:"Д1", label:"Д1"}, {value:"Д2", label:"Д2"}, {value:"Д3", label:"Д3"}];
@@ -99,6 +100,7 @@ class App extends React.Component {
 
   createWavePlayer(url)
   {
+    console.log('hello wave player!');
     document.getElementById('waveform').innerHTML = '';
     let wavesurfer = WaveSurfer.create({
       container: '#waveform',
@@ -163,7 +165,7 @@ class App extends React.Component {
     this.sounds.push(object);
   }
 
-  handleChange(e)
+  handleChangePlayer(e)
   {
     this.createWavePlayer(URL.createObjectURL(e.target.files[0]));
   }
@@ -224,7 +226,7 @@ class App extends React.Component {
               <div id="waveform"></div>
               <div id="timeline"></div>
               <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
-              <input type="file" id="file" onChange={this.handleChange} />
+              <input type="file" id="file" onChange={this.handleChangePlayer} />
             </div>
           </div>
 
