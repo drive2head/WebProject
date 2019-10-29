@@ -83,11 +83,13 @@ class App extends React.Component {
     super(props);
     this.handleSaveSoundButton = this.handleSaveSoundButton.bind(this);
     this.handleSaveButton = this.handleSaveButton.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.handleChangePlayer = this.handleChangePlayer.bind(this);
     this.createWavePlayer = this.createWavePlayer.bind(this);
 
-    this.options = [{value:"Д1", label:"Д1"}, {value:"Д2", label:"Д2"}, {value:"Д3", label:"Д3"}];
+    this.options = [{value:"Д1", label:"Д1"},
+                    {value:"Д2", label:"Д2"},
+                    {value:"Д3", label:"Д3"},
+                    {value:"Акцент", label:"Акцент"}];
     this.startTime = 0;
     this.endTime = 0;
     this.sounds = [];
@@ -183,7 +185,6 @@ class App extends React.Component {
         document.getElementById('dictorCountry').value,
         document.getElementById('dictorAccent').value,
         this.selectedOptions,
-        // document.getElementById('dictorDefect').value,
       );
 
       axios.post('/add_data', {
@@ -211,9 +212,24 @@ class App extends React.Component {
     })
   }
 
-  handleChange = (selectedOptions) => {
-    this.setState({ selectedOptions });
-    this.selectedOptions = selectedOptions;
+  renderSelect() // эта штука не очень красиво растягивается, если добавлять много дефектов
+  {              // может ограничить область, в которую помещаются выбранные дефекты ?
+    return (
+      <Select
+        id="dictorDisorders"
+        style={{width: '300px'}}
+        placeholder="Нет"
+        isMulti
+        autoFocus
+        name="Дефекты"
+        options={this.options}
+        closeMenuOnSelect={false}
+        value={this.selectedOptions}
+        onChange={
+          (selectedOpts) => {this.setState({selectedOpts})}
+        }
+      />
+      );
   }
 
   render()
@@ -239,20 +255,9 @@ class App extends React.Component {
                   Город: <input id="dictorCity" type="text"/><br/>
                   Страна: <input id="dictorCountry" type="text"/><br/>
                   Родной язык: <input id="dictorLang" type="text"/><br/>
-                  Акцент: <input id="dictorAccent" type="checkbox"/><br/>
                   Нарушения речи:
                   <div id="select">
-                    <Select id="dictorDisorders"
-                      style={{width: '300px'}}
-                      placeholder="Нет"
-                      isMulti
-                      autoFocus
-                      name="Дефекты"
-                      options={this.options}
-                      closeMenuOnSelect={false}
-                      value={this.selectedOptions}
-                      onChange={this.handleChange}
-                    />
+                    {this.renderSelect()}
                   </div>
                 </div>
               </div>
