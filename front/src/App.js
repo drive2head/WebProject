@@ -59,16 +59,7 @@ class App extends React.Component {
 
           <Route exact={true} path='/post' render={() => (
             isLoggedIn ? (
-              <PostInterface 
-                saveAll={this.saveAll.bind(this)}
-                saveSound={this.saveSound.bind(this)}
-                handleInputChange={this.handleInputChange.bind(this)}
-                userAuth={this.userAuth.bind(this)}
-                changeSelected={this.changeSelected.bind(this)}
-                newTimeInterval={this.newTimeInterval.bind(this)}
-                changeSoundInfo={this.changeSoundInfo.bind(this)}
-                state={this.state}
-              />
+              <PostInterface />
             ) : (<Redirect to={{pathname: '/login'}} />)
           )}/>
 
