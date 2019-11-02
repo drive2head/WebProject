@@ -38,6 +38,12 @@ class WavePlayer extends React.Component {
       if(keyCode == 32) {
         wavesurfer.playPause();
       }
+      if(keyCode == 31) {
+        let end = document.getElementById('prevEnd');
+        let start = document.getElementById('prevStart');
+        wavesurfer.clearRegions();
+        wavesurfer.addRegion({start: +start.value, end: +end.value});
+      }
     };
 
     wavesurfer.on('ready', function ()
@@ -66,6 +72,7 @@ class WavePlayer extends React.Component {
         <div id="timeline"></div>
         <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
         <input type="file" id="file" onChange={this.changeFile} />
+        <div> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
       </div>
     );
   }

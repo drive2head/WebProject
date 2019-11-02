@@ -4,6 +4,7 @@ import Popup from './login.js';
 import DictorInfo from './dictorInfo.js';
 import SoundInfo from './soundInfo.js';
 import WavePlayer from './waveplayer.js';
+import Sounds from './sounds.js';
 
 class Interface extends React.Component {  
   constructor(props)
@@ -21,8 +22,9 @@ class Interface extends React.Component {
       <div className="container">
         <div className="jumbotron p-3 p-md-5 text-white rounded bg-dark zindex">
           <div className="col-md-12 px-0">
-            <WavePlayer 
+            <WavePlayer
               newTimeInterval={this.props.newTimeInterval.bind(this)}
+              state={this.props.state}
             />
           </div>
         </div>
@@ -35,6 +37,11 @@ class Interface extends React.Component {
           <SoundInfo
             handleInputChange={this.props.handleInputChange.bind(this)}
             saveSound={this.props.saveSound.bind(this)}
+            state={this.props.state}
+          />
+          <Sounds
+            changeSoundInfo={this.props.changeSoundInfo}
+            sounds={this.props.state.sounds}
           />
         </div>
 

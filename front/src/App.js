@@ -18,7 +18,6 @@ class App extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.newTimeInterval = this.newTimeInterval.bind(this);
 
-    this.sounds = [];
     this.slider = "";
 
     this.state = {  
@@ -29,6 +28,7 @@ class App extends React.Component {
       soundLang: "",
       soundDialect: "",
       selectedOptions: [],
+      sounds: [],
 
       // Dictor info
       dictorName: "",
@@ -42,7 +42,7 @@ class App extends React.Component {
       userAuth: false,
       username: "",
       password: "",
-    };  
+    };
   }
 
   saveSound()
@@ -54,8 +54,10 @@ class App extends React.Component {
       this.state.soundLang,
       this.state.soundDialect,
     );
-    this.sounds.push(object);
-    console.log(this.sounds);
+    let newSounds = this.state.sounds;
+    newSounds.push(object);
+    this.setState({sounds: newSounds});
+    console.log(this.state.sounds);
   }
 
   saveAll()
@@ -72,11 +74,27 @@ class App extends React.Component {
       console.log(this.state);
       axios.post('/add_data', {
         person: person,
-        sounds: this.sounds
+        sounds: this.state.sounds
       });
     }
     else
       this.popUpWindow();
+  }
+
+
+  changeSoundInfo(i)
+  {
+    let newSounds = this.state.sounds;
+    let tmp = newSounds[i];
+    newSounds.splice(i, 1);
+
+    this.setState({soundValue: tmp.notation, startTime: tmp.start, endTime: tmp.end, soundLang: tmp.language, soundDialect: tmp.dialect, sounds: newSounds});
+    
+    setTimeout( () => {
+      var evt = new KeyboardEvent('keydown', {'keyCode':31, 'which':31});
+      document.dispatchEvent(evt);}
+      , 100); //НЕ СМОТРИТЕ СЮДА, ЭТО КОСТЫЛЬ, ПО-ДРУГОМУ НИКАК, WAVESURFER МАКСИМАЛЬНО КРИВАЯ ЛИБА, ОБЪЕКТ ПЛЕЕРА НЕВОЗМОЖНО ЗАПИХНУТЬ В THIS
+    
   }
 
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
@@ -95,6 +113,8 @@ class App extends React.Component {
           userAuth={this.userAuth.bind(this)}
           changeSelected={this.changeSelected.bind(this)}
           newTimeInterval={this.newTimeInterval.bind(this)}
+          changeSoundInfo={this.changeSoundInfo.bind(this)}
+          state={this.state}
         />
       </div>
     );
