@@ -5,8 +5,8 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter, Route, Redirect} from 'react-router-dom';
 
-import Popup from './components/login.js';
-import Interface from './components/interface.js';
+import LoginInterface from './components/login/loginInterface.js';
+import PostInterface from './components/post/postInterface.js';
 let entity = require("./entity.js")
 
 class App extends React.Component {
@@ -131,7 +131,19 @@ class App extends React.Component {
 
           <Route exact={true} path='/' render={() => (
             isLoggedIn ? (
-              <Interface 
+              console.log('nope')
+            ) : (<Redirect to={{pathname: '/login'}} />)
+          )}/>
+
+          <Route exact={true} path='/get' render={() => (
+            isLoggedIn ? (
+              console.log('not yet')
+            ) : (<Redirect to={{pathname: '/login'}} />)
+          )}/>
+
+          <Route exact={true} path='/post' render={() => (
+            isLoggedIn ? (
+              <PostInterface 
                 saveAll={this.saveAll.bind(this)}
                 saveSound={this.saveSound.bind(this)}
                 handleInputChange={this.handleInputChange.bind(this)}
@@ -141,16 +153,12 @@ class App extends React.Component {
                 changeSoundInfo={this.changeSoundInfo.bind(this)}
                 state={this.state}
               />
-            ) : (
-              <Redirect to={{
-                pathname: '/login',
-              }} />
-            )
+            ) : (<Redirect to={{pathname: '/login'}} />)
           )}/>
 
           <Route exact={true} path='/login' render={() => (
             <div className="Login">
-              <Popup handleInputChange={this.handleInputChange.bind(this)} />
+              <LoginInterface handleInputChange={this.handleInputChange.bind(this)} />
             </div>
           )}/>
 

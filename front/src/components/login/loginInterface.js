@@ -2,7 +2,7 @@ import React from 'react';
 import LoginForm from './loginForm.js';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 
-class Popup extends React.Component {  
+class LoginInterface extends React.Component {  
   constructor(props)
   {
     super(props);
@@ -53,4 +53,4 @@ class Popup extends React.Component {
   }  
 } 
 
-export default Popup;
+export default LoginInterface;

@@ -1,12 +1,11 @@
 import React from 'react';
 
-import Popup from './login.js';
 import DictorInfo from './dictorInfo.js';
 import SoundInfo from './soundInfo.js';
 import WavePlayer from './waveplayer.js';
 import Sounds from './sounds.js';
 
-class Interface extends React.Component {  
+class PostInterface extends React.Component {  
   constructor(props)
   {
     super(props);
@@ -46,4 +45,4 @@ class Interface extends React.Component {
   }
 }
 
-export default Interface;
+export default PostInterface;
