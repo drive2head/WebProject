@@ -1,6 +1,7 @@
 let query = require("./query.js");
-let entity = require("./entity.js")
-let user_cfg = require("./settings.js")
+let entity = require("./entity.js");
+let userAuth = require("./userAuth.js");
+let user_cfg = require("./settings.js");
 
 const express = require('express');
 const app = express();
@@ -24,23 +25,27 @@ app.listen(port, () => console.log(`Port: ${port}`));
 // Users.push({'name':'Videot4pe', 'pass':'tape123'});
 // Users.push({'name':'123', 'pass': '123'});
 
-function userExist(username, password)
+async function userExist(username, password)
 {
-	for (let i = 0; i < Users.length; i++)
-	{
-		if (Users[i]['name'] == username && Users[i]['pass'] == password)
-			return true;
-	}
-	return false;
+	let user = await userAuth.checkUser(username);
+	if (user === null)
+		return false;
+	if (user.pass !== password)
+		return false;
+	return true;
 }
 
 app.post('/login', (req, res) => {
     let username = req.body.username,
         password = req.body.password;
-    if (userExist(username, password))
-        res.send('true');
-    else
-        res.send('false');
+
+    userExist(username, password)
+    .then(result => {
+    	if (result)
+    		res.send('true');
+    	else
+    		res.send('false');
+    });
 });
 
 app.post('/add_data', (req, res) => {
