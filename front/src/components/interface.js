@@ -1,0 +1,55 @@
+import React from 'react';
+
+import Popup from './login.js';
+import DictorInfo from './dictorInfo.js';
+import SoundInfo from './soundInfo.js';
+import WavePlayer from './waveplayer.js';
+
+class Interface extends React.Component {  
+  constructor(props)
+  {
+    super(props);
+
+    this.popUpWindow = this.popUpWindow.bind(this);
+    this.state = {showPopup: false};
+  }
+
+  popUpWindow(){this.setState({showPopup: !this.state.showPopup});}
+
+  render() {  
+    return (
+      <div className="container">
+        <div className="jumbotron p-3 p-md-5 text-white rounded bg-dark zindex">
+          <div className="col-md-12 px-0">
+            <WavePlayer 
+              newTimeInterval={this.props.newTimeInterval.bind(this)}
+            />
+          </div>
+        </div>
+
+        <div className="row mb-2">
+          <DictorInfo
+            handleInputChange={this.props.handleInputChange.bind(this)}
+            changeSelected={this.props.changeSelected.bind(this)}
+          />
+          <SoundInfo
+            handleInputChange={this.props.handleInputChange.bind(this)}
+            saveSound={this.props.saveSound.bind(this)}
+          />
+        </div>
+
+        <button className="btn btn-dark" id="saveData" onClick={this.props.saveAll}>Save</button>
+        <button className="btn btn-dark" onClick={this.popUpWindow.bind(this)}>Login</button>  
+
+        {this.state.showPopup ?  
+        <Popup  
+          closePopup={this.popUpWindow.bind(this)}  
+          userAuth={this.props.userAuth.bind(this)}
+        /> : null}  
+
+      </div>
+    );
+  }
+}
+
+export default Interface;
