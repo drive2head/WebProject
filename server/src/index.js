@@ -42,9 +42,9 @@ app.post('/login', (req, res) => {
     userExist(username, password)
     .then(result => {
     	if (result)
-    		res.send('true');
+    		res.send(true);
     	else
-    		res.send('false');
+    		res.send(false);
     });
 });
 
