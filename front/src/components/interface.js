@@ -10,12 +10,7 @@ class Interface extends React.Component {
   constructor(props)
   {
     super(props);
-
-    this.popUpWindow = this.popUpWindow.bind(this);
-    this.state = {showPopup: false};
   }
-
-  popUpWindow(){this.setState({showPopup: !this.state.showPopup});}
 
   render() {  
     return (
@@ -46,14 +41,6 @@ class Interface extends React.Component {
         </div>
 
         <button className="btn btn-dark" id="saveData" onClick={this.props.saveAll}>Save</button>
-        <button className="btn btn-dark" onClick={this.popUpWindow.bind(this)}>Login</button>  
-
-        {this.state.showPopup ?  
-        <Popup  
-          closePopup={this.popUpWindow.bind(this)}  
-          userAuth={this.props.userAuth.bind(this)}
-        /> : null}  
-
       </div>
     );
   }

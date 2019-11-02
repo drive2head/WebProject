@@ -1,5 +1,6 @@
 import React from 'react';
 import LoginForm from './loginForm.js';
+import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 
 class Popup extends React.Component {  
   constructor(props)
@@ -33,10 +34,7 @@ class Popup extends React.Component {
 
     var body = await response.json();
     if (body == true)
-    {
-      this.props.userAuth(this.state.username, this.state.password);
-      this.props.closePopup();
-    }
+      window.location.href = "/";
     else
       alert('Wrong data, dear FILOLUX!');
   }

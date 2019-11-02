@@ -13,9 +13,6 @@ class LoginForm extends React.Component {
 		        <div className="card">
 		          	<div className="card-header">
 			            <h3 style={{display: 'inline'}}>Sign In</h3>
-			            <div className="d-flex social_icon">
-			              <button type="submit" onClick={this.props.closePopup} className="btn"><span><i className="fa fa-times-circle"></i></span></button>
-			            </div>
 		          	</div>
 		          	<div className="card-body">
 			            <div className="input-group form-group">
@@ -23,7 +20,6 @@ class LoginForm extends React.Component {
 			                	<span className="input-group-text"><i className="fa fa-user"></i></span>
 			              	</div>
 		          			<input name="username" type="text" className="form-control" onChange={this.props.handleInputChange} placeholder="username"/>
-		          
 		        		</div>
 		            	<div className="input-group form-group">
 		              		<div className="input-group-prepend">

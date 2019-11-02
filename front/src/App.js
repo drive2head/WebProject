@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import './App.css';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
+import {BrowserRouter, Route, Redirect} from 'react-router-dom';
 
+import Popup from './components/login.js';
 import Interface from './components/interface.js';
 let entity = require("./entity.js")
 
@@ -71,7 +73,6 @@ class App extends React.Component {
         this.state.dictorCountry,
         this.state.selectedOptions,
       );
-      console.log(this.state);
       axios.post('/add_data', {
         person: person,
         sounds: this.state.sounds
@@ -80,7 +81,6 @@ class App extends React.Component {
     else
       this.popUpWindow();
   }
-
 
   changeSoundInfo(i)
   {
@@ -98,25 +98,64 @@ class App extends React.Component {
   }
 
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
-  userAuth(uname, pswd){this.setState({userAuth: true, username: uname, password: pswd});}
   changeSelected(selectedOpts){this.setState({selectedOptions: selectedOpts});}
   handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
 
+  loggedIn()
+  {
+    // var response = await fetch('/login', {
+    //   method: 'POST',
+    //   headers: {
+    //       'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     username: this.state.username,
+    //     password: this.state.password,
+    //   })
+    // });
+
+    // var body = await response.json();
+    // if (body == true)
+    //   window.location.href = "/";
+    // else
+       return false;
+    // this.setState({userAuth: , username: , password: ,});
+  }
+
   render()
   {
+    const isLoggedIn = this.loggedIn();
     return (
-      <div className="App">
-        <Interface 
-          saveAll={this.saveAll.bind(this)}
-          saveSound={this.saveSound.bind(this)}
-          handleInputChange={this.handleInputChange.bind(this)}
-          userAuth={this.userAuth.bind(this)}
-          changeSelected={this.changeSelected.bind(this)}
-          newTimeInterval={this.newTimeInterval.bind(this)}
-          changeSoundInfo={this.changeSoundInfo.bind(this)}
-          state={this.state}
-        />
-      </div>
+      <BrowserRouter>
+        <div className="App">
+
+          <Route exact={true} path='/' render={() => (
+            isLoggedIn ? (
+              <Interface 
+                saveAll={this.saveAll.bind(this)}
+                saveSound={this.saveSound.bind(this)}
+                handleInputChange={this.handleInputChange.bind(this)}
+                userAuth={this.userAuth.bind(this)}
+                changeSelected={this.changeSelected.bind(this)}
+                newTimeInterval={this.newTimeInterval.bind(this)}
+                changeSoundInfo={this.changeSoundInfo.bind(this)}
+                state={this.state}
+              />
+            ) : (
+              <Redirect to={{
+                pathname: '/login',
+              }} />
+            )
+          )}/>
+
+          <Route exact={true} path='/login' render={() => (
+            <div className="Login">
+              <Popup handleInputChange={this.handleInputChange.bind(this)} />
+            </div>
+          )}/>
+
+        </div>
+      </BrowserRouter>
     );
   }
 }
