@@ -22,4 +22,3 @@ async function checkUser (username) {
 
 exports.addUser = addUser;
 exports.checkUser = checkUser;
-addUser('123', '123');
