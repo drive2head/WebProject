@@ -1,4 +1,11 @@
-exports.Speaker = function (fullname, native_lang, city, country,
+exports.Record = function (name, tags) {
+	return {
+		name: name,
+		tags: tags
+	}
+}
+
+exports.Person = function (fullname, native_lang, city, country,
 		accent=false, disorders=null) {
 		/*
 			Здесь должна быть проверка значений на ошибки
