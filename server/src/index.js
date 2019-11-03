@@ -1,7 +1,6 @@
-let query = require("./query.js");
-let entity = require("./entity.js");
+let entity = require("./entity.js"); /* only for debug */
 let userAuth = require("./userAuth.js");
-let user_cfg = require("./settings.js");
+let graphDB = require("./graphDB.js");
 
 const express = require('express');
 const app = express();
@@ -10,10 +9,6 @@ const app = express();
 TODO:
 1. Вынести запросы и сессии в отдельный модуль
 */
-
-let neo4j = require('neo4j-driver').v1;
-let driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(user_cfg.login, user_cfg.password));
-let session = driver.session();
 
 app.use(express.urlencoded());
 app.use(express.json());
@@ -49,49 +44,38 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-	let recname = '/testFileName.wav';
-	let queryText = query.addData(recname, req.body.person, req.body.sounds);
-
-	session.run(queryText)
-	.then((result) => {
-		res.send("Data was successfully added!");
-	})
-	.catch((err) => {
-		console.log('err', err);
-	});
+	let record = entity.Record('/testFileName.wav', null);
+	let result = graphDB.addPhonemesRecordPerson(record, req.body.person, req.body.sounds);
+	if (result) {
+		res.send("Data was successfully loaded!");
+	}
+	else {
+		res.send("Data WAS NOT loaded!");
+	}
 });
 
 app.post('/change_person', (req, res) => {
 	// let person = entity.Person('James', 'English', 'New York', 'USA');
-	// let queryText = changePersonQuery(person, 256);
-	let queryText = query.changePerson(req.body.person, req.body.id);
-
-	session.run(queryText)
-	.then((result) => {
+	let result = graphDB.changePerson(req.body.person, req.body.id);
+	if (result) {
 		res.send("Person was successfully changed!");
-	})
-	.catch((err) => {
-		console.log('err', err);
-	});
+	}
+	else {
+		res.send("Person WAS NOT changed!");
+	}
 });
 
 app.post('/change_phoneme', (req, res) => {
 	// let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
-	// let queryText = changePhonemeQuery(phoneme, 252);
-	let queryText = query.changePerson(req.body.phoneme, req.body.id);
-
-	session.run(queryText)
-	.then((result) => {
+	let result = graphDB.changePhoneme(req.body.phoneme, req.body.id);
+	if (result) {
 		res.send("Phoneme was successfully changed!");
-	})
-	.catch((err) => {
-		console.log('err', err);
-	});
+	}
+	else {
+		res.send("Phoneme WAS NOT changed!");
+	}
 });
 
-app.get('/get_data', (req, res) => {
-	res.send("Nothing has happend, prekin'?")
-});
-
-session.close();
-driver.close();
+// app.get('/get_data', (req, res) => {
+	/* smth */
+// });

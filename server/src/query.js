@@ -23,9 +23,9 @@ exports.changePhoneme = function (phoneme, id) {
 	return text;
 };
 
-exports.addData = function (recname, person, phonemes) {
+exports.addData = function (record, person, phonemes) {
 	console.log(person.fullName);
-	let text = `create (rec:Record {description:'${recname}'})\n`+
+	let text = `create (rec:Record {description:'${record.name}'})\n`+
 	`create (person: Person {fullname:'${person.fullName}',\n\t`+
 		`nativeLanguage:'${person.nativeLanguage}', accent:'${person.accent}'})\n`+
 	`merge (country: Country {name:'${person.country}'})\n`+
