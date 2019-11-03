@@ -7,6 +7,7 @@ import {BrowserRouter, Route, Redirect} from 'react-router-dom';
 
 import LoginInterface from './components/login/loginInterface.js';
 import PostInterface from './components/post/postInterface.js';
+import MainInterface from './components/main/mainInterface.js';
 
 class App extends React.Component {
   constructor(props)
@@ -34,7 +35,7 @@ class App extends React.Component {
     // if (body == true)
     //   window.location.href = "/";
     // else
-       return false;
+       return true;
     // this.setState({userAuth: , username: , password: ,});
   }
 
@@ -47,7 +48,7 @@ class App extends React.Component {
 
           <Route exact={true} path='/' render={() => (
             isLoggedIn ? (
-              console.log('nope')
+              <MainInterface />
             ) : (<Redirect to={{pathname: '/login'}} />)
           )}/>
 

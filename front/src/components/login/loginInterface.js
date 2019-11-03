@@ -33,7 +33,8 @@ class LoginInterface extends React.Component {
     });
 
     var body = await response.json();
-    console.log(body);
+    console.log("body: ", body);
+
     if (body == true)
       window.location.href = "/";
     else

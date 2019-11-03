@@ -2,8 +2,7 @@ import React from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 
 class LoginForm extends React.Component {  
-	constructor(props)
-	{
+	constructor(props) {
 		super(props);
 	}
 
