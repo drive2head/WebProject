@@ -28,6 +28,7 @@ app.listen(port, () => console.log(`Port: ${port}`));
 async function userExist(username, password)
 {
 	let user = await userAuth.checkUser(username);
+	console.log(user);
 	if (user === null)
 		return false;
 	if (user.pass !== password)
