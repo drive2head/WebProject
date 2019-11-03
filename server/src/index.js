@@ -16,10 +16,6 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
-// let Users = [];
-// Users.push({'name':'Videot4pe', 'pass':'tape123'});
-// Users.push({'name':'123', 'pass': '123'});
-
 async function userExist(username, password)
 {
 	let user = await userAuth.checkUser(username);
