@@ -21,19 +21,43 @@ async function userExist(username, password)
 	let user = await userAuth.checkUser(username);
 	if (user === null)
 		return false;
-	if (user.pass !== password)
+	if (user.password !== password)
 		return false;
-	return true;
+	return user;
 }
 
-app.post('/login', (req, res) => {
+app.post('/signin', (req, res) => {
     let username = req.body.username,
         password = req.body.password;
 
     userExist(username, password)
     .then(result => {
     	if (result)
-    		res.send(true);
+    	{
+    		res.send(result);
+    	}
+    	else
+    		res.send(false);
+    });
+});
+
+app.post('/signup', (req, res) => {
+    let username = req.body.username,
+        password = req.body.password,
+        name = req.body.name,
+        surname = req.body.surname;
+    userAuth.addUser(username, password, name, surname);
+    res.send(true);
+});
+
+app.post('/person', (req, res) => {
+    let username = req.body.username,
+        password = req.body.password;
+        
+    userExist(username, password)
+    .then(result => {
+    	if (result)
+    		res.send(result);
     	else
     		res.send(false);
     });

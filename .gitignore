@@ -1,2 +1,3 @@
 node_modules/
 db/
+server/src/db/

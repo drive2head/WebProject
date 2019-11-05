@@ -95,35 +95,42 @@ class PostInterface extends React.Component {
 
 
   render() {  
+    const isLoggedIn = this.props.loggedIn();
     return (
-      <div className="container">
-        <div className="jumbotron p-3 p-md-5 text-white rounded bg-dark zindex">
-          <div className="col-md-12 px-0">
-            <WavePlayer
-              newTimeInterval={this.newTimeInterval.bind(this)}
+      isLoggedIn ? (
+        <div className="container">
+          <div className="jumbotron p-3 p-md-5 text-white rounded bg-dark zindex">
+            <div className="col-md-12 px-0">
+              <WavePlayer
+                newTimeInterval={this.newTimeInterval.bind(this)}
+                state={this.state}
+              />
+            </div>
+          </div>
+
+          <div className="row mb-2">
+            <DictorInfo
+              handleInputChange={this.handleInputChange.bind(this)}
+              changeSelected={this.changeSelected.bind(this)}
+            />
+            <SoundInfo
+              handleInputChange={this.handleInputChange.bind(this)}
+              saveSound={this.saveSound.bind(this)}
               state={this.state}
             />
+            <Sounds
+              changeSoundInfo={this.changeSoundInfo}
+              sounds={this.state.sounds}
+            />
           </div>
-        </div>
 
-        <div className="row mb-2">
-          <DictorInfo
-            handleInputChange={this.handleInputChange.bind(this)}
-            changeSelected={this.changeSelected.bind(this)}
-          />
-          <SoundInfo
-            handleInputChange={this.handleInputChange.bind(this)}
-            saveSound={this.saveSound.bind(this)}
-            state={this.state}
-          />
-          <Sounds
-            changeSoundInfo={this.changeSoundInfo}
-            sounds={this.state.sounds}
-          />
+          <button className="btn btn-dark" id="saveData" onClick={this.saveAll}>Save</button>
         </div>
-
-        <button className="btn btn-dark" id="saveData" onClick={this.saveAll}>Save</button>
-      </div>
+      ) : (
+        <div className="App">
+          <a href = "/signin"> Login </a>
+        </div>
+      )
     );
   }
 }

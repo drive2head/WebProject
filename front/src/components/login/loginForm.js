@@ -27,7 +27,10 @@ class LoginForm extends React.Component {
 		              		<input name="password" type="password" className="form-control" onChange={this.props.handleInputChange} placeholder="password"/>
 		            	</div>
 		            	<div className="form-group">
-		              		<button onClick={this.props.logIn} className="btn float-right login_btn">Login</button>
+		              		<button onClick={this.props.signIn} className="btn float-right login_btn">Sign in</button>
+		           		</div>
+		           		<div className="form-group">
+		              		<button onClick={this.props.signUp} className="btn float-right login_btn">Sign up</button>
 		           		</div>
 		          	</div>
 		        </div>

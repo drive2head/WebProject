@@ -4,10 +4,12 @@ import './App.css';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter, Route, Redirect} from 'react-router-dom';
-
+import Cookies from 'universal-cookie';
 import LoginInterface from './components/login/loginInterface.js';
+import SignupInterface from './components/signup/signupInterface.js';
 import PostInterface from './components/post/postInterface.js';
 import MainInterface from './components/main/mainInterface.js';
+import PersonInterface from './components/person/personInterface.js';
 
 class App extends React.Component {
   constructor(props)
@@ -16,27 +18,12 @@ class App extends React.Component {
     this.state = {userAuth: false, username: "", password: ""};
   }
 
-  handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
-
   loggedIn()
   {
-    // var response = await fetch('/login', {
-    //   method: 'POST',
-    //   headers: {
-    //       'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     username: this.state.username,
-    //     password: this.state.password,
-    //   })
-    // });
-
-    // var body = await response.json();
-    // if (body == true)
-    //   window.location.href = "/";
-    // else
-       return true;
-    // this.setState({userAuth: , username: , password: ,});
+    const cookies = new Cookies();
+    cookies.getAll();
+    //cookies.remove('username');
+    return cookies.cookies.username;
   }
 
   render()
@@ -48,25 +35,37 @@ class App extends React.Component {
 
           <Route exact={true} path='/' render={() => (
             isLoggedIn ? (
-              <MainInterface />
-            ) : (<Redirect to={{pathname: '/login'}} />)
+              <MainInterface loggedIn={this.loggedIn}/>
+            ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 
           <Route exact={true} path='/get' render={() => (
             isLoggedIn ? (
               console.log('not yet')
-            ) : (<Redirect to={{pathname: '/login'}} />)
+            ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 
           <Route exact={true} path='/post' render={() => (
             isLoggedIn ? (
-              <PostInterface />
-            ) : (<Redirect to={{pathname: '/login'}} />)
+              <PostInterface loggedIn={this.loggedIn}/>
+            ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 
-          <Route exact={true} path='/login' render={() => (
+          <Route exact={true} path='/person' render={() => (
+            isLoggedIn ? (
+              <PersonInterface loggedIn={this.loggedIn}/>
+            ) : (<Redirect to={{pathname: '/signin'}} />)
+          )}/>
+
+          <Route exact={true} path='/signin' render={() => (
             <div className="Login">
-              <LoginInterface handleInputChange={this.handleInputChange.bind(this)} />
+              <LoginInterface />
+            </div>
+          )}/>
+
+          <Route exact={true} path='/signup' render={() => (
+            <div className="Login">
+              <SignupInterface />
             </div>
           )}/>
 

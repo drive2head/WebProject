@@ -1,6 +1,7 @@
 import React from 'react';
 import LoginForm from './loginForm.js';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+import Cookies from 'universal-cookie';
 
 class LoginInterface extends React.Component {  
   constructor(props)
@@ -20,8 +21,10 @@ class LoginInterface extends React.Component {
     });
   }
 
-  logIn = async () => {
-    var response = await fetch('/login', {
+  signUp() { window.location.href = "/signup" };
+
+  signIn = async () => {
+    var response = await fetch('/signin', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -33,12 +36,18 @@ class LoginInterface extends React.Component {
     });
 
     var body = await response.json();
-    console.log("body: ", body);
-
-    if (body == true)
-      window.location.href = "/";
-    else
+    console.log(body);
+    if (body == false)
       alert('Wrong data, dear FILOLUX!');
+    else
+    {
+      const cookies = new Cookies();
+      cookies.set('username', body.username, { path: '/' });
+      cookies.set('password', body.password, { path: '/' });
+      //cookies.set('role', body.role, { path: '/' });
+      window.location.href = "/";
+    }
+      
   }
 
   render() {  
@@ -47,7 +56,8 @@ class LoginInterface extends React.Component {
         <div className='popup_inner'>
           <LoginForm
             handleInputChange={this.handleInputChange.bind(this)}
-            logIn={this.logIn.bind(this)}
+            signIn={this.signIn.bind(this)}
+            signUp={this.signUp}
           />
         </div>  
       </div>  

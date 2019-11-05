@@ -2,14 +2,16 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/users', {useNewUrlParser: true, useUnifiedTopology: true});
 
 var userSchema = new mongoose.Schema({
+  username: String,
+  password: String,
   name: String,
-  pass: String
+  surname: String,
 });
 
 var User = mongoose.model('User', userSchema);
 
-function addUser (username, password) {
-	let user = new User({ name: username, pass: password });
+function addUser (username, password, name, surname) {
+	let user = new User({ username: username, password: password, name: name, surname: surname });
 	return user.save((err, user) => {
 		if (err) return console.error(err);
 		console.log('User was added');
@@ -17,7 +19,7 @@ function addUser (username, password) {
 };
 
 async function checkUser (username) {
-	return await User.findOne({ name: username });
+	return await User.findOne({ username: username });
 }
 
 exports.addUser = addUser;
