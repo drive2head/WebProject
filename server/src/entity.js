@@ -5,13 +5,15 @@ exports.Record = function (name, tags) {
 	}
 }
 
-exports.Person = function (fullname, native_lang, city, country,
+exports.Person = function (fullname, age, sex, native_lang, city, country,
 		accent=false, disorders=null) {
 		/*
 			Здесь должна быть проверка значений на ошибки
 		*/
 		return {
 			fullName: fullname,
+			age: age,
+			sex: sex,
 			nativeLanguage: native_lang,
 			city: city,
 			country: country,
