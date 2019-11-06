@@ -10,9 +10,9 @@ class GetInterface extends React.Component {
 	render()
 	{
 		return (
-			<div class="container">
+			<div className="container-fluid">
 				<Header/>
-				<div class="jumbotron">
+				<div class="jumbotron" style={{borderRadius: "25px"}}>
 		    		<p class="text-justify">NOPENOANIPENOPE</p>
 		    	</div>
 	    	</div>

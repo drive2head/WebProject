@@ -8,7 +8,7 @@ class PersonForm extends React.Component {
 
 	render() {  
 		return (
-			<div class="jumbotron">
+			<div class="jumbotron" style={{borderRadius: "25px"}}>
 				<div className="input-group form-group">
 	              	<div className="input-group-prepend">
 	                	<span className="input-group-text"><i className="fa fa-user"></i></span>
