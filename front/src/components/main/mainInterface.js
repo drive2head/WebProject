@@ -7,6 +7,14 @@ class MainInterface extends React.Component {
 		super(props);
 	}
 
+	logOut()
+	{
+		const cookies = new Cookies();
+	    cookies.getAll();
+	    cookies.remove('username');
+	    window.location.href = "/";
+	}
+
 	render()
 	{
 		const isLoggedIn = this.props.loggedIn();
@@ -16,6 +24,7 @@ class MainInterface extends React.Component {
 		    		<a href = "/post"> Post </a>
 		    		<a href = "/get"> Get </a>
 		    		<a href = "/person"> Person </a>
+		    		<button onClick={this.logOut}>Logout</button>
 		    	</div>
 		    ) : (
 		    	<div className="App">

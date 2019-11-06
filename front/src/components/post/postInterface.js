@@ -51,7 +51,6 @@ class PostInterface extends React.Component {
     let newSounds = this.state.sounds;
     newSounds.push(object);
     this.setState({sounds: newSounds});
-    console.log(this.state.sounds);
   }
 
   saveAll()
@@ -119,7 +118,7 @@ class PostInterface extends React.Component {
               state={this.state}
             />
             <Sounds
-              changeSoundInfo={this.changeSoundInfo}
+              changeSoundInfo={this.changeSoundInfo.bind(this)}
               sounds={this.state.sounds}
             />
           </div>
