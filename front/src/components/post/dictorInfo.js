@@ -19,7 +19,7 @@ class DictorInfo extends React.Component {
 	    return (
 			<Select
 				id="dictorDisorders"
-				style={{width: '300px'}}
+				style={{width: '150px'}}
 				placeholder="Нет"
 				isMulti
 				autoFocus

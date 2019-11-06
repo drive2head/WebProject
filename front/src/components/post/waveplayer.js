@@ -67,13 +67,16 @@ class WavePlayer extends React.Component {
 
   render() {  
     return (
-      <div>
-        <div id="waveform"></div>
-        <div id="timeline"></div>
-        <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
-        <input type="file" id="file" onChange={this.changeFile} />
-        <div> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
-      </div>
+      //<div className="jumbotron p-3 p-md-5 text-white rounded bg-dark zindex">
+        <div className="col-md-12 px-0">
+          <div id="waveform"></div>
+          <div id="timeline"></div>
+          <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
+          <input type="file" id="file" onChange={this.changeFile} />
+          <div style={{display: "none"}}> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
+          <p></p>
+        </div>
+      //</div>
     );
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Cookies from 'universal-cookie';
 import PersonForm from './personForm.js';
+import Header from '../header.js';
 
 class PersonInterface extends React.Component {
 	constructor(props)
@@ -37,17 +38,11 @@ class PersonInterface extends React.Component {
 
 	render()
 	{
-		const isLoggedIn = this.props.loggedIn();
 		return (
-			isLoggedIn ? (
-				<div className="App">
-		    		<PersonForm state={this.state} />
-		    	</div>
-		    ) : (
-		    	<div className="App">
-		    		<a href = "/signin"> Login </a>
-		    	</div>
-		    )
+			<div className="container">
+				<Header/>
+	    		<PersonForm state={this.state} />
+	    	</div>
 		);
 	}
 }

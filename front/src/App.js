@@ -5,11 +5,13 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter, Route, Redirect} from 'react-router-dom';
 import Cookies from 'universal-cookie';
+
 import LoginInterface from './components/login/loginInterface.js';
 import SignupInterface from './components/signup/signupInterface.js';
 import PostInterface from './components/post/postInterface.js';
 import MainInterface from './components/main/mainInterface.js';
 import PersonInterface from './components/person/personInterface.js';
+import GetInterface from './components/get/getInterface.js';
 
 class App extends React.Component {
   constructor(props)
@@ -35,25 +37,25 @@ class App extends React.Component {
 
           <Route exact={true} path='/' render={() => (
             isLoggedIn ? (
-              <MainInterface loggedIn={this.loggedIn}/>
+              <MainInterface/>
             ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 
           <Route exact={true} path='/get' render={() => (
             isLoggedIn ? (
-              console.log('not yet')
+              <GetInterface/>
             ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 
           <Route exact={true} path='/post' render={() => (
             isLoggedIn ? (
-              <PostInterface loggedIn={this.loggedIn}/>
+              <PostInterface/>
             ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 
           <Route exact={true} path='/person' render={() => (
             isLoggedIn ? (
-              <PersonInterface loggedIn={this.loggedIn}/>
+              <PersonInterface/>
             ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 

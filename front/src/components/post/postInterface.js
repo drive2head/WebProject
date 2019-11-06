@@ -4,6 +4,7 @@ import DictorInfo from './dictorInfo.js';
 import SoundInfo from './soundInfo.js';
 import WavePlayer from './waveplayer.js';
 import Sounds from './sounds.js';
+import Header from '../header.js';
 
 let entity = require("./../../entity.js")
 
@@ -94,23 +95,19 @@ class PostInterface extends React.Component {
 
 
   render() {  
-    const isLoggedIn = this.props.loggedIn();
     return (
-      isLoggedIn ? (
-        <div className="container">
-          <div className="jumbotron p-3 p-md-5 text-white rounded bg-dark zindex">
-            <div className="col-md-12 px-0">
-              <WavePlayer
-                newTimeInterval={this.newTimeInterval.bind(this)}
-                state={this.state}
-              />
-            </div>
-          </div>
-
-          <div className="row mb-2">
+      <div className="container">
+        <Header/>
+        <div class="jumbotron">  
+          <WavePlayer
+            newTimeInterval={this.newTimeInterval.bind(this)}
+            state={this.state}
+          />
+          <div className="row">
             <DictorInfo
               handleInputChange={this.handleInputChange.bind(this)}
               changeSelected={this.changeSelected.bind(this)}
+              saveAll={this.saveAll.bind(this)}
             />
             <SoundInfo
               handleInputChange={this.handleInputChange.bind(this)}
@@ -122,14 +119,11 @@ class PostInterface extends React.Component {
               sounds={this.state.sounds}
             />
           </div>
-
-          <button className="btn btn-dark" id="saveData" onClick={this.saveAll}>Save</button>
+          <div className="row">
+            <button className="btn btn-dark" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.props.saveAll}>Сохранить запись</button>
+          </div>
         </div>
-      ) : (
-        <div className="App">
-          <a href = "/signin"> Login </a>
-        </div>
-      )
+      </div>
     );
   }
 }
