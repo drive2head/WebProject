@@ -1,4 +1,3 @@
-let log = require("./log.js");
 let entity = require("./entity.js");
 
 let query = require("./query.js");
@@ -13,7 +12,7 @@ function addRecordPersonPhonemes (record, person, phonemes) {
 	return session.run(queryText)
 	.then((result) => {
 		const res = JSON.stringify(result.summary.counters._stats);
-		return { type: 'query.create', text: queryText, completed: true, result: result};
+		return { type: 'query.create', text: queryText, completed: true, result: res};
 	})
 	.catch((err) => {
 		const result = JSON.stringify(err);
@@ -27,7 +26,7 @@ function changePhoneme (phoneme, id) {
 	return session.run(queryText)
 	.then((result) => {
 		const res = JSON.stringify(result.summary.counters._stats);
-		return { type: 'query.change', text: queryText, completed: true, result: result};
+		return { type: 'query.change', text: queryText, completed: true, result: res};
 	})
 	.catch((err) => {
 		const res = JSON.stringify(err);
@@ -41,7 +40,7 @@ function changePerson (person, id) {
 	return session.run(queryText)
 	.then((result) => {
 		const res = JSON.stringify(result.summary.counters._stats);
-		return { type: 'query.change', text: queryText, completed: true, result: result};
+		return { type: 'query.change', text: queryText, completed: true, result: res};
 	})
 	.catch((err) => {
 		const res = JSON.stringify(err);
