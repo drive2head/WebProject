@@ -14,13 +14,13 @@ function addUser (username, password, name, surname) {
 	let user = new User({ username: username, password: password, name: name, surname: surname });
 	return user.save((err, user) => {
 		if (err) return console.error(err);
-		console.log('User was added');
+		console.log('User was added: ', user);
 	});
 };
 
-async function checkUser (username) {
+async function getUser (username) {
 	return await User.findOne({ username: username });
 }
 
 exports.addUser = addUser;
-exports.checkUser = checkUser;
+exports.getUser = getUser;
