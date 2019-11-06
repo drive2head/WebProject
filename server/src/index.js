@@ -33,12 +33,14 @@ app.post('/signin', (req, res) => {
 
     userExist(username, password)
     .then(result => {
-    	if (result)
-    	{
+    	if (result) {
+    		log.addLog(req.body.username, 'access.signin', null, true, JSON.stringify(result), '/signin');
     		res.send(result);
     	}
-    	else
+    	else {
+    		log.addLog(req.body.username, 'access.signin', null, true, JSON.stringify(result), '/signin');
     		res.send(false);
+    	}
     });
 });
 
@@ -47,8 +49,9 @@ app.post('/signup', (req, res) => {
         password = req.body.password,
         name = req.body.name,
         surname = req.body.surname;
-    // добавить проверку того, что юзер добавлен
+    // добавить проверку того, что юзер не существует
     userAuth.addUser(username, password, name, surname);
+    // log.addLog(req.body.username, 'access.signup', null, true, JSON.stringify(result), '/signup');
     res.send(true);
 });
 
@@ -58,17 +61,24 @@ app.post('/person', (req, res) => {
         
     userExist(username, password)
     .then(result => {
-    	if (result)
+    	if (result) {
+    		log.addLog(req.body.username, 'accessfo.info', null, true, JSON.stringify(result), '/person');
     		res.send(result);
-    	else
+    	}
+    	else {
+    		log.addLog(req.body.username, 'info.person', null, false, JSON.stringify(result), '/person');
     		res.send(false);
+    	}
     });
 });
 
 app.post('/add_data', (req, res) => {
+	// убрать record, брать данные из res
 	let record = entity.Record('/testFileName.wav', null);
 	let result = graphDB.addRecordPersonPhonemes(req.body.username, record, req.body.person, req.body.sounds);
-	if (result) {
+	log.addLog(req.body.username, result.type, result.text, result.completed, result.res, result.output,
+				'/add_data', 'graphDB.addRecordPersonPhonemes');
+	if (result.completed) {
 		res.send("Data was successfully loaded!");
 	}
 	else {
@@ -79,7 +89,9 @@ app.post('/add_data', (req, res) => {
 app.post('/change_person', (req, res) => {
 	// let person = entity.Person('James', 'English', 'New York', 'USA');
 	let result = graphDB.changePerson(req.body.username, req.body.person, req.body.id);
-	if (result) {
+	log.addLog(req.body.username, result.type, result.text, result.completed, result.res, result.output,
+				'/change_person', 'graphDB.changePerson');
+	if (result.completed) {
 		res.send("Person was successfully changed!");
 	}
 	else {
@@ -90,7 +102,9 @@ app.post('/change_person', (req, res) => {
 app.post('/change_phoneme', (req, res) => {
 	// let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
 	let result = graphDB.changePhoneme(req.body.username, req.body.phoneme, req.body.id);
-	if (result) {
+	log.addLog(req.body.username, result.type, result.text, result.completed, result.res, result.output,
+				'/change_phoneme', 'graphDB.changePhoneme');
+	if (result.completed) {
 		res.send("Phoneme was successfully changed!");
 	}
 	else {

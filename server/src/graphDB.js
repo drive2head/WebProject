@@ -1,4 +1,3 @@
-let log = require("./log.js");
 let entity = require("./entity.js");
 
 let query = require("./query.js");

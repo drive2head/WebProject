@@ -7,14 +7,17 @@ var logSchema = new mongoose.Schema({
 	type: String,
 	action: String,
 	completed: Boolean,
-	description: String
+	output: String,
+	loggingFunction: String,
+	loggedFunction: String,
 });
 
 var Log = mongoose.model('Log', logSchema);
 
-async function addLog (username, type, action, completed, description = null) {
+async function addLog (username, type, action, completed,
+						output = null, loggingFunction = null, loggedFunction = null) {
 	let log = new Log({ date: Date().slice(0, 31), username: username, 
-		type: type, action: action, completed: completed, description: description});
+		type: type, action: action, completed: completed, output: output});
 	try {
 		let res = await log.save();
 		return { 'success': true, log_id: res._id.toString() };
