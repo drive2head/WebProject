@@ -1,5 +1,6 @@
+let cfg = require('./cfg');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/logs', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var logSchema = new mongoose.Schema({
 	date: Date,

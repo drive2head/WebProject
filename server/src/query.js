@@ -51,5 +51,3 @@ exports.addData = function (record, person, phonemes) {
 
 	return text;
 };
-
-console.log("query.js is here");

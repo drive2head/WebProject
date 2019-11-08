@@ -1,5 +1,6 @@
+var cfg = require('./cfg');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/users', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var userSchema = new mongoose.Schema({
   username: String,
@@ -27,5 +28,3 @@ async function getUser (username) {
 
 exports.addUser = addUser;
 exports.getUser = getUser;
-
-// addUser('123', '123', 'Test', 'Testovich');

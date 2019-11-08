@@ -1,9 +1,9 @@
+let cfg = require('./cfg');
 let entity = require("./entity.js");
-
 let query = require("./query.js");
 
 let neo4j = require('neo4j-driver').v1;
-let driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic('editor', 'editor'));
+let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
 let session = driver.session();
 
 function addRecordPersonPhonemes (record, person, phonemes) {
@@ -48,9 +48,9 @@ function changePerson (person, id) {
 	});
 };
 
-exports.addRecordPersonPhonemes = addRecordPersonPhonemes
-exports.changePhoneme = changePhoneme
-exports.changePerson = changePerson
+exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
+exports.changePhoneme = changePhoneme;
+exports.changePerson = changePerson;
 
 // const pers = entity.Person('X', 'X', 'X', 'X', 'X', 'X');
 // const ph = entity.Phoneme('A', 'A', 'A', 'A');

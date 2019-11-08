@@ -6,11 +6,6 @@ let log = require("./log.js");
 const express = require('express');
 const app = express();
 
-/*
-TODO:
-1. Вынести запросы и сессии в отдельный модуль
-*/
-
 app.use(express.urlencoded());
 app.use(express.json());
 
