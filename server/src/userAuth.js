@@ -13,7 +13,10 @@ var User = mongoose.model('User', userSchema);
 function addUser (username, password, name, surname) {
 	let user = new User({ username: username, password: password, name: name, surname: surname });
 	return user.save((err, user) => {
-		if (err) return console.error(err);
+		if (err) {
+			console.log("error:\n", err);
+			return console.error(err);
+		}
 		console.log('User was added: ', user);
 	});
 };
@@ -24,3 +27,5 @@ async function getUser (username) {
 
 exports.addUser = addUser;
 exports.getUser = getUser;
+
+// addUser('123', '123', 'Test', 'Testovich');
