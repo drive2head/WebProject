@@ -5,6 +5,7 @@ import SoundInfo from './soundInfo.js';
 import WavePlayer from './waveplayer.js';
 import Sounds from './sounds.js';
 import Header from '../header.js';
+import Cookies from 'universal-cookie';
 
 let entity = require("./../../entity.js")
 
@@ -56,22 +57,22 @@ class PostInterface extends React.Component {
 
   saveAll()
   {
-    if(this.state.userAuth)
-    {
-      let person = entity.Speaker(
-        this.state.dictorName,
-        this.state.dictorLang,
-        this.state.dictorCity,
-        this.state.dictorCountry,
-        this.state.selectedOptions,
-      );
-      axios.post('/add_data', {
-        person: person,
-        sounds: this.state.sounds
-      });
-    }
-    else
-      this.popUpWindow();
+    let person = entity.Person(
+      this.state.dictorName,
+      this.state.dictorLang,
+      this.state.dictorCity,
+      this.state.dictorCountry,
+      this.state.selectedOptions,
+    );
+    const cookies = new Cookies();
+    cookies.getAll();
+    axios.post('/add_data', {
+      username: cookies.cookies.username,
+      person: person,
+      sounds: this.state.sounds
+    });
+    window.alert('SucKcess! Yeeey');
+    //window.location.href = "/get";
   }
 
   changeSoundInfo(i)
@@ -121,7 +122,7 @@ class PostInterface extends React.Component {
             />
           </div>
           <div className="row">
-            <button className="btn btn-dark" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.props.saveAll}>Сохранить запись</button>
+            <button className="btn btn-dark" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}>Сохранить запись</button>
           </div>
         </div>
       </div>
