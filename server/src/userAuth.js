@@ -1,6 +1,6 @@
 var cfg = require('./cfg');
 var mongoose = require('mongoose');
-mongoose.connect(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var userSchema = new mongoose.Schema({
   username: String,
@@ -9,7 +9,7 @@ var userSchema = new mongoose.Schema({
   surname: String,
 });
 
-var User = mongoose.model('User', userSchema);
+var User = users_connection.model('User', userSchema);
 
 function addUser (username, password, name, surname) {
 	let user = new User({ username: username, password: password, name: name, surname: surname });

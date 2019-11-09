@@ -1,30 +1,37 @@
 let cfg = require('./cfg');
 var mongoose = require('mongoose');
-mongoose.connect(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+var logs_connection = mongoose.createConnection(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var logSchema = new mongoose.Schema({
-	date: Date,
-	username: String,
-	type: String,
-	action: String,
-	completed: Boolean,
-	output: String,
-	loggingFunction: String,
-	loggedFunction: String,
+	date: Date,			// date of log
+	username: String,	// 
+	type: String,		// Query/Auth
+	logOf: String,		// name of function which returned the result
+	completed: Boolean,	// 
+	result: Object, 	// for queries it's array of nodes etc.
+	logFrom: String,	// name of function, where log was added
 });
 
-var Log = mongoose.model('Log', logSchema);
+var Log = logs_connection.model('Log', logSchema);
 
-async function addLog (username, type, action, completed,
-						output = null, loggingFunction = null, loggedFunction = null) {
-	let log = new Log({ date: Date().slice(0, 31), username: username, 
-		type: type, action: action, completed: completed, output: output});
+async function addLog (username, type, logOf, completed, result = null, logFrom = null) {
+	const date = Date().slice(0, 31);
+	let log = new Log(
+	{
+		date: date, 
+		username: username, 
+		type: type, 
+		logOf: logOf, 
+		completed: completed, 
+		result: result, 
+		logFrom: logFrom, 
+	});
 	try {
 		let res = await log.save();
-		return { 'success': true, log_id: res._id.toString() };
+		console.log("log added!");
+		return { completed: true, log_id: res._id.toString() };
 	} catch (err) {
-		console.log("err: ", err);
-		return err;
+		return { completed: true, error: err };
 	}
 };
 
