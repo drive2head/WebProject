@@ -2,7 +2,7 @@ exports.Record = function (name, tags) {
 	return {
 		name: name,
 		tags: tags
-	}
+	};
 }
 
 exports.Person = function (fullname, age, sex, native_lang, city, country,

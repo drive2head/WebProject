@@ -61,7 +61,7 @@ app.post('/add_data', (req, res) => {
 	console.log(">> /add_data called");
 	// убрать record, брать данные из res
 	let record = entity.Record('/testFileName.wav', null);
-	let result = graphDB.addRecordPersonPhonemes(req.body.username, record, req.body.person, req.body.sounds);
+	let result = graphDB.addRecordPersonPhonemes(record, req.body.person, req.body.sounds);
 	log.addLog(req.body.username, 'query.add', 'graphDB.addRecordPersonPhonemes', result.completed, result.output, '/add_data');
 	if (result.completed) {
 		res.send("Data was successfully loaded!");
@@ -73,7 +73,7 @@ app.post('/add_data', (req, res) => {
 
 app.post('/change_person', (req, res) => {
 	// let person = entity.Person('James', 'English', 'New York', 'USA');
-	let result = graphDB.changePerson(req.body.username, req.body.person, req.body.id);
+	let result = graphDB.changePerson(req.body.person, req.body.id);
 	log.addLog(req.body.username, 'query.change', 'graphDB.changePerson', result.completed, result.output, '/change_person');
 	if (result.completed) {
 		res.send("Person was successfully changed!");
@@ -85,7 +85,7 @@ app.post('/change_person', (req, res) => {
 
 app.post('/change_phoneme', (req, res) => {
 	// let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
-	let result = graphDB.changePhoneme(req.body.username, req.body.phoneme, req.body.id);
+	let result = graphDB.changePhoneme(req.body.phoneme, req.body.id);
 	log.addLog(req.body.username, 'query.change', 'graphDB.changePhoneme', result.completed, result.output, '/change_phoneme');
 	if (result.completed) {
 		res.send("Phoneme was successfully changed!");
