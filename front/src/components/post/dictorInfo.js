@@ -44,6 +44,8 @@ class DictorInfo extends React.Component {
                   Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
                   Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
                   Родной язык: <input name="dictorLang" onChange={this.props.handleInputChange} type="text"/><br/>
+                  Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>
+                  Возраст: <input name="dictorAge" onChange={this.props.handleInputChange} type="text"/><br/>
                   Нарушения речи:
                   <div id="select">
                     {this.renderSelect()}

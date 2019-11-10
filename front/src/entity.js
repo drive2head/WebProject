@@ -6,14 +6,14 @@ exports.Record = function (name, tags) {
 }
 
 /* age=null, sex=null is only for debug */
-exports.Person = function (fullname, native_lang, city, country, disorders=null) {
+exports.Person = function (fullname, age, sex, native_lang, city, country, disorders=null) {
 		/*
 			Здесь должна быть проверка значений на ошибки
 		*/
 		return {
 			fullName: fullname,
-			// age: age,
-			// sex: sex,
+			age: age,
+			sex: sex,
 			nativeLanguage: native_lang,
 			city: city,
 			country: country,

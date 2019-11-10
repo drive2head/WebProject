@@ -18,28 +18,28 @@ class Header extends React.Component {
 
     render() {  
         return (
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style={{borderRadius: "10px"}}>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{borderRadius: "10px"}}>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Home</a>
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav">
+                        <li className="nav-item">
+                            <a className="nav-link" href="/">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/get">Get</a>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/get">Get</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/post">Post</a>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/post">Post</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/person">Person</a>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/person">Person</a>
                         </li>
                     </ul>
                 </div>
-                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-                    <ul class="navbar-nav ml-auto">
+                <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                    <ul className="navbar-nav ml-auto">
                         <li><button onClick={this.logOut}>Logout</button></li>
                     </ul>
                 </div>

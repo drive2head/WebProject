@@ -36,6 +36,8 @@ class PostInterface extends React.Component {
       dictorName: "",
       dictorLang: "",
       dictorCity: "",
+      dictorSex: "",
+      dictorAge: "",
       dictorCountry: "",
       dictorAccent: "",
     };
@@ -59,10 +61,16 @@ class PostInterface extends React.Component {
   {
     let person = entity.Person(
       this.state.dictorName,
+      this.state.dictorAge,
+      this.state.dictorSex,
       this.state.dictorLang,
       this.state.dictorCity,
       this.state.dictorCountry,
       this.state.selectedOptions,
+    );
+    let record = entity.Record(
+      document.getElementById('file').value,
+      {},
     );
     const cookies = new Cookies();
     cookies.getAll();
@@ -99,7 +107,7 @@ class PostInterface extends React.Component {
     return (
       <div className="container">
         <Header/>
-        <div class="jumbotron" style={{borderRadius: "25px"}}>
+        <div className="jumbotron" style={{borderRadius: "25px"}}>
           <WavePlayer
             newTimeInterval={this.newTimeInterval.bind(this)}
             state={this.state}
