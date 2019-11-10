@@ -77,6 +77,7 @@ class PostInterface extends React.Component {
     axios.post('/add_data', {
       username: cookies.cookies.username,
       person: person,
+      record: record,
       sounds: this.state.sounds
     });
     window.alert('SucKcess! Yeeey');
