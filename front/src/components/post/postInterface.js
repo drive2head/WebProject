@@ -68,8 +68,10 @@ class PostInterface extends React.Component {
       this.state.dictorCountry,
       this.state.selectedOptions,
     );
+    let record_path = document.getElementById('file').value.split('\\');
+    const recname = record_path[record_path.length - 1];
     let record = entity.Record(
-      document.getElementById('file').value,
+      recname,
       {},
     );
     const cookies = new Cookies();

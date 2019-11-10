@@ -30,9 +30,9 @@ exports.changePhoneme = function (phoneme, id) {
 	return notabs(text);
 };
 
-exports.addData = function (record, person, phonemes) {
+exports.addRecordPersonPhonemes = function (record, person, phonemes) {
 	let text = `\
-	merge (rec:Record {description:'${record.name}'})
+	merge (rec:Record {name:'${record.recname}'})
 	create (person: Person {fullname:'${person.fullName}', age:'${person.age}', 
 		sex:'${person.sex}', nativeLanguage:'${person.nativeLanguage}'})
 	merge (country: Country {name:'${person.country}'})

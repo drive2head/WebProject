@@ -7,7 +7,7 @@ let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
 
 function addRecordPersonPhonemes (record, person, phonemes) {
-	let queryText = query.addData(record.name, person, phonemes);
+	let queryText = query.addRecordPersonPhonemes(record, person, phonemes);
 	let session = null;
 	try {
 		session = driver.session();
@@ -46,7 +46,6 @@ function changePhoneme (phoneme, id) {
 			return { completed: true, output: changedNodes };
 		})
 		.catch((err) => {
-			console.log(err);
 			return { completed: false, output: err };
 		});
 	} finally {
