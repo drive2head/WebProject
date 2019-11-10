@@ -8,7 +8,7 @@ class SoundInfo extends React.Component {
 
   render() {  
     return (
-      <div className="col-md-3">
+      <div className="col-md-5">
         <div className="card flex-md-row mb-4 box-shadow h-md-250">
           <div className="card-body d-flex flex-column align-items-start">
             <div className="row">

@@ -97,7 +97,7 @@ class PostInterface extends React.Component {
 
   render() {  
     return (
-      <div className="container-fluid">
+      <div className="container">
         <Header/>
         <div class="jumbotron" style={{borderRadius: "25px"}}>
           <WavePlayer
@@ -105,7 +105,6 @@ class PostInterface extends React.Component {
             state={this.state}
           />
           <div className="row">
-            <div className="col-md-2"></div>
             <DictorInfo
               handleInputChange={this.handleInputChange.bind(this)}
               changeSelected={this.changeSelected.bind(this)}

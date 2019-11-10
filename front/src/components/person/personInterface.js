@@ -39,7 +39,7 @@ class PersonInterface extends React.Component {
 	render()
 	{
 		return (
-			<div className="container-fluid">
+			<div className="container">
 				<Header/>
 	    		<PersonForm state={this.state} />
 	    	</div>
