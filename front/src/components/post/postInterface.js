@@ -68,6 +68,7 @@ class PostInterface extends React.Component {
       this.state.dictorCountry,
       this.state.selectedOptions,
     );
+    console.log(document.getElementById('file').value);
     let record = entity.Record(
       document.getElementById('file').value,
       {},

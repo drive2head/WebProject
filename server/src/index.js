@@ -58,7 +58,7 @@ app.post('/person', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-	console.log(req.body.person);
+	console.log(req.body.record);
 	graphDB.addRecordPersonPhonemes(req.body.record, req.body.person, req.body.sounds)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'graphDB.addRecordPersonPhonemes', result.completed, result.output, '/add_data');
