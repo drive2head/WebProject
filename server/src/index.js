@@ -58,41 +58,46 @@ app.post('/person', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-	console.log(">> /add_data called");
 	// убрать record, брать данные из res
 	let record = entity.Record('/testFileName.wav', null);
-	let result = graphDB.addRecordPersonPhonemes(record, req.body.person, req.body.sounds);
-	log.addLog(req.body.username, 'query.add', 'graphDB.addRecordPersonPhonemes', result.completed, result.output, '/add_data');
-	if (result.completed) {
-		res.send("Data was successfully loaded!");
-	}
-	else {
-		res.send("Data WAS NOT loaded!");
-	}
+	graphDB.addRecordPersonPhonemes(record, req.body.person, req.body.sounds)
+	.then(result => {
+		log.addLog(req.body.username, 'query.add', 'graphDB.addRecordPersonPhonemes', result.completed, result.output, '/add_data');
+		if (result.completed) {
+			res.send("Data was successfully loaded!");
+		}
+		else {
+			res.send("Data WAS NOT loaded!");
+		}
+	});
 });
 
 app.post('/change_person', (req, res) => {
 	// let person = entity.Person('James', 'English', 'New York', 'USA');
-	let result = graphDB.changePerson(req.body.person, req.body.id);
-	log.addLog(req.body.username, 'query.change', 'graphDB.changePerson', result.completed, result.output, '/change_person');
-	if (result.completed) {
-		res.send("Person was successfully changed!");
-	}
-	else {
-		res.send("Person WAS NOT changed!");
-	}
+	let result = graphDB.changePerson(req.body.person, req.body.id)
+	.then(result => {
+		log.addLog(req.body.username, 'query.change', 'graphDB.changePerson', result.completed, result.output, '/change_person');
+		if (result.completed) {
+			res.send("Person was successfully changed!");
+		}
+		else {
+			res.send("Person WAS NOT changed!");
+		}
+	});
 });
 
 app.post('/change_phoneme', (req, res) => {
 	// let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
-	let result = graphDB.changePhoneme(req.body.phoneme, req.body.id);
-	log.addLog(req.body.username, 'query.change', 'graphDB.changePhoneme', result.completed, result.output, '/change_phoneme');
-	if (result.completed) {
-		res.send("Phoneme was successfully changed!");
-	}
-	else {
-		res.send("Phoneme WAS NOT changed!");
-	}
+	let result = graphDB.changePhoneme(req.body.phoneme, req.body.id)
+	.then(result => {
+		log.addLog(req.body.username, 'query.change', 'graphDB.changePhoneme', result.completed, result.output, '/change_phoneme');
+		if (result.completed) {
+			res.send("Phoneme was successfully changed!");
+		}
+		else {
+			res.send("Phoneme WAS NOT changed!");
+		};
+	});
 });
 
 // app.get('/get_data', (req, res) => {

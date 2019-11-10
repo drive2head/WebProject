@@ -1,3 +1,7 @@
+function notabs(string) {
+	return string.replace(/\t*/g, '');
+}
+
 exports.changePerson = function (person, id) {
 	let text = `\
 	match (person)
@@ -9,11 +13,10 @@ exports.changePerson = function (person, id) {
 	merge (country1:Country {name:'${person.country}'})
 	merge (person)-[:LIVES_IN]->(city1)
 	merge (city1)-[:LOCATED_IN]->(country1)
-	set person = {fullname: '${person.fullName}', nativeLanguage:'${person.nativeLanguage}',
-		accent:${person.accent}}
+	set person = {fullname: '${person.fullName}', nativeLanguage:'${person.nativeLanguage}'}
 	return person`
 
-	return text;
+	return notabs(text);
 };
 
 exports.changePhoneme = function (phoneme, id) {
@@ -24,40 +27,39 @@ exports.changePhoneme = function (phoneme, id) {
 		dialect:'${phoneme.dialect}'}
 	return n`
 
-	return text;
+	return notabs(text);
 };
 
 exports.addData = function (record, person, phonemes) {
 	let text = `\
 	merge (rec:Record {description:'${record.name}'})
-	create (person: Person {fullname:'${person.fullName}'
-		nativeLanguage:'${person.nativeLanguage}', accent:'${person.accent}'})
+	create (person: Person {fullname:'${person.fullName}', nativeLanguage:'${person.nativeLanguage}'})
 	merge (country: Country {name:'${person.country}'})
 	merge (city: City {name:'${person.city}'})
 	create (rec)-[:SPOKEN_BY]->(person)
 	create (person)-[:LIVES_IN]->(city)
-	merge (city)-[:LOCATED_IN]->(country)\n`
+	merge (city)-[:LOCATED_IN]->(country)
+	`;
 
-	// для каждого нарушения речи
-	// if (person.disorders != null) { 
-	// 	person.disorders.forEach((disorder, i) => {
-	// 		text += `merge (dis${i}: Disorder {name:'${disorder}'})\n`+
-	// 				`create (person)-[:HAS]->(dis${i})\n`
-	// 	});
-	// };
+	if (person.disorders != null) { 
+		person.disorders.forEach((disorder, i) => {
+			text += `merge (dis${i}: Disorder {name:'${disorder}'})
+						create (person)-[:HAS]->(dis${i})
+					`
+		});
+		text += `\n`;
+	};
 	
 	let returnPh = ``;
-	// для каждой фонемы
 	phonemes.forEach((phoneme, i) => {
-		text += `\
-			create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',
-				end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})
-			create (ph${i})-[:CONTAINED_IN]->(rec)`;
-		returnPh += `ph${i}`;
+		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',
+					end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})
+				create (ph${i})-[:CONTAINED_IN]->(rec)`;
+		returnPh += `, ph${i}`;
 	});
 
-	text += `\nreturn person, `;
+	text += `return person`;
 	text += returnPh;
 
-	return text;
+	return notabs(text);
 };
