@@ -5,7 +5,6 @@ exports.Record = function (name, tags) {
 	}
 }
 
-/* age=null, sex=null is only for debug */
 exports.Person = function (fullname, age, sex, native_lang, city, country, disorders=null) {
 		/*
 			Здесь должна быть проверка значений на ошибки

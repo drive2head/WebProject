@@ -33,7 +33,8 @@ exports.changePhoneme = function (phoneme, id) {
 exports.addData = function (record, person, phonemes) {
 	let text = `\
 	merge (rec:Record {description:'${record.name}'})
-	create (person: Person {fullname:'${person.fullName}', nativeLanguage:'${person.nativeLanguage}'})
+	create (person: Person {fullname:'${person.fullName}', age:'${person.age}', 
+		sex:'${person.sex}', nativeLanguage:'${person.nativeLanguage}'})
 	merge (country: Country {name:'${person.country}'})
 	merge (city: City {name:'${person.city}'})
 	create (rec)-[:SPOKEN_BY]->(person)

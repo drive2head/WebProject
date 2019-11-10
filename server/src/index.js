@@ -58,9 +58,8 @@ app.post('/person', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-	// убрать record, брать данные из res
-	let record = entity.Record('/testFileName.wav', null);
-	graphDB.addRecordPersonPhonemes(record, req.body.person, req.body.sounds)
+	console.log(req.body.person);
+	graphDB.addRecordPersonPhonemes(req.body.record, req.body.person, req.body.sounds)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'graphDB.addRecordPersonPhonemes', result.completed, result.output, '/add_data');
 		if (result.completed) {

@@ -107,6 +107,7 @@ exports.changePerson = changePerson;
 // 	return person, ph0, ph1
 // 	`;
 
+// 	let session = driver.session();
 // 	return session.run(queryText)
 // 	.then((result) => {
 // 		var createdNodes = [];
@@ -121,13 +122,18 @@ exports.changePerson = changePerson;
 // 	});
 // };
 
-// test_addRecordPersonPhonemes();
+// test_addRecordPersonPhonemes()
+// .then((result) => {
+	// console.log("result: ", result);
+// })
 
-// const pers = entity.Person('X', 'X', 'X', 'X', 'X', 'X');
-// const ph = entity.Phoneme('A', 'A', 'A', 'A');
+// const pers = entity.Person('Name', '18', 'M', 'RU', 'MSK', 'RF');
+// const ph = entity.Phoneme('A', '0:00:00', '0:05:00', 'RU');
 // const rec = entity.Record('rec.wav', 'empty');
-// addRecordPersonPhonemes(rec, pers, [ph]);
-
+// addRecordPersonPhonemes(rec, pers, [ph])
+// .then((result) => {
+// 	console.log("result: ", result);
+// })
 
 
 
