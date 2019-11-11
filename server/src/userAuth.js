@@ -11,19 +11,23 @@ var userSchema = new mongoose.Schema({
 
 var User = users_connection.model('User', userSchema);
 
-function addUser (username, password, name, surname) {
-	let user = new User({ username: username, password: password, name: name, surname: surname });
-	return user.save((err, user) => {
-		if (err) {
-			console.log("error:\n", err);
-			return console.error(err);
-		}
-		console.log('User was added: ', user);
-	});
-};
-
 async function getUser (username) {
 	return await User.findOne({ username: username });
+}
+
+async function addUser (username) {
+	try {
+		var userExits = await getUser(username);
+		if (userExits == null) {
+			var newUser = new User({ username: username, password: null, name: null, surname: null });
+			let saveUser = await newUser.save();
+			return { completed: true, output: saveUser };
+		} else {
+			return { completed: false, output: `The username '${username}' is already in use` };
+		}
+	} catch (err) {
+		return { completed: false, output: err };
+	}
 }
 
 exports.addUser = addUser;

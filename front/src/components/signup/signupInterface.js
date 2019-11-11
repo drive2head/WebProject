@@ -37,10 +37,10 @@ class SignupInterface extends React.Component {
 
     var body = await response.json();
 
-    if (body == false)
-      alert('Bad data, FILOLUX!');
-    else
-      window.location.href = "/signin";      
+    alert(body.msg);
+    if (body.status == true) {
+      window.location.href = "/signin";   
+    }
   }
 
   render() {  

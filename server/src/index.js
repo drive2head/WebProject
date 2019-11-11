@@ -12,21 +12,11 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
-async function userExist(username, password)
-{
-	let user = await userAuth.getUser(username);
-	if (user === null)
-		return false;
-	if (user.password !== password)
-		return false;
-	return user;
-}
-
 app.post('/signin', (req, res) => {
     let username = req.body.username,
         password = req.body.password;
 
-    userExist(username, password)
+    userAuth.getUser(username)
     .then(result => {
     	const completed = Boolean(result);
     	log.addLog(req.body.username, 'access.signin', 'userExist', completed, result, '/signin');
@@ -39,10 +29,16 @@ app.post('/signup', (req, res) => {
         password = req.body.password,
         name = req.body.name,
         surname = req.body.surname;
-    // добавить проверку того, что юзер не существует
-    userAuth.addUser(username, password, name, surname);
-    // log.addLog(req.body.username, 'access.signup', null, true, JSON.stringify(result), '/signup');
-    res.send(true);
+
+    userAuth.addUser(username, password, name, surname)
+    .then(result => {
+    	log.addLog(req.body.username, 'access.signup', 'addUser', result.completed, JSON.stringify(result), '/signup');
+    	if (result.completed) {
+    		res.send({ status: true, msg: 'User was successfully created!' });
+    	} else {
+    		res.send({ status: false, msg: result.output });
+    	}
+    })
 });
 
 app.post('/person', (req, res) => {

@@ -37,7 +37,7 @@ class LoginInterface extends React.Component {
 
     var body = await response.json();
     console.log(body);
-    if (body == false)
+    if (body == null)
       alert('Wrong data, dear FILOLUX!');
     else
     {

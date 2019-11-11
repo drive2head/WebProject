@@ -28,11 +28,10 @@ async function addLog (username, type, logOf, completed, result = null, logFrom 
 	});
 	try {
 		let res = await log.save((err, user) => {
-		if (err) {
-			console.log("error:\n", err);
-			return null;
-		}
-	});
+			if (err) {
+				return null;
+			}
+		});
 		return { completed: true, log_id: res._id.toString() };
 	} catch (err) {
 		return { completed: true, error: err };
