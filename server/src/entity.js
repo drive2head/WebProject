@@ -1,6 +1,6 @@
-exports.Record = function (name, tags) {
+exports.Record = function (recname, tags) {
 	return {
-		name: name,
+		recname: recname,
 		tags: tags
 	}
 }

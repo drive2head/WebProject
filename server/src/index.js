@@ -58,7 +58,10 @@ app.post('/person', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
+<<<<<<< HEAD
 	console.log(req.body.record);
+=======
+>>>>>>> c6ca0af3876bd84e52e791e7176c0da6b3f84523
 	graphDB.addRecordPersonPhonemes(req.body.record, req.body.person, req.body.sounds)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'graphDB.addRecordPersonPhonemes', result.completed, result.output, '/add_data');
