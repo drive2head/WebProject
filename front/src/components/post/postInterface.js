@@ -68,12 +68,8 @@ class PostInterface extends React.Component {
       this.state.dictorCountry,
       this.state.selectedOptions,
     );
-<<<<<<< HEAD
-    console.log(document.getElementById('file').value);
-=======
     let record_path = document.getElementById('file').value.split('\\');
     const recname = record_path[record_path.length - 1];
->>>>>>> c6ca0af3876bd84e52e791e7176c0da6b3f84523
     let record = entity.Record(
       recname,
       {},
@@ -86,7 +82,7 @@ class PostInterface extends React.Component {
       record: record,
       sounds: this.state.sounds
     });
-    window.alert('SucKcess! Yeeey');
+    window.alert('Done!');
     //window.location.href = "/get";
   }
 
