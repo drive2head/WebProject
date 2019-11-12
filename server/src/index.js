@@ -2,8 +2,8 @@ let entity = require("./entity.js"); /* only for debug */
 let userAuth = require("./userAuth.js");
 let graphDB = require("./graphDB.js");
 let log = require("./log.js");
-var formidable = require('formidable');
-var fs = require('fs');
+let formidable = require('formidable');
+let fs = require('fs');
 
 const express = require('express');
 const app = express();
@@ -14,17 +14,17 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
-
-
 app.post('/fileupload', (req, res) => {
-	console.log('hey');
-	let oldpath = req.filetoupload.path;
-	let newpath = '/var/www/uploads' + req.filetoupload.name;
-	fs.rename(oldpath, newpath, function (err) {
-		if (err) throw err;
-		res.write('File uploaded and moved!');
-		res.end();
-	}
+	var form = new formidable.IncomingForm();
+	form.parse(req, function (err, fields, files) {
+		var oldpath = files.filetoupload.path;
+		var newpath = '/var/www/records/' + files.filetoupload.name;
+		fs.rename(oldpath, newpath, function (err) {
+			if (err) throw err;
+			console.log('File uploaded and moved!');
+			res.send();
+		});
+	});
 });
 
 app.post('/signin', (req, res) => {
