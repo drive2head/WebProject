@@ -18,11 +18,12 @@ app.post('/fileupload', (req, res) => {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
-		var newpath = '/var/www/records/' + files.filetoupload.name;
+		//var newpath = '/var/www/records/' + files.filetoupload.name;
+		var newpath = '/Users/garanya/Desktop/speechdb/files/' + files.filetoupload.name;
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
 			console.log('File uploaded and moved!');
-			res.send();
+			res.redirect('/post');
 		});
 	});
 });

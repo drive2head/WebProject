@@ -12,6 +12,7 @@ import PostInterface from './components/post/postInterface.js';
 import MainInterface from './components/main/mainInterface.js';
 import PersonInterface from './components/person/personInterface.js';
 import GetInterface from './components/get/getInterface.js';
+import UploadForm from './components/upload/uploadForm.js';
 
 class App extends React.Component {
   constructor(props)
@@ -50,6 +51,12 @@ class App extends React.Component {
           <Route exact={true} path='/post' render={() => (
             isLoggedIn ? (
               <PostInterface/>
+            ) : (<Redirect to={{pathname: '/signin'}} />)
+          )}/>
+
+          <Route exact={true} path='/upload' render={() => (
+            isLoggedIn ? (
+              <UploadForm/>
             ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 

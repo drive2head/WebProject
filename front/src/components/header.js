@@ -36,6 +36,9 @@ class Header extends React.Component {
                         <li className="nav-item">
                             <a className="nav-link" href="/profile">Профиль</a>
                         </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/upload">Загрузить</a>
+                        </li>
                     </ul>
                 </div>
                 <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
