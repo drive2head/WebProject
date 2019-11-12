@@ -2,6 +2,8 @@ let entity = require("./entity.js"); /* only for debug */
 let userAuth = require("./userAuth.js");
 let graphDB = require("./graphDB.js");
 let log = require("./log.js");
+var formidable = require('formidable');
+var fs = require('fs');
 
 const express = require('express');
 const app = express();
@@ -11,6 +13,19 @@ app.use(express.json());
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
+
+
+
+app.post('/fileupload', (req, res) => {
+	console.log('hey');
+	let oldpath = req.filetoupload.path;
+	let newpath = '/var/www/uploads' + req.filetoupload.name;
+	fs.rename(oldpath, newpath, function (err) {
+		if (err) throw err;
+		res.write('File uploaded and moved!');
+		res.end();
+	}
+});
 
 app.post('/signin', (req, res) => {
     let username = req.body.username,
