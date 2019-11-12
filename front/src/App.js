@@ -53,7 +53,7 @@ class App extends React.Component {
             ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 
-          <Route exact={true} path='/person' render={() => (
+          <Route exact={true} path='/profile' render={() => (
             isLoggedIn ? (
               <PersonInterface/>
             ) : (<Redirect to={{pathname: '/signin'}} />)

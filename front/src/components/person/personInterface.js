@@ -14,7 +14,6 @@ class PersonInterface extends React.Component {
 	getUser = async () => {
 		const cookies = new Cookies();
     	cookies.getAll();
-    	console.log(cookies.cookies);
 		var response = await fetch('/person', {
 			method: 'POST',
 			headers: {
@@ -27,7 +26,7 @@ class PersonInterface extends React.Component {
 		});
 
 		var body = await response.json();
-
+		console.log(body);
 		if (body == false)
 			alert('Bad data, FILOLUX!');
 		else

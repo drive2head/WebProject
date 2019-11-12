@@ -25,22 +25,22 @@ class Header extends React.Component {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className="nav-link" href="/">Home</a>
+                            <a className="nav-link" href="/">Главная</a>
+                        </li>
+                        {/*  <li className="nav-item">
+                            <a className="nav-link" href="/get">Посмотреть разметки</a>
+                        </li> */}
+                        <li className="nav-item">
+                            <a className="nav-link" href="/post">Добавить</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/get">Get</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="/post">Post</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="/person">Person</a>
+                            <a className="nav-link" href="/profile">Профиль</a>
                         </li>
                     </ul>
                 </div>
                 <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                     <ul className="navbar-nav ml-auto">
-                        <li><button onClick={this.logOut}>Logout</button></li>
+                        <li><button onClick={this.logOut}>Выйти</button></li>
                     </ul>
                 </div>
             </nav>
