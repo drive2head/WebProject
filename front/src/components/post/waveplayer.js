@@ -74,7 +74,7 @@ class WavePlayer extends React.Component {
           <div id="waveform"></div>
           <div id="timeline"></div>
           <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
-            <input type="file" id="file" name="filetoupload" onChange={this.changeFile} />
+          <input type="file" id="file" name="filetoupload" onChange={this.changeFile} />
           <div style={{display: "none"}}> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
           <p></p>
         </div>
