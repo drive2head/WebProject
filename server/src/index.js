@@ -1,6 +1,8 @@
-let entity = require("./entity.js"); /* only for debug */
-let userAuth = require("./userAuth.js");
+// let entity = require("./entity.js"); /* only for debug */
 let graphDB = require("./graphDB.js");
+let infoDB = require("./infoDB.js");
+
+let userAuth = require("./userAuth.js");
 let log = require("./log.js");
 
 const express = require('express');
@@ -58,6 +60,10 @@ app.post('/add_data', (req, res) => {
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'graphDB.addRecordPersonPhonemes', result.completed, result.output, '/add_data');
 		if (result.completed) {
+			// result.output.forEach((node) => {
+				// const recordID = ...
+				// infoDB.updateNodeInfo(recordID, node.id, node.label, req.body.username);
+			// })
 			res.send("Data was successfully loaded!");
 		}
 		else {

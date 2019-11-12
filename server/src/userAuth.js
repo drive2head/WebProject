@@ -17,14 +17,13 @@ async function getUser (username) {
 
 async function addUser (username) {
 	try {
-		var userExits = await getUser(username);
-		if (userExits == null) {
-			var newUser = new User({ username: username, password: null, name: null, surname: null });
-			let saveUser = await newUser.save();
-			return { completed: true, output: saveUser };
-		} else {
+		var userExists = await getUser(username);
+		if (userExists) {
 			return { completed: false, output: `The username '${username}' is already in use` };
 		}
+		var newUser = new User({ username: username, password: null, name: null, surname: null });
+		newUser = await newUser.save();
+		return { completed: true, output: newUser };
 	} catch (err) {
 		return { completed: false, output: err };
 	}
