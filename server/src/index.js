@@ -48,7 +48,7 @@ app.post('/person', (req, res) => {
     userAuth.getUser(username)
     .then(result => {
     	const completed = Boolean(result);
-    	log.addLog(req.body.username, 'access.signin', 'userExist', completed, result, '/signin');
+    	log.addLog(req.body.username, 'access.profile', 'getUser', completed, result, '/person');
     	res.send(result);
     });
 });
