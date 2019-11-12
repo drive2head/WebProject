@@ -21,6 +21,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
+    "formidable": "^1.2.1",
     "mongoose": "^5.7.7",
     "neo4j-driver": "^1.7.6",
     "nodemon": "^1.19.3",

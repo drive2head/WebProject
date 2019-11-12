@@ -4,6 +4,8 @@ let infoDB = require("./infoDB.js");
 
 let userAuth = require("./userAuth.js");
 let log = require("./log.js");
+let formidable = require('formidable');
+let fs = require('fs');
 
 const express = require('express');
 const app = express();
@@ -13,6 +15,20 @@ app.use(express.json());
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
+
+app.post('/fileupload', (req, res) => {
+	var form = new formidable.IncomingForm();
+	form.parse(req, function (err, fields, files) {
+		var oldpath = files.filetoupload.path;
+		var newpath = '/var/www/records/' + files.filetoupload.name;
+		//var newpath = '/Users/garanya/Desktop/speechdb/files/' + files.filetoupload.name;
+		fs.rename(oldpath, newpath, function (err) {
+			if (err) throw err;
+			console.log('File uploaded and moved!');
+			res.redirect('/post');
+		});
+	});
+});
 
 app.post('/signin', (req, res) => {
     let username = req.body.username,

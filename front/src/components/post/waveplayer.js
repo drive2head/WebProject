@@ -2,6 +2,7 @@ import React from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import RegionPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.min.js';
 import Timeline from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
+import axios from "axios";
 
 class WavePlayer extends React.Component {  
   constructor(props)
@@ -12,7 +13,9 @@ class WavePlayer extends React.Component {
     this.createWavePlayer = this.createWavePlayer.bind(this);
   }
 
-  changeFile(e){this.createWavePlayer(URL.createObjectURL(e.target.files[0]));}
+  changeFile(e){
+    this.createWavePlayer(URL.createObjectURL(e.target.files[0]));
+  }
 
   createWavePlayer(url)
   {
@@ -61,7 +64,6 @@ class WavePlayer extends React.Component {
       e.stopImmediatePropagation();
       region.play();
     });
-
     wavesurfer.load(url);
   }
 
@@ -72,7 +74,7 @@ class WavePlayer extends React.Component {
           <div id="waveform"></div>
           <div id="timeline"></div>
           <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
-          <input type="file" id="file" onChange={this.changeFile} />
+          <input type="file" id="file" name="filetoupload" onChange={this.changeFile} />
           <div style={{display: "none"}}> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
           <p></p>
         </div>
