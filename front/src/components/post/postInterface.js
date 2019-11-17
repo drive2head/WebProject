@@ -7,7 +7,7 @@ import Sounds from './sounds.js';
 import Header from '../header.js';
 import Cookies from 'universal-cookie';
 
-let entity = require("./../../entity.js")
+let entity = require("./../../model.js")
 
 class PostInterface extends React.Component {  
   constructor(props)
@@ -80,7 +80,7 @@ class PostInterface extends React.Component {
       username: cookies.cookies.username,
       person: person,
       record: record,
-      sounds: this.state.sounds
+      phonemes: this.state.sounds
     });
     window.alert('Done!');
     //window.location.href = "/get";

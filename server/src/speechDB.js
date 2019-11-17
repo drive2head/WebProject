@@ -1,5 +1,5 @@
 let cfg = require('./cfg');
-let entity = require("./entity.js");
+let entity = require("./model.js");
 let query = require("./query.js");
 
 let Integer = require('neo4j-driver/lib/v1/integer.js');
@@ -131,7 +131,7 @@ exports.changePerson = changePerson;
 // const rec = entity.Record('rec.wav', 'empty');
 // addRecordPersonPhonemes(rec, pers, [ph])
 // .then((result) => {
-// 	console.log("result: ", result);
+	// console.log("result: ", result);
 // })
 
 
