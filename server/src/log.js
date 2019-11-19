@@ -1,5 +1,4 @@
 let cfg = require('./cfg');
-var localDate = require('./localDate');
 
 var mongoose = require('mongoose');
 var logs_connection = mongoose.createConnection(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -17,7 +16,7 @@ var logSchema = new mongoose.Schema({
 var Log = logs_connection.model('Log', logSchema);
 
 async function addLog (username, type, logOf, completed, result = null, logFrom = null) {
-	const date = localDate.now();
+	const date = new Date();
 	let log = new Log(
 	{
 		date: date, 
