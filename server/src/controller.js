@@ -1,6 +1,6 @@
 // let entity = require("./entity.js"); /* only for debug */
 let SpeechDB = require("./speechDB.js");
-let NodeStats = require("./NodeStatsDB.js");
+let NodeStats = require("./nodeStatsDB.js");
 
 let userAuth = require("./userAuth.js");
 let log = require("./log.js");
