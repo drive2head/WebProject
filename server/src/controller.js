@@ -20,8 +20,8 @@ app.post('/fileupload', (req, res) => {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
-		var newpath = '/var/www/records/' + files.filetoupload.name;
-		//var newpath = '/Users/garanya/Desktop/speechdb/files/' + files.filetoupload.name;
+		// var newpath = '/var/www/records/' + files.filetoupload.name;
+		var newpath = '/Users/demo/GitHub/audio/' + files.filetoupload.name;
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
 			console.log('File uploaded and moved!');
@@ -76,10 +76,10 @@ app.post('/add_data', (req, res) => {
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'addRecordPersonPhonemes', result.completed, result.output, '/add_data');
 		if (result.completed) {
-			// result.output.forEach((node) => {
-				// const recordID = ...
-				// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
-			// })
+			result.output.forEach((node) => {
+				const recordID = 'testRecordID';
+				NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
+			});
 			res.send("Data was successfully loaded!");
 		}
 		else {
