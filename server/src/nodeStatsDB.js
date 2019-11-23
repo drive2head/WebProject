@@ -3,14 +3,13 @@ var cfg = require('./cfg');
 var mongoose = require('mongoose');
 var users_connection = mongoose.createConnection(cfg.info_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-// | audioID | nodeID | label | createdBy | lastEditBy | date | //
 var nodeInfoSchema = new mongoose.Schema({
-  recordID: String,
-  nodeID: String,
-  label: String,
-  createdBy: String,
-  lastEditBy: String,
-  lastEditDate: Date
+	recordID: String,
+	nodeID: String,
+	label: String,
+	createdBy: String,
+	lastEditBy: String,
+	lastEditDate: Date
 });
 
 var NodeInfo = users_connection.model('NodeInfo', nodeInfoSchema);
@@ -29,7 +28,7 @@ async function updateNodeInfo(recordID, nodeID, label, username) {
 			existingNode.lastEditDate = currentDate;
 			nodeInfo = existingNode;
 		} else {
-			nodeInfo = new NodeInfo({recordID: recordID, nodeID: nodeID, label: label, createdBy: username, 
+			nodeInfo = new NodeInfo({recordID: recordID, nodeID: nodeID, label: label, createdBy: username,
 				lastEditBy: username, lastEditDate: currentDate});
 		}
 		return nodeInfo.save()

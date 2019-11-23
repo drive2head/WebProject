@@ -31,44 +31,44 @@ app.post('/fileupload', (req, res) => {
 });
 
 app.post('/signin', (req, res) => {
-    let username = req.body.username,
-        password = req.body.password;
+	let username = req.body.username,
+		password = req.body.password;
 
-    userAuth.getUser(username)
-    .then(result => {
-    	const completed = Boolean(result);
-    	log.addLog(req.body.username, 'access.signin', 'userExist', completed, result.output, '/signin');
-    	res.send(result);
-    });
+	userAuth.getUser(username)
+	.then(result => {
+		const completed = Boolean(result);
+		log.addLog(req.body.username, 'access.signin', 'userExist', completed, result.output, '/signin');
+		res.send(result);
+	});
 });
 
 app.post('/signup', (req, res) => {
-    let username = req.body.username,
-        password = req.body.password,
-        name = req.body.name,
-        surname = req.body.surname;
+	let username = req.body.username,
+		password = req.body.password,
+		name = req.body.name,
+		surname = req.body.surname;
 
-    userAuth.addUser(username, password, name, surname)
-    .then(result => {
-    	log.addLog(req.body.username, 'access.signup', 'addUser', result.completed, result.output, '/signup');
-    	if (result.completed) {
-    		res.send({ status: true, msg: 'User was successfully created!' });
-    	} else {
-    		res.send({ status: false, msg: result.output });
-    	}
-    })
+	userAuth.addUser(username, password, name, surname)
+	.then(result => {
+		log.addLog(req.body.username, 'access.signup', 'addUser', result.completed, result.output, '/signup');
+		if (result.completed) {
+			res.send({ status: true, msg: 'User was successfully created!' });
+		} else {
+			res.send({ status: false, msg: result.output });
+		}
+	})
 });
 
 app.post('/person', (req, res) => {
-    let username = req.body.username,
-        password = req.body.password;
-        
-    userAuth.getUser(username)
-    .then(result => {
-    	const completed = Boolean(result);
-    	log.addLog(req.body.username, 'access.profile', 'getUser', completed, result.output, '/person');
-    	res.send(result);
-    });
+	let username = req.body.username,
+		password = req.body.password;
+		
+	userAuth.getUser(username)
+	.then(result => {
+		const completed = Boolean(result);
+		log.addLog(req.body.username, 'access.profile', 'getUser', completed, result.output, '/person');
+		res.send(result);
+	});
 });
 
 app.post('/add_data', (req, res) => {
