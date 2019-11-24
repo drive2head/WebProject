@@ -1,11 +1,13 @@
 // let entity = require("./entity.js"); /* only for debug */
 let SpeechDB = require("./speechDB.js");
+let RecordsDB = require("./recordsDB.js");
 let NodeStats = require("./nodeStatsDB.js");
 
 let userAuth = require("./userAuth.js");
 let log = require("./log.js");
 let formidable = require('formidable');
 let fs = require('fs');
+var cfg = require('./cfg');
 
 const express = require('express');
 const app = express();
@@ -20,13 +22,26 @@ app.post('/fileupload', (req, res) => {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
-		// var newpath = '/var/www/records/' + files.filetoupload.name;
-		var newpath = '/Users/demo/GitHub/audio/' + files.filetoupload.name;
-		fs.rename(oldpath, newpath, function (err) {
-			if (err) throw err;
-			console.log('File uploaded and moved!');
-			res.redirect('/post');
-		});
+		var newpath = cfg.records_dir + files.filetoupload.name;
+		try {
+			fs.rename(oldpath, newpath, function (err) {
+				if (err) throw err;
+			});
+			RecordsDB.addRecord(files.filetoupload.name, newpath)
+			.then(result => {
+				log.addLog(req.body.username, 'upload.file', 'addRecord', result.completed, result.output, '/fileupload');
+				if (result.completed) {
+					res.send({ status: true, msg: 'Record was successfully uploaded!' });
+				} else {
+					res.send({ status: false, msg: result.output });
+				}
+			})
+			.catch(err => {
+				throw err;
+			})
+		} catch (err) {
+			console.log(err);
+		}
 	});
 });
 
