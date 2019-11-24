@@ -9,15 +9,12 @@ class UploadForm extends React.Component {
 
 	render() {  
 		return (
-			<div className="container">
-				<Header/>
-				<div class="jumbotron" style={{borderRadius: "25px"}}>
-			        <form action="fileupload" method="post" enctype="multipart/form-data">
-					    <input type="file" id="file" name="filetoupload" onChange={this.changeFile} />
-					    <input type="submit" /> 
-					</form>
-				</div>
-		    </div>
+			<div className="col-md-6">
+		        <form action="fileupload" method="post" enctype="multipart/form-data">
+				    <input type="file" id="file" name="filetoupload" onChange={this.changeFile} />
+				    <input type="submit" /> 
+				</form>
+			</div>
 		);
     }
 }

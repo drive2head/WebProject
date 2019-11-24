@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from "axios";
-import DictorInfo from './dictorInfo.js';
 import SoundInfo from './soundInfo.js';
 import WavePlayer from './waveplayer.js';
 import Sounds from './sounds.js';
@@ -102,7 +101,6 @@ class PostInterface extends React.Component {
   }
 
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
-  changeSelected(selectedOpts){this.setState({selectedOptions: selectedOpts});}
   handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
 
 
@@ -116,16 +114,13 @@ class PostInterface extends React.Component {
             state={this.state}
           />
           <div className="row">
-            <DictorInfo
-              handleInputChange={this.handleInputChange.bind(this)}
-              changeSelected={this.changeSelected.bind(this)}
-              saveAll={this.saveAll.bind(this)}
-            />
+            <div className="col-md-1"></div>
             <SoundInfo
               handleInputChange={this.handleInputChange.bind(this)}
               saveSound={this.saveSound.bind(this)}
               state={this.state}
             />
+            <div className="col-md-1"></div>
             <Sounds
               changeSoundInfo={this.changeSoundInfo.bind(this)}
               sounds={this.state.sounds}

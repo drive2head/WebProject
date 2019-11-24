@@ -38,6 +38,9 @@ class SignupForm extends React.Component {
 		              		</div>
 		              		<input name="password" type="password" className="form-control" onChange={this.props.handleInputChange} placeholder="Пароль"/>
 		            	</div>
+		            	<div className="form-group">
+		              		<button onClick={this.props.back} className="btn float-right btn-success">Войти</button>
+		           		</div>
 		           		<div className="form-group">
 		              		<button onClick={this.props.signUp} className="btn float-right btn-danger">Зарегистрироваться</button>
 		           		</div>

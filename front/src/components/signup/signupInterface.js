@@ -43,6 +43,8 @@ class SignupInterface extends React.Component {
     }
   }
 
+  back () { window.location.href = "/signin" }
+
   render() {  
     return (  
       <div className='popup'>  
@@ -50,6 +52,7 @@ class SignupInterface extends React.Component {
           <SignupForm
             handleInputChange={this.handleInputChange.bind(this)}
             signUp={this.signUp.bind(this)}
+            back={this.back.bind(this)}
           />
         </div>  
       </div>  
