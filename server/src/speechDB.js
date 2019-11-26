@@ -107,11 +107,11 @@ exports.addPhonemes = addPhonemes;
 // 	console.log("test_addRecordPersonPhonemes():\n", result);
 // })
 
-const pers = entity.Person('Name', '18', 'M', 'RU', 'MSK', 'RF');
-const ph0 = entity.Phoneme('A', '0:00:00', '0:05:00', 'RU');
-const ph1 = entity.Phoneme('B', '0:06:00', '0:10:00', 'RU');
-const rec = entity.Record('rec.wav', 'empty');
-addRecordPersonPhonemes(rec, pers, [ph0, ph1])
-.then((result) => {
-	console.log("result: ", result);
-});
+// const pers = entity.Person('Name', '18', 'M', 'RU', 'MSK', 'RF');
+// const ph0 = entity.Phoneme('A', '0:00:00', '0:05:00', 'RU');
+// const ph1 = entity.Phoneme('B', '0:06:00', '0:10:00', 'RU');
+// const rec = entity.Record('rec.wav', 'empty');
+// addRecordPersonPhonemes(rec, pers, [ph0, ph1])
+// .then((result) => {
+// 	console.log("result: ", result);
+// });
