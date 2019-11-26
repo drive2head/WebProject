@@ -6,79 +6,59 @@ let Integer = require('neo4j-driver/lib/v1/integer.js');
 let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
 
-function addRecordPersonPhonemes (record, person, phonemes) {
-	let queryText = query.addRecordPersonPhonemes(record, person, phonemes);
-	let session = null;
-	try {
-		session = driver.session();
-		return session.run(queryText)
-		.then((result) => {
-			var createdNodes = [];
-			const singleRecord = result.records[0];
-			singleRecord.forEach((node) => {
-				createdNodes.push({ id: Integer.toString(node.identity), label: node.labels[0] });
-			});
-			return { completed: true, output: createdNodes };
-		})
-		.catch((err) => {
+function extractNodes(record) {
+	var recordNodes = [];
+	record.forEach((node) => {
+		recordNodes.push({ id: Integer.toString(node.identity), label: node.labels[0] });
+	});
+	return recordNodes;
+}
+
+function runQuery(queryFunc, multipleRecords=false) {
+	return function() {
+		var queryText = queryFunc.apply(this, arguments);
+
+		let session = null;
+		try {
+			session = driver.session();
+			return session.run(queryText)
+			.then((result) => {
+				var nodes = [];
+				result.records.forEach((record) => {
+					var recordNodes = extractNodes(record);
+					if (multipleRecords) {
+						nodes.push(recordNodes);
+					} else {
+						recordNodes.forEach((node) => { nodes.push(node); } );
+					}
+				});
+				return { completed: true, output: nodes };
+			})
+			.catch((err) => {
+				return { completed: false, output: { error: err, query: queryText } };
+			})
+		} catch (err) {
 			return { completed: false, output: { error: err, query: queryText } };
-		});
-	} catch (err) {
-		return { completed: false, output: err };
-	} finally {
-		session.close();
-	};
-};
-
-function changePhoneme (phoneme, id) {
-	let queryText = query.changePhoneme(phoneme, id);
-	let session = null;
-	try {
-		session = driver.session();
-		return session.run(queryText)
-		.then((result) => {
-			var changedNodes = [];
-			if (result.records.length > 0) {
-				const singleRecord = result.records[0];
-				const node = singleRecord.get(0);
-				changedNodes.push({ id: Integer.toString(node.identity), label: node.labels[0] });
-			};
-			return { completed: true, output: changedNodes };
-		})
-		.catch((err) => {
-			return { completed: false, output: err };
-		});
-	} finally {
-		session.close();
+		} finally {
+			session.close();
+		};
 	}
-};
+}
 
-function changePerson (person, id) {
-	let queryText = query.changePerson(person, id);
-	let session = null;
-	try {
-		session = driver.session();
-		return session.run(queryText)
-		.then((result) => {
-			var changedNodes = [];
-			if (result.records.length > 0) {
-				const singleRecord = result.records[0];
-				const node = singleRecord.get(0);
-				changedNodes.push({ id: Integer.toString(node.identity), label: node.labels[0] });
-			};
-			return { completed: true, output: changedNodes };
-		})
-		.catch((err) => {
-			return { completed: false, output: err };
-		});
-	} finally {
-		session.close();
-	}
-};
+addRecordPersonPhonemes = runQuery(query.addRecordPersonPhonemes);
+changePhoneme = runQuery(query.changePhoneme);
+changePerson = runQuery(query.changePerson);
+addPerson = runQuery(query.addPerson);
+addRecord = runQuery(query.addRecord);
+addPhonemes = runQuery(query.addPhonemes);
 
 exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
 exports.changePhoneme = changePhoneme;
 exports.changePerson = changePerson;
+exports.addPerson = addPerson;
+exports.addRecord = addRecord;
+exports.addPhonemes = addPhonemes;
+
 
 // function test_addRecordPersonPhonemes() {
 // 	let queryText = `\
@@ -109,6 +89,7 @@ exports.changePerson = changePerson;
 // 	let session = driver.session();
 // 	return session.run(queryText)
 // 	.then((result) => {
+// 		console.log("result: ", result);
 // 		var createdNodes = [];
 // 		const singleRecord = result.records[0];
 // 		singleRecord.forEach((node) => {
@@ -123,19 +104,14 @@ exports.changePerson = changePerson;
 
 // test_addRecordPersonPhonemes()
 // .then((result) => {
-	// console.log("result: ", result);
+// 	console.log("test_addRecordPersonPhonemes():\n", result);
 // })
 
-// const pers = entity.Person('Name', '18', 'M', 'RU', 'MSK', 'RF');
-// const ph = entity.Phoneme('A', '0:00:00', '0:05:00', 'RU');
-// const rec = entity.Record('rec.wav', 'empty');
-// addRecordPersonPhonemes(rec, pers, [ph])
-// .then((result) => {
-	// console.log("result: ", result);
-// })
-
-
-
-
-
-
+const pers = entity.Person('Name', '18', 'M', 'RU', 'MSK', 'RF');
+const ph0 = entity.Phoneme('A', '0:00:00', '0:05:00', 'RU');
+const ph1 = entity.Phoneme('B', '0:06:00', '0:10:00', 'RU');
+const rec = entity.Record('rec.wav', 'empty');
+addRecordPersonPhonemes(rec, pers, [ph0, ph1])
+.then((result) => {
+	console.log("result: ", result);
+});
