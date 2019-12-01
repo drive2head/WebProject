@@ -49,11 +49,11 @@ app.post('/signin', (req, res) => {
 	let username = req.body.username,
 		password = req.body.password;
 
-	userAuth.getUser(username)
+	userAuth.verifyUser(username, password)
 	.then(result => {
-		const completed = Boolean(result);
-		log.addLog(req.body.username, 'access.signin', 'userExist', completed, result.output, '/signin');
-		res.send(result);
+		console.log(result);
+		log.addLog(req.body.username, 'access.signin', 'userExist', result.completed, result.output, '/signin');
+		res.send({ status: result.completed, msg: result.output });
 	});
 });
 
