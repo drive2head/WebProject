@@ -10,6 +10,10 @@ var recordSchema = new mongoose.Schema({
 
 var Record = users_connection.model('Record', recordSchema);
 
+async function getAllRecords() {
+	return await Record.find();
+};
+
 async function findRecordByName (name) {
 	return await Record.findOne({ name: name });
 };
@@ -34,3 +38,4 @@ async function addRecord(name, path) {
 
 exports.getRecord = getRecord;
 exports.addRecord = addRecord;
+exports.getAllRecords = getAllRecords;

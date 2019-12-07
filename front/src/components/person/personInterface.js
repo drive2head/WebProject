@@ -25,8 +25,7 @@ class PersonInterface extends React.Component {
 			})
 		});
 
-		var body = await response.json();
-		console.log(body);
+		var body = await response.json(); // отправляет запрос с undefined username/password 
 		if (body == false)
 			alert('Bad data, FILOLUX!');
 		else

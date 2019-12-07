@@ -18,6 +18,14 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
+app.post('/records', (req, res) => {
+	RecordsDB.getAllRecords()
+	.then(result => {
+		log.addLog(req.body.username, 'access.records', 'getAllRecords', true, result, '/records');
+		res.send(result);
+	});
+});
+
 app.post('/fileupload', (req, res) => {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function (err, fields, files) {
@@ -51,7 +59,7 @@ app.post('/signin', (req, res) => {
 
 	userAuth.verifyUser(username, password)
 	.then(result => {
-		console.log(result);
+		console.log('(/signin) verifyUser:', result);
 		log.addLog(req.body.username, 'access.signin', 'userExist', result.completed, result.output, '/signin');
 		res.send({ status: result.completed, msg: result.output });
 	});
@@ -78,10 +86,12 @@ app.post('/person', (req, res) => {
 	let username = req.body.username,
 		password = req.body.password;
 		
+	console.log("(/person) username:", username);
 	userAuth.getUser(username)
 	.then(result => {
+		console.log("(/person) result:", result);
 		const completed = Boolean(result);
-		log.addLog(req.body.username, 'access.profile', 'getUser', completed, result.output, '/person');
+		log.addLog(req.body.username, 'access.profile', 'getUser', completed, result, '/person');
 		res.send(result);
 	});
 });

@@ -35,11 +35,12 @@ class LoginInterface extends React.Component {
       })
     });
 
+    console.log("HEY");
     var body = await response.json();
     console.log(body);
-    if (body == null)
-      alert('Wrong data, dear FILOLUX!');
-    else
+    if (body.status == false) {
+      alert(body.msg);
+    } else
     {
       const cookies = new Cookies();
       cookies.set('username', body.username, { path: '/' });
