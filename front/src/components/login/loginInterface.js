@@ -43,8 +43,8 @@ class LoginInterface extends React.Component {
     } else
     {
       const cookies = new Cookies();
-      cookies.set('username', body.username, { path: '/' });
-      cookies.set('password', body.password, { path: '/' });
+      cookies.set('username', this.state.username, { path: '/' });
+      cookies.set('password', this.state.password, { path: '/' });
       //cookies.set('role', body.role, { path: '/' });
       window.location.href = "/";
     }

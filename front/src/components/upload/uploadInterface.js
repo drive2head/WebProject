@@ -3,7 +3,6 @@ import Header from '../header.js';
 import axios from "axios";
 import Cookies from 'universal-cookie';
 import UploadForm from './uploadForm.js';
-import DictorInfo from './dictorInfo.js';
 
 let entity = require("./../../model.js")
 
@@ -59,11 +58,6 @@ class UploadInterface extends React.Component {
 				<Header/>
 				<div className="jumbotron" style={{borderRadius: "25px"}}>
 					<div className="row">
-						<DictorInfo
-							handleInputChange={this.handleInputChange.bind(this)}
-							saveTrack={this.saveTrack.bind(this)}
-							changeSelected={this.changeSelected.bind(this)}
-						/>
 						<UploadForm/>
 					</div>
 				</div>

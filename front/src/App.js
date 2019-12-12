@@ -13,6 +13,7 @@ import MainInterface from './components/main/mainInterface.js';
 import PersonInterface from './components/person/personInterface.js';
 import GetInterface from './components/get/getInterface.js';
 import UploadInterface from './components/upload/uploadInterface.js';
+import DictorInterface from './components/dictor/dictorInterface.js';
 
 class App extends React.Component {
   constructor(props)
@@ -57,6 +58,12 @@ class App extends React.Component {
           <Route exact={true} path='/upload' render={() => (
             isLoggedIn ? (
               <UploadInterface/>
+            ) : (<Redirect to={{pathname: '/signin'}} />)
+          )}/>
+
+          <Route exact={true} path='/add_dictor' render={() => (
+            isLoggedIn ? (
+              <DictorInterface/>
             ) : (<Redirect to={{pathname: '/signin'}} />)
           )}/>
 

@@ -50,7 +50,7 @@ class DictorInfo extends React.Component {
                   <div id="select">
                     {this.renderSelect()}
                   </div>
-                  <button className="btn btn-dark" name="saveTrack" onClick={this.props.saveTrack}>Сохранить</button>
+                  <button className="btn btn-dark" name="saveDictor" onClick={this.props.saveDictor}>Сохранить</button>
                 </div>
               </div>
             </div>
