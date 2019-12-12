@@ -5,7 +5,8 @@ var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlP
 
 var recordSchema = new mongoose.Schema({
 	name: String,
-	path: String
+	path: String,
+	dictorID: ObjectId
 });
 
 var Record = users_connection.model('Record', recordSchema);
@@ -22,13 +23,13 @@ async function getRecord (recordID) {
 	return await Record.findOne({ _id: recordID });
 };
 
-async function addRecord(name, path) {
+async function addRecord(name, path, dictorID) {
 	try {
 		var record = await findRecordByName(name);
 		if (record) {
 			return { completed: false, output: `This record name is already in use` };
 		}
-		var newRecord = new Record({ name: name, path: path });
+		var newRecord = new Record({ name: name, path: path, dictorID: dictorID });
 		newRecord = await newRecord.save();
 		return { completed: true, output: newRecord };
 	} catch (err) {
