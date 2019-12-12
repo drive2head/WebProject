@@ -47,14 +47,3 @@ async function addSpeaker(name, person) {
 exports.getSpeaker = getSpeaker;
 exports.addSpeaker = addSpeaker;
 exports.getAllSpeakers = getAllSpeakers;
-
-addSpeaker('TestSpeaker', 
-{
-	fullName: 'Василий Петров',
-	age: '53',
-	sex: 'Мужик',
-	nativeLanguage: 'русский',
-	city: 'Москва',
-	country: 'Россия',
-	disorders: ['слепой', 'глухой', 'немного тупой']
-});
