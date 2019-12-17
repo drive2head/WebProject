@@ -59,6 +59,16 @@
 	background-color: rgba(0,0,0,0.5) !important;
 } 
 
+.inline {
+	float: left;
+	width: 50%;
+}
+
+.inlinediv {
+	display: inline;
+	text-align: center;
+}
+
 .social_icon {
 	position: absolute;
 	right: 20px;
