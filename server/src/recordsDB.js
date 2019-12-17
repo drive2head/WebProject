@@ -6,7 +6,7 @@ var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlP
 var recordSchema = new mongoose.Schema({
 	name: String,
 	path: String,
-	dictorID: ObjectId
+	dictorID: mongoose.ObjectId
 });
 
 var Record = users_connection.model('Record', recordSchema);
