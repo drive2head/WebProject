@@ -19,6 +19,7 @@ class WavePlayer extends React.Component {
 
   createWavePlayer(url)
   {
+    console.log(url);
     let wavesurfer = WaveSurfer.create({
       container: '#waveform',
       waveColor: 'red',

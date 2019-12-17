@@ -14,6 +14,7 @@ const app = express();
 
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(express.static('files'))
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
@@ -25,6 +26,14 @@ app.post('/records', (req, res) => {
 		res.send(result);
 	});
 });
+
+function files() {
+	var path = cfg.records_dir;
+	console.log(path);
+	fs.readdirSync(path).forEach(file => {
+  		console.log(file);
+	});
+}
 
 app.post('/fileupload', (req, res) => {
 	var form = new formidable.IncomingForm();
@@ -82,7 +91,8 @@ app.post('/signup', (req, res) => {
 	})
 });
 
-app.post('/person', (req, res) => {
+app.post('/profile', (req, res) => {
+	//files();
 	let username = req.body.username,
 		password = req.body.password;
 		

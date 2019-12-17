@@ -17,6 +17,7 @@ class DictorInterface extends React.Component {
 			dictorAge: "",
 			dictorCountry: "",
 			selectedOptions: [],
+			dictorPseudo: "",
 	    };
 	}
 
@@ -24,8 +25,9 @@ class DictorInterface extends React.Component {
 	{
 		let dictor = entity.Person(this.state.dictorName, this.state.dictorLang, this.state.dictorCity, this.state.dictorSex, this.state.dictorAge, this.state.selectedOptions);
 
-		axios.post('/add_dictor', {
+		axios.post('/add_person', {
 			person: dictor,
+			pseudonym: this.state.dictorPseudo,
 		});
 		window.alert('Done!');
 	}

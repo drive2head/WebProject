@@ -40,6 +40,7 @@ class DictorInfo extends React.Component {
               <div className="card flex-md-row mb-4 box-shadow h-md-250">
                 <div className="card-body d-flex flex-column align-items-start">
                   <p> Описание диктора: </p>
+                  Псевдоним: <input name="dictorPseudo" onChange={this.props.handleInputChange} type="text"/><br/>
                   Имя: <input name="dictorName" onChange={this.props.handleInputChange} type="text"/><br/>
                   Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
                   Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
