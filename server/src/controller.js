@@ -41,10 +41,11 @@ app.post('/add_person', (req, res) => {
 	})
 });
 
-app.post('/persons', (req, res) => {
+app.get('/persons', (req, res) => {
 	SpeakersDB.getAllSpeakers()
 	.then(result => {
 		log.addLog(req.body.username, 'access.persons', 'getAllSpeakers', true, result, '/persons');
+		console.log(result);
 		res.send(result);
 	})
 });
