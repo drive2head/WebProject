@@ -19,10 +19,31 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
-app.post('/speakers', (req, res) => {
-	SpeechDB.getAllSpeakers()
+app.post('/add_person', (req, res) => {
+	SpeechDB.addPerson(res.person)
 	.then(result => {
-		log.addLog(req.body.username, 'access.speakers', 'getAllSpeakers', true, result, '/speakers');
+		log.addLog(req.body.username, 'query.add', 'addPerson', result.completed, result.output, '/add_person');
+		if (result.completed == false)
+			res.send({ status: false, msg: 'Person was not added' });
+
+		const nodeID = result.output[0].id;
+		SpeakersDB.addSpeaker(req.body.pseudonym, nodeID)
+		.then(result => {
+			log.addLog(req.body.username, 'query.add', 'addSpeaker', result.completed, result.output, '/add_person');
+			if (result.completed == false)
+				res.send({ status: false, msg: 'Person was not added' });
+			res.send({ status: true, msg: 'Person was added' });
+		})
+	})
+	.catch(err => {
+		throw err;
+	})
+});
+
+app.post('/persons', (req, res) => {
+	SpeakersDB.getAllSpeakers()
+	.then(result => {
+		log.addLog(req.body.username, 'access.persons', 'getAllSpeakers', true, result, '/persons');
 		res.send(result);
 	})
 });
@@ -111,7 +132,7 @@ app.post('/add_data', (req, res) => {
 		log.addLog(req.body.username, 'query.add', 'addRecordPersonPhonemes', result.completed, result.output, '/add_data');
 		if (result.completed) {
 			result.output.forEach((node) => {
-				const recordID = 'testRecordID';
+				const recordID = node.id;
 				NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
 			});
 			res.send("Data was successfully loaded!");
