@@ -1,6 +1,7 @@
 // let entity = require("./entity.js"); /* only for debug */
 let SpeechDB = require("./speechDB.js");
 let RecordsDB = require("./recordsDB.js");
+let SpeakersDB = require("./speakersDB.js");
 let NodeStats = require("./nodeStatsDB.js");
 
 let userAuth = require("./userAuth.js");
@@ -17,6 +18,14 @@ app.use(express.json());
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
+
+app.post('/speakers', (req, res) => {
+	SpeechDB.getAllSpeakers()
+	.then(result => {
+		log.addLog(req.body.username, 'access.speakers', 'getAllSpeakers', true, result, '/speakers');
+		res.send(result);
+	})
+});
 
 app.post('/records', (req, res) => {
 	RecordsDB.getAllRecords()
@@ -82,7 +91,7 @@ app.post('/signup', (req, res) => {
 	})
 });
 
-app.post('/person', (req, res) => {
+app.post('/profile', (req, res) => {
 	let username = req.body.username,
 		password = req.body.password;
 		

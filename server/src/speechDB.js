@@ -59,6 +59,10 @@ exports.addPerson = addPerson;
 exports.addRecord = addRecord;
 exports.addPhonemes = addPhonemes;
 
+var person = entity.Person('Name', '18', 'M', 'RU', 'MSK', 'RF');
+addPerson(person)
+.then((result) => { console.log(result) } );
+
 
 // function test_addRecordPersonPhonemes() {
 // 	let queryText = `\
