@@ -6,7 +6,7 @@ var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlP
 var recordSchema = new mongoose.Schema({
 	name: String,
 	path: String,
-	dictorID: mongoose.ObjectId
+	speakerID: mongoose.ObjectId
 });
 
 var Record = users_connection.model('Record', recordSchema);
@@ -19,17 +19,17 @@ async function findRecordByName (name) {
 	return await Record.findOne({ name: name });
 };
 
-async function getRecord (recordID) {
-	return await Record.findOne({ _id: recordID });
-};
+// async function getRecord (recordID) {
+	// return await Record.findOne({ _id: recordID });
+// };
 
-async function addRecord(name, path, dictorID) {
+async function addRecord(name, path, speakerID) {
 	try {
 		var record = await findRecordByName(name);
 		if (record) {
 			return { completed: false, output: `This record name is already in use` };
 		}
-		var newRecord = new Record({ name: name, path: path, dictorID: dictorID });
+		var newRecord = new Record({ name: name, path: path, speakerID: speakerID });
 		newRecord = await newRecord.save();
 		return { completed: true, output: newRecord };
 	} catch (err) {
@@ -37,6 +37,6 @@ async function addRecord(name, path, dictorID) {
 	}
 };
 
-exports.getRecord = getRecord;
+// exports.getRecord = getRecord;
 exports.addRecord = addRecord;
 exports.getAllRecords = getAllRecords;

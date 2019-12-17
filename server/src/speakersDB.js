@@ -5,15 +5,7 @@ var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrl
 
 var speakerSchema = new mongoose.Schema({
 	name: String,
-	person: {
-		fullName: String,
-		age: String,
-		sex: String,
-		nativeLanguage: String,
-		city: String,
-		country: String,
-		disorders: [String]
-	}
+	nodeID: String
 });
 
 var Speaker = users_connection.model('Speaker', speakerSchema);
@@ -26,17 +18,17 @@ async function findRecordByName (name) {
 	return await Speaker.findOne({ name: name });
 };
 
-async function getSpeaker (speakerID) {
-	return await Speaker.findOne({ _id: recordID });
-};
+// async function getSpeaker (speakerID) {
+	// return await Speaker.findOne({ _id: speakerID });
+// };
 
-async function addSpeaker(name, person) {
+async function addSpeaker(name, nodeID) {
 	try {
 		var speaker = await findRecordByName(name);
 		if (speaker) {
 			return { completed: false, output: `This speaker name is already in use` };
 		}
-		var newSpeaker = new Speaker({ name: name, person: person });
+		var newSpeaker = new Speaker({ name: name, nodeID: nodeID });
 		newSpeaker = await newSpeaker.save();
 		return { completed: true, output: newSpeaker };
 	} catch (err) {
@@ -44,6 +36,6 @@ async function addSpeaker(name, person) {
 	}
 };
 
-exports.getSpeaker = getSpeaker;
+// exports.getSpeaker = getSpeaker;
 exports.addSpeaker = addSpeaker;
 exports.getAllSpeakers = getAllSpeakers;
