@@ -1,6 +1,7 @@
 // let entity = require("./entity.js"); /* only for debug */
 let SpeechDB = require("./speechDB.js");
 let RecordsDB = require("./recordsDB.js");
+let SpeakersDB = require("./speakersDB.js");
 let NodeStats = require("./nodeStatsDB.js");
 
 let userAuth = require("./userAuth.js");
@@ -18,6 +19,35 @@ app.use(express.static('files'))
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
+
+app.post('/add_person', (req, res) => {
+	SpeechDB.addPerson(res.person)
+	.then(result => {
+		log.addLog(req.body.username, 'query.add', 'addPerson', result.completed, result.output, '/add_person');
+		if (result.completed == false)
+			res.send({ status: false, msg: 'Person was not added' });
+
+		const nodeID = result.output[0].id;
+		SpeakersDB.addSpeaker(req.body.pseudonym, nodeID)
+		.then(result => {
+			log.addLog(req.body.username, 'query.add', 'addSpeaker', result.completed, result.output, '/add_person');
+			if (result.completed == false)
+				res.send({ status: false, msg: 'Person was not added' });
+			res.send({ status: true, msg: 'Person was added' });
+		})
+	})
+	.catch(err => {
+		throw err;
+	})
+});
+
+app.post('/persons', (req, res) => {
+	SpeakersDB.getAllSpeakers()
+	.then(result => {
+		log.addLog(req.body.username, 'access.persons', 'getAllSpeakers', true, result, '/persons');
+		res.send(result);
+	})
+});
 
 app.post('/records', (req, res) => {
 	RecordsDB.getAllRecords()
@@ -92,7 +122,6 @@ app.post('/signup', (req, res) => {
 });
 
 app.post('/profile', (req, res) => {
-	//files();
 	let username = req.body.username,
 		password = req.body.password;
 		
@@ -112,7 +141,7 @@ app.post('/add_data', (req, res) => {
 		log.addLog(req.body.username, 'query.add', 'addRecordPersonPhonemes', result.completed, result.output, '/add_data');
 		if (result.completed) {
 			result.output.forEach((node) => {
-				const recordID = 'testRecordID';
+				const recordID = node.id;
 				NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
 			});
 			res.send("Data was successfully loaded!");
