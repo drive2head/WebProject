@@ -9,16 +9,17 @@ class UploadForm extends React.Component {
 		this.state = {  
 			dictors: [],
 			list: [],
-			dictor: '',
-			dictorId: '',
+			person: '',
+			personId: '',
 		};
 		this.getDictors();
 	}
 
 	changeDictor(name, id)
 	{
-		this.setState({dictor: name});
-		this.setState({dictorId: id});
+		this.setState({person: name});
+		this.setState({personId: id});
+		console.log(this.state.person, this.state.personId);
 	}
 
 	getDictors = async () => {
@@ -32,7 +33,7 @@ class UploadForm extends React.Component {
 		let body = await response.json();
 		this.setState({ dictors: body })  
 		this.setState({ list: this.state.dictors.map((dictor, i) =>
-                <li key={i}><button className="btn btn-dark" id={i} onClick={() => {this.changeDictor(dictor.name, dictor.nodeId)}}>{dictor.name}</button></li>
+                <li key={i}><button className="btn btn-dark" id={i} onClick={() => {this.changeDictor(dictor.name, dictor.nodeID)}}>{dictor.name}</button></li>
   		)});    
 	}
 
@@ -53,7 +54,7 @@ class UploadForm extends React.Component {
 			                <div className="card-body d-flex flex-column align-items-start">
 						        <form action="add_record" method="post" enctype="multipart/form-data">
 								    <input type="file" id="file" name="filetoupload"/><br/>
-								    <input type="text" id="text" name="text" value={this.state.dictor}/><br/>
+								    <input type="text" id="text" name="text" value={this.state.personId}/><br/>
 								    <input type="submit" /> 
 								</form>
 							</div>
