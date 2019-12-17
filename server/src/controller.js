@@ -8,7 +8,7 @@ let userAuth = require("./userAuth.js");
 let log = require("./log.js");
 let formidable = require('formidable');
 let fs = require('fs');
-var cfg = require('./cfg');
+let cfg = require('./cfg');
 
 const express = require('express');
 const app = express();
@@ -58,7 +58,7 @@ app.post('/records', (req, res) => {
 });
 
 function files() {
-	var path = cfg.records_dir;
+	let path = cfg.records_dir;
 	console.log(path);
 	fs.readdirSync(path).forEach(file => {
   		console.log(file);
@@ -66,10 +66,11 @@ function files() {
 }
 
 app.post('/add_record', (req, res) => {
-	var form = new formidable.IncomingForm();
+	let form = new formidable.IncomingForm();
 	form.parse(req, function (err, fields, files) {
-		var oldpath = files.filetoupload.path;
-		var newpath = cfg.records_dir + files.filetoupload.name;
+		let dictor = fields.text;
+		let oldpath = files.filetoupload.path;
+		let newpath = cfg.records_dir + files.filetoupload.name;
 		try {
 			fs.rename(oldpath, newpath, function (err) {
 				if (err) throw err;
