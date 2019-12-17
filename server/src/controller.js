@@ -65,7 +65,7 @@ function files() {
 	});
 }
 
-app.post('/fileupload', (req, res) => {
+app.post('/add_record', (req, res) => {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
@@ -74,9 +74,9 @@ app.post('/fileupload', (req, res) => {
 			fs.rename(oldpath, newpath, function (err) {
 				if (err) throw err;
 			});
-			RecordsDB.addRecord(files.filetoupload.name, newpath)
+			RecordsDB.addRecord(files.filetoupload.name, newpath, req.body.personID)
 			.then(result => {
-				log.addLog(req.body.username, 'upload.file', 'addRecord', result.completed, result.output, '/fileupload');
+				log.addLog(req.body.username, 'upload.file', 'addRecord', result.completed, result.output, '/add_record');
 				if (result.completed) {
 					res.send({ status: true, msg: 'Record was successfully uploaded!' });
 				} else {
