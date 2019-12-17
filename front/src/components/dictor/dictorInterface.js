@@ -29,7 +29,7 @@ class DictorInterface extends React.Component {
 			person: dictor,
 			pseudonym: this.state.dictorPseudo,
 		});
-		window.alert('Done!');
+		window.location.href = "/";
 	}
 
 	handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}

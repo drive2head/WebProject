@@ -12,7 +12,7 @@ class UploadForm extends React.Component {
 			<div className="col-md-6">
 		        <form action="fileupload" method="post" enctype="multipart/form-data">
 				    <input type="file" id="file" name="filetoupload"/>
-				    <input type="text" id="name" name="name"/>
+				    <input type="text" id="text" name="text"/>
 				    <input type="submit" /> 
 				</form>
 			</div>
