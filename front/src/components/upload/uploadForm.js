@@ -33,7 +33,7 @@ class UploadForm extends React.Component {
 		let body = await response.json();
 		this.setState({ dictors: body })  
 		this.setState({ list: this.state.dictors.map((dictor, i) =>
-                <li key={i}><button className="btn btn-dark" id={i} onClick={() => {this.changeDictor(dictor.name, dictor.nodeID)}}>{dictor.name}</button></li>
+                <li key={i}><button className="btn btn-dark" id={i} onClick={() => {this.changeDictor(dictor.name, dictor._id)}}>{dictor.name}</button></li>
   		)});    
 	}
 
