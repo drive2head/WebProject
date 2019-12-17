@@ -36,24 +36,30 @@ class DictorInfo extends React.Component {
 
 	render() {  
 		return (
-			<div className="col-md-6">
-              <div className="card flex-md-row mb-4 box-shadow h-md-250">
-                <div className="card-body d-flex flex-column align-items-start">
-                  <p> Описание диктора: </p>
-                  Псевдоним: <input name="dictorPseudo" onChange={this.props.handleInputChange} type="text"/><br/>
-                  Имя: <input name="dictorName" onChange={this.props.handleInputChange} type="text"/><br/>
-                  Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
-                  Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
-                  Родной язык: <input name="dictorLang" onChange={this.props.handleInputChange} type="text"/><br/>
-                  Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>
-                  Возраст: <input name="dictorAge" onChange={this.props.handleInputChange} type="text"/><br/>
-                  Нарушения речи:
-                  <div id="select">
-                    {this.renderSelect()}
-                  </div>
-                  <button className="btn btn-dark" name="saveDictor" onClick={this.props.saveDictor}>Сохранить</button>
-                </div>
-              </div>
+			<div className="col-md-12">
+				<div className="row">
+					<div className="col-md-3"></div>
+					<div className="col-md-6">
+			            <div className="card flex-md-row mb-4 box-shadow h-md-250">
+			                <div className="card-body d-flex flex-column align-items-start">
+			                  <p> Описание диктора: </p>
+			                  Псевдоним: <input name="dictorPseudo" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  Имя: <input name="dictorName" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  Родной язык: <input name="dictorLang" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  Возраст: <input name="dictorAge" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  Нарушения речи:
+			                  <div id="select">
+			                    {this.renderSelect()}
+			                  </div>
+			                  <button className="btn btn-dark" name="saveDictor" onClick={this.props.saveDictor}>Сохранить</button>
+			            	</div>
+              			</div>
+              		</div>
+              		<div className="col-md-3"></div>
+              	</div>
             </div>
 		);
     }

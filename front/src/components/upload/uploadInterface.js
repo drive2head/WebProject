@@ -9,26 +9,7 @@ let entity = require("./../../model.js")
 class UploadInterface extends React.Component {  
 	constructor(props) {
 		super(props);
-		this.state = {  
-			dictors: [],
-		};
-		this.getDictors();
 	}
-
-	getDictors = async () => {
-		let response = await fetch('/persons', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-
-		let body = await response.json();
-		console.log(body);
-		this.setState({ dictors: body })  
-		console.log(this.state);    
-	}
-
 
 	render() {  
 		return (
