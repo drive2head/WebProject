@@ -14,7 +14,7 @@ class PersonInterface extends React.Component {
 	getUser = async () => {
 		const cookies = new Cookies();
     	cookies.getAll();
-		var response = await fetch('/person', {
+		var response = await fetch('/profile', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

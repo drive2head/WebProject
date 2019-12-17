@@ -91,7 +91,7 @@ app.post('/person', (req, res) => {
 	.then(result => {
 		console.log("(/person) result:", result);
 		const completed = Boolean(result);
-		log.addLog(req.body.username, 'access.profile', 'getUser', completed, result, '/person');
+		log.addLog(req.body.username, 'access.profile', 'getUser', completed, result, '/profile');
 		res.send(result);
 	});
 });
