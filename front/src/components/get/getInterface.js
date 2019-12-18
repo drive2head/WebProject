@@ -60,7 +60,8 @@ class GetInterface extends React.Component {
 
 		let body = await response.json();
 		let list = [];
-		this.setState({sounds: body.output});
+		console.log(body);
+		this.setState({sounds: body});
 		for (let i = 0; i < this.state.sounds; i++)
 			list.push({id: i, label: this.state.sounds[i].soundValue});
 		this.setState({soundsList: list});
