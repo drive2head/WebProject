@@ -9,20 +9,37 @@ class WavePlayer extends React.Component {
   constructor(props)
   {
     super(props);
-    this.changeFile = this.changeFile.bind(this);
     this.createWavePlayer = this.createWavePlayer.bind(this);
-    this.options = [{value:"drum.wav", label:"drum.wav"}, {value:"str.m4a", label:"str.m4a"}];
+    this.options = [];
+    this.getOptions();
     this.state = {selectedOption: {}}
+  }
+
+  getOptions = async () =>
+  {
+    var response = await fetch('/records', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+      })
+    });
+    let body = await response.json();
+    for (let i of body)
+      this.options.push({value: i.name, label: i.name})
+    console.log(this.options);
   }
 
   renderSelect()
   {
     return (
       <Select
+        autoFocus={false}
         id="files"
-        style={{width: '50px'}}
         name="Файлы"
         options={this.options}
+        openMenuOnFocus
         closeMenuOnSelect={true}
         value={this.state.selectedOption}
         onChange={
@@ -34,26 +51,9 @@ class WavePlayer extends React.Component {
 
   changeSelected(selectedOpt){
     document.getElementById('waveform').innerHTML = '';
-
-    var blob = null;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", 'http://speechdb.ru/audio/' + selectedOpt.value);
-    xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
-    xhr.onload = function()
-    {
-        blob = xhr.response;//xhr.response is now a blob object
-        console.log(blob);
-    }
-    xhr.send();
-
     this.createWavePlayer('http://speechdb.ru/audio/' + selectedOpt.value);
     this.setState({selectedOption: selectedOpt});
-  }
-
-  changeFile(e){
-    //console.log(e.target.files[0], URL.createObjectURL(e.target.files[0]));
-    this.createWavePlayer(URL.createObjectURL(e.target.files[0]));
-    //this.createWavePlayer('http://speechdb.ru/audio/drum.wav');
+    document.getElementById('waveform').focus();
   }
 
   createWavePlayer(url)
@@ -113,10 +113,14 @@ class WavePlayer extends React.Component {
           <div id="waveform"></div>
           <div id="timeline"></div>
           <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
-          <div id="select">
-            {this.renderSelect()}
+          <div className="row">
+            <div className="col-md-1"></div>
+            <div className="col-md-5">
+              <div id="select" style={{width: '100%'}}>
+                {this.renderSelect()}
+              </div>
+            </div>
           </div>
-          <input type="file" id="file" name="filetoupload" onChange={this.changeFile} />
           <div style={{display: "none"}}> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
           <p></p>
         </div>

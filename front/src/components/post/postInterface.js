@@ -30,7 +30,7 @@ class PostInterface extends React.Component {
       soundDialect: "",
       selectedOptions: [],
       sounds: [],
-
+      soundsList: [],
       // Dictor info
       dictorName: "",
       dictorLang: "",
@@ -54,6 +54,10 @@ class PostInterface extends React.Component {
     let newSounds = this.state.sounds;
     newSounds.push(object);
     this.setState({sounds: newSounds});
+    let list = this.state.soundsList;
+    list.push({id: list.length, label: this.state.soundValue});
+    this.setState({soundsList: list});
+    console.log(this.state.soundsList);
   }
 
   saveAll()
@@ -87,12 +91,18 @@ class PostInterface extends React.Component {
 
   changeSoundInfo(i)
   {
+    i = i.id;
     let newSounds = this.state.sounds;
     let tmp = newSounds[i];
     newSounds.splice(i, 1);
+    let list = this.state.soundsList;
+    list.splice(i, 1);
 
-    this.setState({soundValue: tmp.notation, startTime: tmp.start, endTime: tmp.end, soundLang: tmp.language, soundDialect: tmp.dialect, sounds: newSounds});
-    
+    for(let i = 0; i < list.length; i++)
+      if (list[i].id != i)
+        list[i].id = i;
+
+    this.setState({soundValue: tmp.notation, startTime: tmp.start, endTime: tmp.end, soundLang: tmp.language, soundDialect: tmp.dialect, sounds: newSounds, soundsList: list});
     setTimeout( () => {
       var evt = new KeyboardEvent('keydown', {'keyCode':31, 'which':31});
       document.dispatchEvent(evt);}
@@ -120,11 +130,12 @@ class PostInterface extends React.Component {
               saveSound={this.saveSound.bind(this)}
               state={this.state}
             />
-            <div className="col-md-1"></div>
             <Sounds
               changeSoundInfo={this.changeSoundInfo.bind(this)}
-              sounds={this.state.sounds}
+              sounds={this.state.soundsList}
+              current={this.state.soundValue}
             />
+            <div className="col-md-1"></div>
           </div>
           <div className="row">
             <button className="btn btn-dark" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}>Сохранить запись</button>
