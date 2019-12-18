@@ -42,35 +42,6 @@ class PostInterface extends React.Component {
     };
   }
 
-  handleOpts = async (sound) =>
-  {
-    const cookies = new Cookies();
-      cookies.getAll();
-    let response = await fetch('/get_data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        record: sound,
-        username: cookies.cookies.username,
-      })
-    });
-
-    let body = await response.json();
-    console.log(body.output);
-    let list = [];
-    let s = [];
-    for (let i of body.output)
-    {
-      s.push(i.node);
-      list.push({id: i.id, label: i.label});
-    }
-    this.setState({soundsList: list});
-    this.setState({sounds: s});
-    console.log(this.state.soundsList);
-  }
-
   saveSound()
   {
     let object = entity.Phoneme(
@@ -150,7 +121,6 @@ class PostInterface extends React.Component {
         <div className="jumbotron" style={{borderRadius: "25px"}}>
           <WavePlayer
             newTimeInterval={this.newTimeInterval.bind(this)}
-            handleOpts={this.handleOpts.bind(this)}
             state={this.state}
           />
           <div className="row">

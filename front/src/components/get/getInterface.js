@@ -30,6 +30,7 @@ class GetInterface extends React.Component {
 			soundDialect: "",
 			selectedOptions: [],
 			sounds: [],
+			newSounds: [],
 			soundsList: [],
 			// Dictor info
 			dictorName: "",
@@ -78,6 +79,9 @@ class GetInterface extends React.Component {
 	    let newSounds = this.state.sounds;
 	    newSounds.push(object);
 	    this.setState({sounds: newSounds});
+	    newSounds = this.state.newSounds;
+	    newSounds.push(object);
+	    this.setState({newSounds: newSounds});
 	    let list = this.state.soundsList;
 	    list.push({id: list.length, label: this.state.soundValue});
 	    this.setState({soundsList: list});
@@ -109,7 +113,7 @@ class GetInterface extends React.Component {
 	    axios.post('/add_data', {
 	      username: cookies.cookies.username,
 	      record: document.getElementById('files').textContent,
-	      phonemes: this.state.sounds
+	      phonemes: this.state.newSounds
 	    });
 	    window.alert('Done!');
 	    //window.location.href = "/get";
