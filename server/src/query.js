@@ -38,15 +38,27 @@ exports.addRecord = function (record, person_id) {
 	return notabs(text);
 }
 
-exports.addPhonemes = function (record_name, phonemes) {
+exports.getMarkup = function (username, record_name) {
+	let text = `
+	match (markup:Markup {username: '${username}'})
+	match (rec:Record {name: '${record_name}'})
+	match (markup)-[:MARKED_ON]->(rec)
+	match (ph:Phoneme)-[:CONTAINED_IN]->(markup)
+	return ph
+	`;
+};
+
+exports.addMarkup = function (username, record_name, phonemes) {
 	let text = `\
-	match (rec: Record {name: '${record_name}'})`;
+	match (record: Record {name: '${record_name}'})
+	create (markup: Markup {username: '${username}'})
+	create (markup)-[:MARKED_ON]->(record)`;
 
 	let returnPh = `return `;
 	phonemes.forEach((phoneme, i) => {
 		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',
 					end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})
-				create (ph${i})-[:CONTAINED_IN]->(rec)`;
+				create (ph${i})-[:CONTAINED_IN]->(markup)`;
 
 		if (i < phonemes.length - 1) {
 			returnPh += `ph${i}, `;

@@ -50,14 +50,21 @@ changePhoneme = runQuery(query.changePhoneme);
 changePerson = runQuery(query.changePerson);
 addPerson = runQuery(query.addPerson);
 addRecord = runQuery(query.addRecord);
-addPhonemes = runQuery(query.addPhonemes);
+addMarkup = runQuery(query.addMarkup);
+getMarkup = runQuery(query.getMarkup);
 
 exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
 exports.changePhoneme = changePhoneme;
 exports.changePerson = changePerson;
 exports.addPerson = addPerson;
 exports.addRecord = addRecord;
-exports.addPhonemes = addPhonemes;
+exports.addMarkup = addMarkup;
+exports.getMarkup = getMarkup;
+
+getMarkup('123', 'voice1.wav');
+// .then((result) => {
+	// console.log(result);
+// })
 
 
 // function test_addRecordPersonPhonemes() {
@@ -113,5 +120,5 @@ exports.addPhonemes = addPhonemes;
 // const rec = entity.Record('rec.wav', 'empty');
 // addRecordPersonPhonemes(rec, pers, [ph0, ph1])
 // .then((result) => {
-// 	console.log("result: ", result);
+	// console.log("result: ", result);
 // });

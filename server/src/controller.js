@@ -155,9 +155,9 @@ app.post('/profile', (req, res) => {
 
 app.post('/add_data', (req, res) => {
 	console.log('req.body.record:', req.body.record);
-	SpeechDB.addPhonemes(req.body.record, req.body.phonemes)
+	SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
 	.then(result => {
-		log.addLog(req.body.username, 'query.add', 'addPhonemes', result.completed, result.output, '/add_data');
+		log.addLog(req.body.username, 'query.add', 'addMarkup', result.completed, result.output, '/add_data');
 		if (result.completed) {
 			// result.output.forEach((node) => {
 				// const recordID = node.id;
