@@ -12,7 +12,6 @@ exports.addPerson = function (person) {
 		sex:'${person.sex}', nativeLanguage:'${person.nativeLanguage}'})
 	merge (country: Country {name:'${person.country}'})
 	merge (city: City {name:'${person.city}'})
-	create (rec)-[:SPOKEN_BY]->(person)
 	create (person)-[:LIVES_IN]->(city)
 	merge (city)-[:LOCATED_IN]->(country)
 	return person`;
@@ -33,6 +32,7 @@ exports.addRecord = function (record, person_id) {
 	match (person)
 	where ID(person) = ${person_id}
 	merge (rec:Record {name:'${record.recname}'})
+	create (rec)-[:SPOKEN_BY]->(person)
 	return rec`;
 
 	return notabs(text);
@@ -83,24 +83,27 @@ exports.changePhoneme = function (phoneme, id) {
 	return notabs(text);
 };
 
-exports.addRecordPersonPhonemes = function (record, person, phonemes) {
-	let text = `\
-	merge (rec:Record {name:'${record.recname}'})
-	create (person: Person {fullname:'${person.fullName}', age:'${person.age}', 
-		sex:'${person.sex}', nativeLanguage:'${person.nativeLanguage}'})
-	merge (country: Country {name:'${person.country}'})
-	merge (city: City {name:'${person.city}'})
-	create (rec)-[:SPOKEN_BY]->(person)
-	create (person)-[:LIVES_IN]->(city)
-	merge (city)-[:LOCATED_IN]->(country)`;
+exports.addRecordPersonPhonemes = function (record, personID, phonemes) {
+	// let text = `\
 
-	if (person.disorders != null) { 
-		person.disorders.forEach((disorder, i) => {
-			text += `merge (dis${i}: Disorder {name:'${disorder}'})
-						create (person)-[:HAS]->(dis${i})\n`;
-		});
-		text += `\n`;
-	};
+	// merge (rec:Record {name:'${record.recname}'})
+	// create (person: Person {fullname:'${person.fullName}', age:'${person.age}', 
+	// 	sex:'${person.sex}', nativeLanguage:'${person.nativeLanguage}'})
+	// merge (country: Country {name:'${person.country}'})
+	// merge (city: City {name:'${person.city}'})
+	// create (rec)-[:SPOKEN_BY]->(person)
+	// create (person)-[:LIVES_IN]->(city)
+	// merge (city)-[:LOCATED_IN]->(country)`;
+	let text = `\
+	
+	match (person: Person)
+	where ID(person) = ${personID}
+	merge (rec:Record {name:'${record.recname}'})`;
+	// merge (country: Country {name:'${person.country}'})
+	// merge (city: City {name:'${person.city}'})
+	// create (rec)-[:SPOKEN_BY]->(person)
+	// create (person)-[:LIVES_IN]->(city)
+	// merge (city)-[:LOCATED_IN]->(country)`;
 	
 	let returnPh = ``;
 	phonemes.forEach((phoneme, i) => {

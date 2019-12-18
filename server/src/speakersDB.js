@@ -14,17 +14,17 @@ async function getAllSpeakers() {
 	return await Speaker.find();
 };
 
-async function findRecordByName (name) {
+async function findSpeakerByName (name) {
 	return await Speaker.findOne({ name: name });
 };
 
-// async function getSpeaker (speakerID) {
-	// return await Speaker.findOne({ _id: speakerID });
-// };
+async function findSpeakerByID (speakerID) {
+	return await Speaker.findOne({ _id: speakerID });
+};
 
 async function addSpeaker(name, nodeID) {
 	try {
-		var speaker = await findRecordByName(name);
+		var speaker = await findSpeakerByName(name);
 		if (speaker) {
 			return { completed: false, output: `This speaker name is already in use` };
 		}
@@ -36,6 +36,6 @@ async function addSpeaker(name, nodeID) {
 	}
 };
 
-// exports.getSpeaker = getSpeaker;
+exports.findSpeakerByID = findSpeakerByID;
 exports.addSpeaker = addSpeaker;
 exports.getAllSpeakers = getAllSpeakers;

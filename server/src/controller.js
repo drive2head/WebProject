@@ -24,16 +24,23 @@ app.post('/add_person', (req, res) => {
 	SpeechDB.addPerson(req.body.person)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'addPerson', result.completed, result.output, '/add_person');
-		if (result.completed == false)
+		if (result.completed == false) {
 			res.send({ status: false, msg: 'Person was not added' });
+			return;
+		}
 
 		const nodeID = result.output[0].id;
 		SpeakersDB.addSpeaker(req.body.pseudonym, nodeID)
 		.then(result => {
 			log.addLog(req.body.username, 'query.add', 'addSpeaker', result.completed, result.output, '/add_person');
-			if (result.completed == false)
+			if (result.completed == false) {
 				res.send({ status: false, msg: 'Person was not added' });
+				return;
+			}
 			res.send({ status: true, msg: 'Person was added' });
+		})
+		.catch(err => {
+			console.log("Error occured:\n", err);
 		})
 	})
 	.catch(err => {
@@ -45,7 +52,6 @@ app.get('/persons', (req, res) => {
 	SpeakersDB.getAllSpeakers()
 	.then(result => {
 		log.addLog(req.body.username, 'access.persons', 'getAllSpeakers', true, result, '/persons');
-		console.log(result);
 		res.send(result);
 	})
 });
@@ -60,7 +66,6 @@ app.post('/records', (req, res) => {
 
 function files() {
 	let path = cfg.records_dir;
-	console.log(path);
 	fs.readdirSync(path).forEach(file => {
   		console.log(file);
 	});
@@ -69,29 +74,43 @@ function files() {
 app.post('/add_record', (req, res) => {
 	let form = new formidable.IncomingForm();
 	form.parse(req, function (err, fields, files) {
-		let dictor = fields.text;
+		let personID = fields.text;
 		let oldpath = files.filetoupload.path;
 		let newpath = cfg.records_dir + files.filetoupload.name;
+		let recordName = files.filetoupload.name;
 		try {
 			fs.rename(oldpath, newpath, function (err) {
 				if (err) throw err;
 			});
-			RecordsDB.addRecord(files.filetoupload.name, newpath, req.body.personID)
+
+			SpeakersDB.findSpeakerByID(personID)
 			.then(result => {
-				log.addLog(req.body.username, 'upload.file', 'addRecord', result.completed, result.output, '/add_record');
-				if (result.completed) {
-					res.send({ status: true, msg: 'Record was successfully uploaded!' });
-				} else {
-					res.send({ status: false, msg: result.output });
-				}
-			})
-			.catch(err => {
-				throw err;
+				const personNodeID = result.nodeID;
+				SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID)
+				.then(result => {
+					log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
+					if (result.completed == false) {
+						res.send({ status: false, msg: result.output });
+						return;
+					}
+
+					RecordsDB.addRecord(files.filetoupload.name, newpath, personID)
+					.then(result => {
+						log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
+						if (result.completed) {
+							res.send({ status: true, msg: 'Record was successfully uploaded!' });
+						} else {
+							res.send({ status: false, msg: result.output });
+						}
+					})
+					.catch(err => { throw err; })
+				})
+				.catch(err => { throw err; })
 			})
 		} catch (err) {
 			console.log(err);
-		}
-	});
+		};
+	})
 });
 
 app.post('/signin', (req, res) => {
@@ -100,7 +119,6 @@ app.post('/signin', (req, res) => {
 
 	userAuth.verifyUser(username, password)
 	.then(result => {
-		console.log('(/signin) verifyUser:', result);
 		log.addLog(req.body.username, 'access.signin', 'userExist', result.completed, result.output, '/signin');
 		res.send({ status: result.completed, msg: result.output });
 	});
@@ -127,10 +145,8 @@ app.post('/profile', (req, res) => {
 	let username = req.body.username,
 		password = req.body.password;
 		
-	console.log("(/person) username:", username);
 	userAuth.getUser(username)
 	.then(result => {
-		console.log("(/person) result:", result);
 		const completed = Boolean(result);
 		log.addLog(req.body.username, 'access.profile', 'getUser', completed, result, '/profile');
 		res.send(result);
@@ -138,7 +154,12 @@ app.post('/profile', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-	SpeechDB.addRecordPersonPhonemes(req.body.record, req.body.person, req.body.phonemes)
+	var personID = null;
+	findRecordByName(name)
+	.then(result => {
+		personID = result.speakerID;
+	});
+	SpeechDB.addRecordPersonPhonemes(req.body.record, personID, req.body.phonemes)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'addRecordPersonPhonemes', result.completed, result.output, '/add_data');
 		if (result.completed) {

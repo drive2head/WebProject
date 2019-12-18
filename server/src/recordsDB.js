@@ -38,5 +38,6 @@ async function addRecord(name, path, speakerID) {
 };
 
 // exports.getRecord = getRecord;
+exports.findRecordByName = findRecordByName;
 exports.addRecord = addRecord;
 exports.getAllRecords = getAllRecords;
