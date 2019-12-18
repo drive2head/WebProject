@@ -33,9 +33,9 @@ class Header extends React.Component {
                         <li className="nav-item">
                             <a className="nav-link" href="/post">Разметка</a>
                         </li>
-                        {/*<li className="nav-item">
+                        <li className="nav-item">
                             <a className="nav-link" href="/get">Просмотр</a>
-                        </li>*/}
+                        </li>
                         <li className="nav-item">
                             <a className="nav-link" href="/upload">Аудиозапись</a>
                         </li>
