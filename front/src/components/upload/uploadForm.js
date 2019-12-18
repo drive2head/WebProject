@@ -78,7 +78,7 @@ class UploadForm extends React.Component {
 						        <form action="add_record" method="post" enctype="multipart/form-data">
 						        	<input type="text" id="text" name="text" value={this.state.personId} style={{width: '100%'}}/><br/>
 								    <input type="file" id="file" name="filetoupload"/><br/>
-								    <input type="submit" /> 
+								    <input className="btn btn-dark" type="submit" /> 
 								</form>
 							</div>
 						</div>
