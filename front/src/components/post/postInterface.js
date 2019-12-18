@@ -60,10 +60,10 @@ class PostInterface extends React.Component {
     let body = await response.json();
     console.log(body.output);
     let list = [];
-    this.setState({soundsList: body.output});
+    this.setState({sounds: body.output});
     for (let i of body.output)
-      list.push(i.label);
-    this.setState({sounds: list});
+      list.push({id: i.id, name: i.name});
+    this.setState({soundsList: list});
     console.log(this.state.soundsList);
   }
 
