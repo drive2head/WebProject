@@ -13,9 +13,9 @@ class GetInterface extends React.Component {
 			<div className="container">
 				<Header/>
 				<div class="jumbotron" style={{borderRadius: "25px"}}>
-		    		<p class="text-justify">No API</p>
-		    	</div>
-	    	</div>
+					<p class="text-justify">No API</p>
+				</div>
+			</div>
 
 		);
 	}

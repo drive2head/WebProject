@@ -54,8 +54,8 @@ class DictorInfo extends React.Component {
 				                Нарушения речи:
 			                  	<div id="select">
 			                    	{this.renderSelect()}
-			                  	</div>
-			                  	<button className="btn btn-dark" name="saveDictor" onClick={this.props.saveDictor}>Сохранить</button>
+			                  	</div><br/>
+			                  	<br/><button className="btn btn-dark" name="saveDictor" onClick={this.props.saveDictor}>Сохранить</button>
 			                </div>
               			</div>
               		</div>

@@ -98,7 +98,7 @@ app.post('/add_record', (req, res) => {
 					.then(result => {
 						log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
 						if (result.completed) {
-							res.send({ status: true, msg: 'Record was successfully uploaded!' });
+							res.redirect('/');
 						} else {
 							res.send({ status: false, msg: result.output });
 						}
