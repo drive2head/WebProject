@@ -154,19 +154,15 @@ app.post('/profile', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-	var personID = null;
-	findRecordByName(name)
+	console.log('req.body.record:', req.body.record);
+	SpeechDB.addPhonemes(req.body.record, req.body.phonemes)
 	.then(result => {
-		personID = result.speakerID;
-	});
-	SpeechDB.addRecordPersonPhonemes(req.body.record, personID, req.body.phonemes)
-	.then(result => {
-		log.addLog(req.body.username, 'query.add', 'addRecordPersonPhonemes', result.completed, result.output, '/add_data');
+		log.addLog(req.body.username, 'query.add', 'addPhonemes', result.completed, result.output, '/add_data');
 		if (result.completed) {
-			result.output.forEach((node) => {
-				const recordID = node.id;
-				NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
-			});
+			// result.output.forEach((node) => {
+				// const recordID = node.id;
+				// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
+			// });
 			res.send("Data was successfully loaded!");
 		}
 		else {

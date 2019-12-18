@@ -38,17 +38,22 @@ exports.addRecord = function (record, person_id) {
 	return notabs(text);
 }
 
-exports.addPhonemes = function (record_id, phonemes) {
+exports.addPhonemes = function (record_name, phonemes) {
 	let text = `\
-	match (record)
-	where ID(record) = ${record_id}`;
+	match (rec: Record {name: '${record_name}'})`;
 
-	let returnPh = ``;
+	let returnPh = `return `;
 	phonemes.forEach((phoneme, i) => {
 		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',
 					end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})
 				create (ph${i})-[:CONTAINED_IN]->(rec)`;
-		returnPh += `, ph${i}`;
+
+		if (i < phonemes.length - 1) {
+			returnPh += `ph${i}, `;
+		} else {
+			returnPh += `ph${i}`;
+		}
+
 	});
 	text += `\n` + returnPh;
 
