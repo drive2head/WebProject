@@ -38,6 +38,13 @@ exports.addRecord = function (record, person_id) {
 	return notabs(text);
 }
 
+exports.getMarkups = function (username) {
+	let text = `
+	`;
+
+	return notabs(text);
+};
+
 exports.getMarkup = function (username, record_name) {
 	let text = `
 	match (markup:Markup {username: '${username}'})

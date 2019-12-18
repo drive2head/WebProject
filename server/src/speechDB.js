@@ -9,7 +9,7 @@ let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login,
 function extractNodes(record) {
 	var recordNodes = [];
 	record.forEach((node) => {
-		recordNodes.push({ id: Integer.toString(node.identity), label: node.labels[0] });
+		recordNodes.push({ id: Integer.toString(node.identity), label: node.labels[0], node: node });
 	});
 	return recordNodes;
 }
