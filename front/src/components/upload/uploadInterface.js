@@ -16,9 +16,7 @@ class UploadInterface extends React.Component {
 			<div className="container">
 				<Header/>
 				<div className="jumbotron" style={{borderRadius: "25px"}}>
-					<div className="row">
-						<UploadForm/>
-					</div>
+					<UploadForm/>
 				</div>
 		    </div>
 		);
