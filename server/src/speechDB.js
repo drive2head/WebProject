@@ -24,14 +24,14 @@ function runQuery(queryFunc, multipleRecords=false) {
 			return session.run(queryText)
 			.then((result) => {
 				var nodes = [];
-				result.records.forEach((record) => {
-					var recordNodes = extractNodes(record);
-					if (multipleRecords) {
-						nodes.push(recordNodes);
-					} else {
-						recordNodes.forEach((node) => { nodes.push(node); } );
-					}
-				});
+				if (multipleRecords) {
+					result.records.forEach((record) => {
+						var recordNodes = extractNodes(record);
+							recordNodes.forEach((node) => { nodes.push(node); } );
+						});
+				} else {
+					nodes = extractNodes(result.records[0]);
+				}
 				return { completed: true, output: nodes };
 			})
 			.catch((err) => {
@@ -51,7 +51,7 @@ changePerson = runQuery(query.changePerson);
 addPerson = runQuery(query.addPerson);
 addRecord = runQuery(query.addRecord);
 addMarkup = runQuery(query.addMarkup);
-getMarkup = runQuery(query.getMarkup);
+getMarkup = runQuery(query.getMarkup, true);
 
 exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
 exports.changePhoneme = changePhoneme;
@@ -60,12 +60,6 @@ exports.addPerson = addPerson;
 exports.addRecord = addRecord;
 exports.addMarkup = addMarkup;
 exports.getMarkup = getMarkup;
-
-getMarkup('123', 'voice1.wav');
-// .then((result) => {
-	// console.log(result);
-// })
-
 
 // function test_addRecordPersonPhonemes() {
 // 	let queryText = `\

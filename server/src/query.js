@@ -46,6 +46,8 @@ exports.getMarkup = function (username, record_name) {
 	match (ph:Phoneme)-[:CONTAINED_IN]->(markup)
 	return ph
 	`;
+
+	return notabs(text);
 };
 
 exports.addMarkup = function (username, record_name, phonemes) {
