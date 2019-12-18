@@ -199,6 +199,19 @@ app.post('/change_phoneme', (req, res) => {
 	});
 });
 
-// app.get('/get_data', (req, res) => {
-	/* smth */
-// });
+app.post('/get_data', (req, res) => {
+	SpeechDB.getMarkup(req.body.username, req.body.record)
+	.then(result => {
+		console.log(result);
+		if (result.completed) {
+		// result.output.forEach((node) => {
+			// const recordID = node.id;
+			// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
+		// });
+			res.send(result);
+		}
+		else {
+			res.send("Data WAS NOT loaded!");
+		}
+	});
+});

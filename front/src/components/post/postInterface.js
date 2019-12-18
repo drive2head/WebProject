@@ -42,6 +42,30 @@ class PostInterface extends React.Component {
     };
   }
 
+  handleOpts = async (sound) =>
+  {
+    const cookies = new Cookies();
+      cookies.getAll();
+    let response = await fetch('/get_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        record: sound,
+        username: cookies.cookies.username,
+      })
+    });
+
+    let body = await response.json();
+    let list = [];
+    this.setState({sounds: body.output});
+    for (let i = 0; i < this.state.sounds; i++)
+      list.push({id: i, label: this.state.sounds[i].soundValue});
+    this.setState({soundsList: list});
+    console.log(this.state.soundsList);
+  }
+
   saveSound()
   {
     let object = entity.Phoneme(
@@ -113,7 +137,6 @@ class PostInterface extends React.Component {
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
   handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
 
-
   render() {  
     document.title = "Новая разметка";
     return (
@@ -122,6 +145,7 @@ class PostInterface extends React.Component {
         <div className="jumbotron" style={{borderRadius: "25px"}}>
           <WavePlayer
             newTimeInterval={this.newTimeInterval.bind(this)}
+            handleOpts={this.handleOpts.bind(this)}
             state={this.state}
           />
           <div className="row">

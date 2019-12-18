@@ -54,7 +54,7 @@ class WavePlayer extends React.Component {
     this.createWavePlayer('http://speechdb.ru/audio/' + selectedOpt.value);
     this.setState({selectedOption: selectedOpt});
     document.getElementById('waveform').focus();
-    this.props.handleOpts(selectedOpt.value)
+    this.props.handleOpts(selectedOpt.value);
   }
 
   createWavePlayer(url)
