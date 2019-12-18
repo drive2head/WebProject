@@ -31,13 +31,13 @@ class Header extends React.Component {
                             <a className="nav-link" href="/get">Посмотреть разметки</a>
                         </li> */}
                         <li className="nav-item">
-                            <a className="nav-link" href="/post">Добавить разметку</a>
+                            <a className="nav-link" href="/post">Разметка</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/upload">Загрузить аудиозапись</a>
+                            <a className="nav-link" href="/upload">Аудиозапись</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/add_dictor">Новый диктор</a>
+                            <a className="nav-link" href="/add_dictor">Диктор</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" href="/profile">Профиль</a>

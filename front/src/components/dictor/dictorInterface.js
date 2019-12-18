@@ -36,6 +36,7 @@ class DictorInterface extends React.Component {
   	changeSelected(selectedOpts){this.setState({selectedOptions: selectedOpts});}
 
 	render() {  
+		document.title = "Новый интерфейс";
 		return (
 			<div className="container">
 				<Header/>

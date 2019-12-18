@@ -43,26 +43,20 @@ class DictorInfo extends React.Component {
 					<div className="col-md-8">
 			            <div className="card flex-md-row mb-4 box-shadow h-md-250">
 			                <div className="card-body d-flex flex-column align-items-start">
-			                	<div className="inlinediv">
-				                  	<div className="inline">
-				                  		<p> Описание диктора: </p>
-					                  	Псевдоним: <input name="dictorPseudo" onChange={this.props.handleInputChange} type="text"/><br/>
-					                  	Имя: <input name="dictorName" onChange={this.props.handleInputChange} type="text"/><br/>
-					                  	Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
-					                </div>
-					                <div className="inline">
-					                  	Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
-					                  	Родной язык: <input name="dictorLang" onChange={this.props.handleInputChange} type="text"/><br/>
-					                  	Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>
-					                  	Возраст: <input name="dictorAge" onChange={this.props.handleInputChange} type="text"/><br/>
-					                </div>
-					            </div>
+		                  		<p> Описание диктора: </p>
+			                  	Псевдоним: <input name="dictorPseudo" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	Имя: <input name="dictorName" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	Родной язык: <input name="dictorLang" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	Возраст: <input name="dictorAge" onChange={this.props.handleInputChange} type="text"/><br/>
 				                Нарушения речи:
 			                  	<div id="select">
 			                    	{this.renderSelect()}
 			                  	</div>
 			                  	<button className="btn btn-dark" name="saveDictor" onClick={this.props.saveDictor}>Сохранить</button>
-			            	</div>
+			                </div>
               			</div>
               		</div>
               		<div className="col-md-2"></div>

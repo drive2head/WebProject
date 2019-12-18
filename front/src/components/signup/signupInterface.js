@@ -46,6 +46,7 @@ class SignupInterface extends React.Component {
   back () { window.location.href = "/signin" }
 
   render() {  
+    document.title = "Регистрация";
     return (  
       <div className='popup'>  
         <div className='popup_inner'>

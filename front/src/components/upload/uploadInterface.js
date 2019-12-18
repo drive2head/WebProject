@@ -12,6 +12,7 @@ class UploadInterface extends React.Component {
 	}
 
 	render() {  
+		document.title = "Новая аудиозапись";
 		return (
 			<div className="container">
 				<Header/>

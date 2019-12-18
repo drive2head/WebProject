@@ -52,6 +52,7 @@ class LoginInterface extends React.Component {
   }
 
   render() {  
+    document.title = "Вход";
     return (  
       <div className='popup'>  
         <div className='popup_inner'>

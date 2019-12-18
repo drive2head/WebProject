@@ -62,27 +62,27 @@ class PostInterface extends React.Component {
 
   saveAll()
   {
-    let person = entity.Person(
-      this.state.dictorName,
-      this.state.dictorAge,
-      this.state.dictorSex,
-      this.state.dictorLang,
-      this.state.dictorCity,
-      this.state.dictorCountry,
-      this.state.selectedOptions,
-    );
-    let record_path = document.getElementById('file').value.split('\\');
-    const recname = record_path[record_path.length - 1];
-    let record = entity.Record(
-      recname,
-      {},
-    );
+    // let person = entity.Person(
+    //   this.state.dictorName,
+    //   this.state.dictorAge,
+    //   this.state.dictorSex,
+    //   this.state.dictorLang,
+    //   this.state.dictorCity,
+    //   this.state.dictorCountry,
+    //   this.state.selectedOptions,
+    // );
+    // let record_path = document.getElementById('file').value.split('\\');
+    // const recname = record_path[record_path.length - 1];
+    // let record = entity.Record(
+    //   recname,
+    //   {},
+    // );
     const cookies = new Cookies();
     cookies.getAll();
+    console.log(document.getElementById('files').textContent);
     axios.post('/add_data', {
       username: cookies.cookies.username,
-      person: person,
-      record: record,
+      record: document.getElementById('files').textContent,
       phonemes: this.state.sounds
     });
     window.alert('Done!');
@@ -115,6 +115,7 @@ class PostInterface extends React.Component {
 
 
   render() {  
+    document.title = "Новая разметка";
     return (
       <div className="container">
         <Header/>

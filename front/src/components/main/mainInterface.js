@@ -9,6 +9,7 @@ class MainInterface extends React.Component {
 
 	render()
 	{
+		document.title = "Главная";
 		return (
 			<div className="container">
 				<Header/>
