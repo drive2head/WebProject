@@ -8,9 +8,9 @@ class DictorInfo extends React.Component {
 		super(props);
 
 		this.languages = [
-	      {value:"Русский", label:"Русский"},
-	      {value:"Английский", label:"Английский"},
-	      {value:"Французский", label:"Французский"},
+	      {value:"русский", label:"русский"},
+	      {value:"английский", label:"английский"},
+	      {value:"французский", label:"французский"},
 	    ];
 
 		this.options = [

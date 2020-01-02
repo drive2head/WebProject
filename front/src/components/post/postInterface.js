@@ -35,8 +35,6 @@ class PostInterface extends React.Component {
     };
   }
 
-  changeLang(l) {this.setState({soundLang: l})}
-
   saveSound()
   {
     let object = entity.Phoneme(
@@ -90,6 +88,8 @@ class PostInterface extends React.Component {
     
   }
 
+  changeLang(l) {this.setState({soundLang: l})}
+  changeNotation(l) {this.setState({soundValue: l})}
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
   handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
 
@@ -106,6 +106,7 @@ class PostInterface extends React.Component {
           <div className="row">
             <div className="col-md-1"></div>
             <SoundInfo
+              changeNotation={this.changeNotation.bind(this)}
               changeLang={this.changeLang.bind(this)}
               handleInputChange={this.handleInputChange.bind(this)}
               saveSound={this.saveSound.bind(this)}
