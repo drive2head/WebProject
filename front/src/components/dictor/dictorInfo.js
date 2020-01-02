@@ -7,12 +7,19 @@ class DictorInfo extends React.Component {
 	{
 		super(props);
 
+		this.languages = [
+	      {value:"Русский", label:"Русский"},
+	      {value:"Английский", label:"Английский"},
+	      {value:"Французский", label:"Французский"},
+	    ];
+
 		this.options = [
 	      {value:"Д1", label:"Д1"},
 	      {value:"Д2", label:"Д2"},
 	      {value:"Д3", label:"Д3"},
 	      {value:"Акцент", label:"Акцент"}
 	    ];
+	    this.state = {nativeLang: ''};
 	}
   
 	renderSelect()
@@ -35,6 +42,29 @@ class DictorInfo extends React.Component {
 	    );
 	}
 
+	renderSelectLang()
+	{
+		return (
+			<Select
+				autoFocus={false}
+				style={{width: '150px'}}
+				id="language"
+				name="Родной язык"
+				options={this.languages}
+				openMenuOnFocus
+				closeMenuOnSelect={true}
+				placeholder="Родной язык: "
+				value={this.state.nativeLang}
+				onChange={
+				  (selectedOpt) => {
+				    this.setState({nativeLang: selectedOpt});
+				    this.props.changeLang(selectedOpt.label);
+				  }
+				}
+			/>
+		);
+	}
+
 	render() {  
 		return (
 			<div className="col-md-12">
@@ -48,7 +78,9 @@ class DictorInfo extends React.Component {
 			                  	Имя: <input name="dictorName" onChange={this.props.handleInputChange} type="text"/><br/>
 			                  	Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
 			                  	Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
-			                  	Родной язык: <input name="dictorLang" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	<div id="select">
+					            	{this.renderSelectLang()}
+					            </div>
 			                  	Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>
 			                  	Возраст: <input name="dictorAge" onChange={this.props.handleInputChange} type="text"/><br/>
 				                Нарушения речи:

@@ -32,8 +32,9 @@ class DictorInterface extends React.Component {
 		window.location.href = "/";
 	}
 
+  	changeLang(selectedOpts) {this.setState({dictorLang: selectedOpts});}
 	handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
-  	changeSelected(selectedOpts){this.setState({selectedOptions: selectedOpts});}
+  	changeSelected(selectedOpts) {this.setState({selectedOptions: selectedOpts});}
 
 	render() {  
 		document.title = "Новый интерфейс";
@@ -44,6 +45,7 @@ class DictorInterface extends React.Component {
 					<div className="row">
 						<DictorInfo
 							handleInputChange={this.handleInputChange.bind(this)}
+							changeLang={this.changeLang.bind(this)}
 							changeSelected={this.changeSelected.bind(this)}
 							saveDictor={this.saveDictor.bind(this)}
 						/>

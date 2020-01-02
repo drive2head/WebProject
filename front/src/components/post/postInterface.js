@@ -52,7 +52,6 @@ class PostInterface extends React.Component {
     let list = this.state.soundsList;
     list.push({id: list.length, label: this.state.soundValue});
     this.setState({soundsList: list});
-    this.setState({soundDialect: ''});
     this.setState({soundValue: ''});
   }
 
