@@ -20,7 +20,7 @@ class PostInterface extends React.Component {
     this.newTimeInterval = this.newTimeInterval.bind(this);
 
     this.slider = "";
-
+    
     this.state = {  
       // Sound info
       startTime: 0,
@@ -41,6 +41,8 @@ class PostInterface extends React.Component {
       dictorAccent: "",
     };
   }
+
+  changeLang(l) {this.setState({soundLang: l})}
 
   saveSound()
   {
@@ -126,6 +128,7 @@ class PostInterface extends React.Component {
           <div className="row">
             <div className="col-md-1"></div>
             <SoundInfo
+              changeLang={this.changeLang.bind(this)}
               handleInputChange={this.handleInputChange.bind(this)}
               saveSound={this.saveSound.bind(this)}
               state={this.state}
