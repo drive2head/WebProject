@@ -31,6 +31,7 @@ class PostInterface extends React.Component {
       selectedOptions: [],
       sounds: [],
       soundsList: [],
+
     };
   }
 
@@ -72,10 +73,10 @@ class PostInterface extends React.Component {
   changeSoundInfo(i)
   {
     i = i.id;
-    // let newSounds = this.state.sounds;
-    // let tmp = newSounds[i];
+    let newSounds = this.state.sounds;
+    let tmp = newSounds[i];
     // newSounds.splice(i, 1);
-    // let list = this.state.soundsList;
+    let list = this.state.soundsList;
     // list.splice(i, 1);
 
     // for(let i = 0; i < list.length; i++)
