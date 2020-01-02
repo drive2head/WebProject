@@ -65,6 +65,11 @@ class DictorInfo extends React.Component {
 		);
 	}
 
+	handleOptionChange()
+	{
+
+	}
+
 	render() {  
 		return (
 			<div className="col-md-12">
@@ -81,7 +86,22 @@ class DictorInfo extends React.Component {
 			                  	Родной язык: <div id="select">
 					            	{this.renderSelectLang()}
 					            </div>
-			                  	Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>
+			                  	Пол: <div name="dictorSex">
+								    <div className="radio">
+								    	<label>
+								        	<input type="radio" value="ж" name="dictorSex"
+								                      onChange={this.props.handleInputChange} />
+								        	ж
+								      	</label>
+								    </div>
+								    <div className="radio">
+								      	<label>
+								        	<input type="radio" value="м" name="dictorSex"
+								                      onChange={this.props.handleInputChange} />
+								        	м
+								      	</label>
+								    </div>
+								</div>
 			                  	Возраст: <input name="dictorAge" onChange={this.props.handleInputChange} type="text"/><br/>
 				                Нарушения речи:
 			                  	<div id="select">

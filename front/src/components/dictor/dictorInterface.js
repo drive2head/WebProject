@@ -23,8 +23,8 @@ class DictorInterface extends React.Component {
 
 	saveDictor()
 	{
-		let dictor = entity.Person(this.state.dictorName, this.state.dictorLang, this.state.dictorCity, this.state.dictorSex, this.state.dictorAge, this.state.selectedOptions);
-
+		let dictor = entity.Person(this.state.dictorName, this.state.dictorAge, this.state.dictorSex, this.state.dictorLang, this.state.dictorCity, this.state.dictorCountry, this.state.selectedOptions);
+		console.log(dictor);
 		axios.post('/add_person', {
 			person: dictor,
 			pseudonym: this.state.dictorPseudo,

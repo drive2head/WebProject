@@ -112,7 +112,7 @@ class WavePlayer extends React.Component {
         <div className="col-md-12 px-0">
           <div id="waveform"></div>
           <div id="timeline"></div>
-          <input id="slider" type="range" min="1" max="500" defaultValue="1"/>
+          <input id="slider" type="range" min="1" max="1000" defaultValue="1"/>
           <div className="row">
             <div className="col-md-1"></div>
             <div className="col-md-5">
