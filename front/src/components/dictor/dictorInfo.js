@@ -47,13 +47,13 @@ class DictorInfo extends React.Component {
 		return (
 			<Select
 				autoFocus={false}
-				style={{width: '150px'}}
+				style={{width: '100px'}}
 				id="language"
 				name="Родной язык"
 				options={this.languages}
 				openMenuOnFocus
 				closeMenuOnSelect={true}
-				placeholder="Родной язык: "
+				placeholder=""
 				value={this.state.nativeLang}
 				onChange={
 				  (selectedOpt) => {
@@ -78,7 +78,7 @@ class DictorInfo extends React.Component {
 			                  	Имя: <input name="dictorName" onChange={this.props.handleInputChange} type="text"/><br/>
 			                  	Город: <input name="dictorCity" onChange={this.props.handleInputChange} type="text"/><br/>
 			                  	Страна: <input name="dictorCountry" onChange={this.props.handleInputChange} type="text"/><br/>
-			                  	<div id="select">
+			                  	Родной язык: <div id="select">
 					            	{this.renderSelectLang()}
 					            </div>
 			                  	Пол: <input name="dictorSex" onChange={this.props.handleInputChange} type="text"/><br/>

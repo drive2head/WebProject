@@ -26,7 +26,7 @@ class SoundInfo extends React.Component {
         options={this.languages}
         openMenuOnFocus
         closeMenuOnSelect={true}
-        placeholder="Язык: "
+        placeholder=""
         value={this.state.soundLang}
         onChange={
           (selectedOpt) => {
@@ -44,7 +44,7 @@ class SoundInfo extends React.Component {
         <div className="card flex-md-row mb-4 box-shadow h-md-250">
           <div className="card-body d-flex flex-column align-items-start">
             <p> Описание фонемы: </p>
-            <div id="select" style={{width: '100%'}}>
+            Родной язык: <div id="select" style={{width: '100%'}}>
               {this.renderSelect()}
             </div>
             Диалект: <input name="soundDialect" onChange={this.props.handleInputChange} value={this.props.state.soundDialect} type="text"/><br/>
