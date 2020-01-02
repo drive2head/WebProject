@@ -154,7 +154,6 @@ app.post('/profile', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-	console.log('req.body.record:', req.body.record);
 	SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'addMarkup', result.completed, result.output, '/add_data');
@@ -163,6 +162,7 @@ app.post('/add_data', (req, res) => {
 				// const recordID = node.id;
 				// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
 			// });
+			console.log('hey');
 			res.send("Data was successfully loaded!");
 		}
 		else {
