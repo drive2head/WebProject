@@ -76,7 +76,7 @@ class UploadForm extends React.Component {
 						<div className="card flex-md-row mb-4 box-shadow h-md-250">
 			                <div className="card-body d-flex flex-column align-items-start">
 						        <form action="add_record" method="post" enctype="multipart/form-data">
-						        	<input type="text" id="text" name="text" value={this.state.personId} style={{width: '100%'}}/><br/>
+						        	<input type="text" id="text" name="text" style={{display: 'none'}} value={this.state.personId} style={{width: '100%'}}/><br/>
 								    <br/><input type="file" id="file" name="filetoupload"/><br/>
 								    <br/><input className="btn btn-dark" type="submit" /> 
 								</form>

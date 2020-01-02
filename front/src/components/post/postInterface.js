@@ -31,14 +31,6 @@ class PostInterface extends React.Component {
       selectedOptions: [],
       sounds: [],
       soundsList: [],
-      // Dictor info
-      dictorName: "",
-      dictorLang: "",
-      dictorCity: "",
-      dictorSex: "",
-      dictorAge: "",
-      dictorCountry: "",
-      dictorAccent: "",
     };
   }
 
@@ -59,26 +51,12 @@ class PostInterface extends React.Component {
     let list = this.state.soundsList;
     list.push({id: list.length, label: this.state.soundValue});
     this.setState({soundsList: list});
-    console.log(this.state.soundsList);
+    this.setState({soundDialect: ''});
+    this.setState({soundValue: ''});
   }
 
   saveAll()
   {
-    // let person = entity.Person(
-    //   this.state.dictorName,
-    //   this.state.dictorAge,
-    //   this.state.dictorSex,
-    //   this.state.dictorLang,
-    //   this.state.dictorCity,
-    //   this.state.dictorCountry,
-    //   this.state.selectedOptions,
-    // );
-    // let record_path = document.getElementById('file').value.split('\\');
-    // const recname = record_path[record_path.length - 1];
-    // let record = entity.Record(
-    //   recname,
-    //   {},
-    // );
     const cookies = new Cookies();
     cookies.getAll();
     console.log(document.getElementById('files').textContent);
@@ -88,21 +66,21 @@ class PostInterface extends React.Component {
       phonemes: this.state.sounds
     });
     window.alert('Done!');
-    //window.location.href = "/get";
+    window.location.href = "/";
   }
 
   changeSoundInfo(i)
   {
     i = i.id;
-    let newSounds = this.state.sounds;
-    let tmp = newSounds[i];
-    newSounds.splice(i, 1);
-    let list = this.state.soundsList;
-    list.splice(i, 1);
+    // let newSounds = this.state.sounds;
+    // let tmp = newSounds[i];
+    // newSounds.splice(i, 1);
+    // let list = this.state.soundsList;
+    // list.splice(i, 1);
 
-    for(let i = 0; i < list.length; i++)
-      if (list[i].id != i)
-        list[i].id = i;
+    // for(let i = 0; i < list.length; i++)
+    //   if (list[i].id != i)
+    //     list[i].id = i;
 
     this.setState({soundValue: tmp.notation, startTime: tmp.start, endTime: tmp.end, soundLang: tmp.language, soundDialect: tmp.dialect, sounds: newSounds, soundsList: list});
     setTimeout( () => {

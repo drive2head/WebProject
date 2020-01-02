@@ -22,7 +22,7 @@ class Sounds extends React.Component {
         onChange={
           (selectedOpt) => {
             this.props.changeSoundInfo(selectedOpt);
-            this.setState({value: selectedOpt.label});
+            this.setState({value: selectedOpt});
           }
         }
       />
