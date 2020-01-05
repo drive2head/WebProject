@@ -49,7 +49,7 @@ app.post('/markups', (req, res) => {
 		log.addLog(req.body.username, 'access.markups', 'getMarkups', result.completed, result.output, '/markups');
 		res.send(result);
 	})
-}
+});
 
 app.post('/add_person', (req, res) => {
 	SpeechDB.addPerson(req.body.person)

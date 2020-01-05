@@ -114,7 +114,7 @@ class SoundInfo extends React.Component {
         <div className="card flex-md-row mb-4 box-shadow h-md-250">
           <div className="card-body d-flex flex-column align-items-start">
             <p> Описание фонемы: </p>
-            Родной язык: <div id="select" style={{width: '100%'}}>
+            Язык: <div id="select" style={{width: '100%'}}>
               {this.renderSelect()}
             </div>
             Диалект: <input name="soundDialect" onChange={this.props.handleInputChange} value={this.props.state.soundDialect} type="text"/><br/>
