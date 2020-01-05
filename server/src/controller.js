@@ -20,6 +20,37 @@ app.use(express.static('files'))
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
+function files() {
+	let path = cfg.records_dir;
+	fs.readdirSync(path).forEach(file => {
+  		console.log(file);
+	});
+}
+
+app.get('/persons', (req, res) => {
+	SpeakersDB.getAllSpeakers()
+	.then(result => {
+		log.addLog(req.body.username, 'access.persons', 'getAllSpeakers', true, result, '/persons');
+		res.send(result);
+	})
+});
+
+app.get('/records', (req, res) => {
+	RecordsDB.getAllRecords()
+	.then(result => {
+		log.addLog(req.body.username, 'access.records', 'getAllRecords', true, result, '/records');
+		res.send(result);
+	});
+});
+
+app.post('/markups', (req, res) => {
+	SpeechDB.getMarkups(req.body.username)
+	.then(result => {
+		log.addLog(req.body.username, 'access.markups', 'getMarkups', result.completed, result.output, '/markups');
+		res.send(result);
+	})
+}
+
 app.post('/add_person', (req, res) => {
 	SpeechDB.addPerson(req.body.person)
 	.then(result => {
@@ -47,29 +78,6 @@ app.post('/add_person', (req, res) => {
 		throw err;
 	})
 });
-
-app.get('/persons', (req, res) => {
-	SpeakersDB.getAllSpeakers()
-	.then(result => {
-		log.addLog(req.body.username, 'access.persons', 'getAllSpeakers', true, result, '/persons');
-		res.send(result);
-	})
-});
-
-app.post('/records', (req, res) => {
-	RecordsDB.getAllRecords()
-	.then(result => {
-		log.addLog(req.body.username, 'access.records', 'getAllRecords', true, result, '/records');
-		res.send(result);
-	});
-});
-
-function files() {
-	let path = cfg.records_dir;
-	fs.readdirSync(path).forEach(file => {
-  		console.log(file);
-	});
-}
 
 app.post('/add_record', (req, res) => {
 	let form = new formidable.IncomingForm();
@@ -108,11 +116,43 @@ app.post('/add_record', (req, res) => {
 				.catch(err => { throw err; })
 			})
 		} catch (err) {
-			console.log(err);
+			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');
 		};
 	})
 });
 
+app.post('/add_data', (req, res) => {
+	SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
+	.then(result => {
+		log.addLog(req.body.username, 'query.add', 'addMarkup', result.completed, result.output, '/add_data');
+		if (result.completed) {
+			// result.output.forEach((node) => {
+				// const recordID = node.id;
+				// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
+			// });
+			console.log('hey');
+			res.send("Data was successfully loaded!");
+		}
+		else {
+			res.send("Data WAS NOT loaded!");
+		}
+	});
+});
+
+app.post('/get_data', (req, res) => {
+	SpeechDB.getMarkup(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/add_data');
+		if (result.completed) {
+			res.send(result);
+		}
+		else {
+			res.send("Data WAS NOT loaded!");
+		}
+	});
+});
+
+/* AUTHENTICATION AND ACCOUNT ACCESS */
 app.post('/signin', (req, res) => {
 	let username = req.body.username,
 		password = req.body.password;
@@ -153,65 +193,30 @@ app.post('/profile', (req, res) => {
 	});
 });
 
-app.post('/add_data', (req, res) => {
-	SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
-	.then(result => {
-		log.addLog(req.body.username, 'query.add', 'addMarkup', result.completed, result.output, '/add_data');
-		if (result.completed) {
-			// result.output.forEach((node) => {
-				// const recordID = node.id;
-				// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
-			// });
-			console.log('hey');
-			res.send("Data was successfully loaded!");
-		}
-		else {
-			res.send("Data WAS NOT loaded!");
-		}
-	});
-});
+// app.post('/change_person', (req, res) => {
+// 	// let person = entity.Person('James', 'English', 'New York', 'USA');
+// 	let result = SpeechDB.changePerson(req.body.person, req.body.id)
+// 	.then(result => {
+// 		log.addLog(req.body.username, 'query.change', 'changePerson', result.completed, result.output, '/change_person');
+// 		if (result.completed) {
+// 			res.send("Person was successfully changed!");
+// 		}
+// 		else {
+// 			res.send("Person WAS NOT changed!");
+// 		}
+// 	});
+// });
 
-app.post('/change_person', (req, res) => {
-	// let person = entity.Person('James', 'English', 'New York', 'USA');
-	let result = SpeechDB.changePerson(req.body.person, req.body.id)
-	.then(result => {
-		log.addLog(req.body.username, 'query.change', 'changePerson', result.completed, result.output, '/change_person');
-		if (result.completed) {
-			res.send("Person was successfully changed!");
-		}
-		else {
-			res.send("Person WAS NOT changed!");
-		}
-	});
-});
-
-app.post('/change_phoneme', (req, res) => {
-	// let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
-	let result = SpeechDB.changePhoneme(req.body.phoneme, req.body.id)
-	.then(result => {
-		log.addLog(req.body.username, 'query.change', 'changePhoneme', result.completed, result.output, '/change_phoneme');
-		if (result.completed) {
-			res.send("Phoneme was successfully changed!");
-		}
-		else {
-			res.send("Phoneme WAS NOT changed!");
-		};
-	});
-});
-
-app.post('/get_data', (req, res) => {
-	SpeechDB.getMarkup(req.body.username, req.body.record)
-	.then(result => {
-		console.log(result);
-		if (result.completed) {
-		// result.output.forEach((node) => {
-			// const recordID = node.id;
-			// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
-		// });
-			res.send(result);
-		}
-		else {
-			res.send("Data WAS NOT loaded!");
-		}
-	});
-});
+// app.post('/change_phoneme', (req, res) => {
+// 	// let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
+// 	let result = SpeechDB.changePhoneme(req.body.phoneme, req.body.id)
+// 	.then(result => {
+// 		log.addLog(req.body.username, 'query.change', 'changePhoneme', result.completed, result.output, '/change_phoneme');
+// 		if (result.completed) {
+// 			res.send("Phoneme was successfully changed!");
+// 		}
+// 		else {
+// 			res.send("Phoneme WAS NOT changed!");
+// 		};
+// 	});
+// });

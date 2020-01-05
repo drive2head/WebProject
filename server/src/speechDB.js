@@ -6,12 +6,17 @@ let Integer = require('neo4j-driver/lib/v1/integer.js');
 let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
 
+// function extractNodes returns array of nodes, returned by the query
+// each returned node is extended with fields 'label' and 'id'
 function extractNodes(record) {
 	var recordNodes = [];
 	record.forEach((node) => {
 		var extendedNode = { ...node };
 		extendedNode.id = Integer.toString(node.identity);
-		extendedNode.label = node.labels[0];
+		// a node may not have a label if it was deleted (it this case query returns node(s) with only ID)
+		if (node.labels) {
+			extendedNode.label = node.labels[0]; // at this moment each node has 1 label
+		}
 		recordNodes.push(extendedNode);
 	});
 	return recordNodes;
@@ -55,6 +60,7 @@ addPerson = runQuery(query.addPerson);
 addRecord = runQuery(query.addRecord);
 addMarkup = runQuery(query.addMarkup);
 getMarkup = runQuery(query.getMarkup, true);
+getMarkups = runQuery(query.getMarkups, true);
 
 exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
 exports.changePhoneme = changePhoneme;

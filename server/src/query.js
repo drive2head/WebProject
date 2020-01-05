@@ -40,6 +40,10 @@ exports.addRecord = function (record, person_id) {
 
 exports.getMarkups = function (username) {
 	let text = `
+	match (markup:Markup {username: '${username}'})
+	match (rec:Record)
+	match (markup)-[:MARKED_ON]->(rec)
+	return rec
 	`;
 
 	return notabs(text);
@@ -108,6 +112,15 @@ exports.changePhoneme = function (phoneme, id) {
 
 	return notabs(text);
 };
+
+exports.deletePhoneme = function (id) {
+	let text =`
+	match (phoneme: Phoneme)
+	where ID(Phoneme) = ${id}
+	delete 
+	return phoneme
+	`;
+}
 
 exports.addRecordPersonPhonemes = function (record, personID, phonemes) {
 	// let text = `\
