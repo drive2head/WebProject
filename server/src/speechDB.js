@@ -61,14 +61,20 @@ addRecord = runQuery(query.addRecord);
 addMarkup = runQuery(query.addMarkup);
 getMarkup = runQuery(query.getMarkup, true);
 getMarkups = runQuery(query.getMarkups, true);
+deletePerson = runQuery(query.deletePerson);
+deleteRecord = runQuery(query.deleteRecord);
+deleteMarkup = runQuery(query.deleteMarkup);
 
-exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
+// exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
 exports.changePhoneme = changePhoneme;
 exports.changePerson = changePerson;
 exports.addPerson = addPerson;
 exports.addRecord = addRecord;
 exports.addMarkup = addMarkup;
 exports.getMarkup = getMarkup;
+exports.deletePerson = deletePerson;
+exports.deleteRecord = deleteRecord;
+exports.deleteMarkup = deleteMarkup;
 
 // function test_addRecordPersonPhonemes() {
 // 	let queryText = `\
