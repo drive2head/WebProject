@@ -73,16 +73,79 @@ class WavePlayer extends React.Component {
       ]
     });
 
-    document.onkeydown = function (e) {
+    document.onkeydown = (e) => {
       let keyCode = e.keyCode;
       if(keyCode == 32) {
         wavesurfer.playPause();
       }
+
       if(keyCode == 31) {
         let end = document.getElementById('prevEnd');
         let start = document.getElementById('prevStart');
-        wavesurfer.clearRegions();
-        wavesurfer.addRegion({start: +start.value, end: +end.value});
+        //wavesurfer.clearRegions();
+
+        console.log(wavesurfer.regions.list);
+
+        wavesurfer.addRegion({id: document.getElementById('selectPhoneme').innerText, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
+
+        let region = {};
+        for (let i in wavesurfer.regions.list)
+        {
+          region = wavesurfer.regions.list[i];
+        }
+
+        region.attributes.label = 'Phoneme';
+        region.phoneme = true;    
+
+
+        let regionEl = region.element;
+      
+        let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
+        deleteButton.className = 'fa fa-trash';
+        deleteButton.addEventListener('click', function(e) {
+          e.stopImmediatePropagation();
+          region.remove();
+        });
+        deleteButton.title = "Delete region";
+        let css = {
+         display: 'block',
+          float: 'center',
+          position: 'relative',
+          zIndex: 10,
+          cursor: 'pointer',
+          cursor: 'hand',
+          color: '#129fdd'
+        };
+        region.style(deleteButton, css);
+
+
+        let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'));
+        phonemeNotation.title = "Edit region";
+        phonemeNotation.innerHTML = region.id;
+        phonemeNotation.addEventListener('click', (e) => {
+          //e.stopImmediatePropagation();
+          this.props.changeSoundInfoWave(region.start.toFixed(3));
+        });
+        region.style(phonemeNotation, css);
+      }
+      if(keyCode == 30) {
+        for (let i in wavesurfer.regions.list)
+        {
+          if (!wavesurfer.regions.list[i].phoneme)
+          {
+            wavesurfer.regions.list[i].remove();
+          }
+        }
+        let not = this.props.soundValue;
+        let region = {};
+        for (let i in wavesurfer.regions.list)
+          if (wavesurfer.regions.list[i].id == not)
+          {
+            region = wavesurfer.regions.list[i];
+            break;
+          }
+        //region.color = 'hsla(137, 60%, 80%, 0.1)';
+        //console.log(region);
       }
     };
 
@@ -95,8 +158,20 @@ class WavePlayer extends React.Component {
         wavesurfer.zoom(zoomLevel);
       };
     });
-    wavesurfer.on('region-update-end', (region) => {this.props.newTimeInterval(region.start.toFixed(3), region.end.toFixed(3))});
-    wavesurfer.on('region-created', (region) => {wavesurfer.clearRegions();});
+
+    wavesurfer.on('region-update-end', (region, event) => {  
+      this.props.newTimeInterval(region.start.toFixed(3), region.end.toFixed(3))
+    });
+    //wavesurfer.on('region-update-end', (region) => {this.props.newTimeInterval(region.start.toFixed(3), region.end.toFixed(3))});
+    wavesurfer.on('region-created', (region) => {
+      for (let i in wavesurfer.regions.list)
+      {
+        if (!wavesurfer.regions.list[i].phoneme)
+        {
+          wavesurfer.regions.list[i].remove();
+        }
+      }
+    });
     wavesurfer.on('region-click', function(region, e) {
       e.stopImmediatePropagation();
       region.play();

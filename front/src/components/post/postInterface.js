@@ -51,6 +51,10 @@ class PostInterface extends React.Component {
     list.push({id: list.length, label: this.state.soundValue});
     this.setState({soundsList: list});
     this.setState({soundValue: ''});
+    setTimeout( () => {
+      var evt = new KeyboardEvent('keydown', {'keyCode':31, 'which':31});
+      document.dispatchEvent(evt);}
+      , 100);
   }
 
   saveAll()
@@ -67,25 +71,44 @@ class PostInterface extends React.Component {
     window.location.href = "/";
   }
 
-  changeSoundInfo(i)
+  // changeSoundInfo(i)
+  // {
+  //   i = i.id;
+  //   let newSounds = this.state.sounds;
+  //   let tmp = newSounds[i];
+  //   // newSounds.splice(i, 1);
+  //   let list = this.state.soundsList;
+  //   // list.splice(i, 1);
+
+  //   // for(let i = 0; i < list.length; i++)
+  //   //   if (list[i].id != i)
+  //   //     list[i].id = i;
+
+  //   this.setState({soundValue: tmp.notation, startTime: tmp.start, endTime: tmp.end, soundLang: tmp.language, soundDialect: tmp.dialect, sounds: newSounds, soundsList: list});
+  //   setTimeout( () => {
+  //     var evt = new KeyboardEvent('keydown', {'keyCode':30, 'which':30});
+  //     document.dispatchEvent(evt);}
+  //     , 100); //НЕ СМОТРИТЕ СЮДА, ЭТО КОСТЫЛЬ, ПО-ДРУГОМУ НИКАК, WAVESURFER МАКСИМАЛЬНО КРИВАЯ ЛИБА, ОБЪЕКТ ПЛЕЕРА НЕВОЗМОЖНО ЗАПИХНУТЬ В THIS
+  // }
+
+  changeSoundInfoWave(st)
   {
-    i = i.id;
     let newSounds = this.state.sounds;
-    let tmp = newSounds[i];
-    // newSounds.splice(i, 1);
+    let tmp = {};
+
+    for (let i = 0; i < newSounds.length; i++)
+      if (newSounds[i].start == st)
+      {
+        tmp = newSounds[i];
+        break;
+      }
     let list = this.state.soundsList;
-    // list.splice(i, 1);
-
-    // for(let i = 0; i < list.length; i++)
-    //   if (list[i].id != i)
-    //     list[i].id = i;
-
     this.setState({soundValue: tmp.notation, startTime: tmp.start, endTime: tmp.end, soundLang: tmp.language, soundDialect: tmp.dialect, sounds: newSounds, soundsList: list});
+    console.log(this.state.soundValue);
     setTimeout( () => {
-      var evt = new KeyboardEvent('keydown', {'keyCode':31, 'which':31});
+      var evt = new KeyboardEvent('keydown', {'keyCode':30, 'which':30});
       document.dispatchEvent(evt);}
       , 100); //НЕ СМОТРИТЕ СЮДА, ЭТО КОСТЫЛЬ, ПО-ДРУГОМУ НИКАК, WAVESURFER МАКСИМАЛЬНО КРИВАЯ ЛИБА, ОБЪЕКТ ПЛЕЕРА НЕВОЗМОЖНО ЗАПИХНУТЬ В THIS
-    
   }
 
   changeLang(l) {this.setState({soundLang: l})}
@@ -102,6 +125,8 @@ class PostInterface extends React.Component {
           <WavePlayer
             newTimeInterval={this.newTimeInterval.bind(this)}
             state={this.state}
+            changeSoundInfoWave={this.changeSoundInfoWave.bind(this)}
+            soundValue={this.state.soundValue}
           />
           <div className="row">
             <div className="col-md-1"></div>
@@ -113,7 +138,7 @@ class PostInterface extends React.Component {
               state={this.state}
             />
             <Sounds
-              changeSoundInfo={this.changeSoundInfo.bind(this)}
+              changeSoundInfo={this.changeSoundInfoWave.bind(this)}
               sounds={this.state.soundsList}
               current={this.state.soundValue}
             />

@@ -64,6 +64,10 @@ class SoundInfo extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({soundLang: nextProps.value})
+  }
+
   renderSelect()
   {
     return (
@@ -118,7 +122,7 @@ class SoundInfo extends React.Component {
               {this.renderSelect()}
             </div>
             Диалект: <input name="soundDialect" onChange={this.props.handleInputChange} value={this.props.state.soundDialect} type="text"/><br/>
-            Значение: <div id="select" style={{width: '100%'}}>
+            Значение: <div id="selectPhoneme" style={{width: '100%'}}>
               {this.renderNotations()}
             </div>
             <p> </p>
