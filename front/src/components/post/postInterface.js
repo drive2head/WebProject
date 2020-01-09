@@ -31,7 +31,6 @@ class PostInterface extends React.Component {
       selectedOptions: [],
       sounds: [],
       soundsList: [],
-
     };
   }
 
@@ -111,6 +110,26 @@ class PostInterface extends React.Component {
       , 100); //НЕ СМОТРИТЕ СЮДА, ЭТО КОСТЫЛЬ, ПО-ДРУГОМУ НИКАК, WAVESURFER МАКСИМАЛЬНО КРИВАЯ ЛИБА, ОБЪЕКТ ПЛЕЕРА НЕВОЗМОЖНО ЗАПИХНУТЬ В THIS
   }
 
+  deleteRegion(st)
+  {
+    let i = 0;
+    let newSounds = this.state.sounds;
+    for (i = 0; i < newSounds.length; i++)
+      if (newSounds[i].start == st)
+        break;
+    let tmp = newSounds[i];
+    newSounds.splice(i, 1);
+    let list = this.state.soundsList;
+    list.splice(i, 1);
+
+    for(let i = 0; i < list.length; i++)
+      if (list[i].id != i)
+        list[i].id = i;
+
+    this.setState({sounds: newSounds, soundsList: list});
+
+  }
+
   changeLang(l) {this.setState({soundLang: l})}
   changeNotation(l) {this.setState({soundValue: l})}
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
@@ -127,9 +146,10 @@ class PostInterface extends React.Component {
             state={this.state}
             changeSoundInfoWave={this.changeSoundInfoWave.bind(this)}
             soundValue={this.state.soundValue}
+            deleteRegion={this.deleteRegion.bind(this)}
           />
           <div className="row">
-            <div className="col-md-1"></div>
+            <div className="col-md-3"></div>
             <SoundInfo
               changeNotation={this.changeNotation.bind(this)}
               changeLang={this.changeLang.bind(this)}
@@ -137,12 +157,7 @@ class PostInterface extends React.Component {
               saveSound={this.saveSound.bind(this)}
               state={this.state}
             />
-            <Sounds
-              changeSoundInfo={this.changeSoundInfoWave.bind(this)}
-              sounds={this.state.soundsList}
-              current={this.state.soundValue}
-            />
-            <div className="col-md-1"></div>
+            <div className="col-md-3"></div>
           </div>
           <div className="row">
             <button className="btn btn-dark" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}>Сохранить запись</button>

@@ -102,8 +102,9 @@ class WavePlayer extends React.Component {
       
         let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
         deleteButton.className = 'fa fa-trash';
-        deleteButton.addEventListener('click', function(e) {
+        deleteButton.addEventListener('click', (e) => {
           e.stopImmediatePropagation();
+          this.props.deleteRegion(region.start.toFixed(3));
           region.remove();
         });
         deleteButton.title = "Delete region";
@@ -187,12 +188,13 @@ class WavePlayer extends React.Component {
           <div id="timeline"></div>
           <input id="slider" type="range" min="1" max="1000" defaultValue="1"/>
           <div className="row">
-            <div className="col-md-1"></div>
-            <div className="col-md-5">
+            <div className="col-md-3"></div>
+            <div className="col-md-6">
               <div id="select" style={{width: '100%'}}>
                 {this.renderSelect()}
               </div>
             </div>
+            <div className="col-md-3"></div>
           </div>
           <div style={{display: "none"}}> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
           <p></p>
