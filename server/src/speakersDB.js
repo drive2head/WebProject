@@ -11,7 +11,7 @@ var speakerSchema = new mongoose.Schema({
 var Speaker = users_connection.model('Speaker', speakerSchema);
 
 async function getAllSpeakers() {
-	return await Speaker.find();
+	return await Speaker.aggregate().project({name: 1});
 };
 
 async function findSpeakerByName (name) {
@@ -20,6 +20,10 @@ async function findSpeakerByName (name) {
 
 async function findSpeakerByID (speakerID) {
 	return await Speaker.findOne({ _id: speakerID });
+};
+
+async function deleteSpeakerByID (speakerID) {
+	return await Speaker.deleteOne({ _id: speakerID});
 };
 
 async function addSpeaker(name, nodeID) {
@@ -37,5 +41,7 @@ async function addSpeaker(name, nodeID) {
 };
 
 exports.findSpeakerByID = findSpeakerByID;
+exports.findSpeakerByName = findSpeakerByName;
 exports.addSpeaker = addSpeaker;
 exports.getAllSpeakers = getAllSpeakers;
+exports.deleteSpeakerByID = deleteSpeakerByID;

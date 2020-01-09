@@ -130,7 +130,6 @@ app.post('/add_data', (req, res) => {
 				// const recordID = node.id;
 				// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
 			// });
-			console.log('hey');
 			res.send("Data was successfully loaded!");
 		}
 		else {
@@ -149,6 +148,43 @@ app.post('/get_data', (req, res) => {
 		else {
 			res.send("Data WAS NOT loaded!");
 		}
+	});
+});
+
+app.post('/delete_person', (req, res) => {
+	SpeakersDB.findSpeakerByName(req.body.name)
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.findSpeakerByName', result.completed, result.output, '/delete_person');
+		if (!result) {
+			res.send({ status: false, msg: 'Person was not found' });
+			return;
+		}
+		const personNodeID = result.nodeID;
+		const id = result._id;
+		SpeechDB.deletePerson(personNodeID)
+		.then(result => {
+			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deletePerson', result.completed, result.output, '/delete_person');
+			if (!result.completed) {
+				res.send({ status: false, msg: result.output });
+				return;
+			}
+
+			SpeakersDB.deleteSpeakerByID(id)
+			.then(result => {
+				log.addLog(req.body.username, 'query.delete', 'SpeakersDB.deleteSpeakerByID', result.completed, result.output, '/delete_person');
+				if (!result.completed) {
+					res.send({ status: false, msg: result.output });
+				} else {
+					res.send({ status: true, msg: 'Person was successfully deleted!'})
+				}
+			})
+			.catch(err => { throw err; })
+		})
+		.catch(err => { throw err; })
+
+	})
+	.catch(err => {
+		console.log("Error occured:\n", err);
 	});
 });
 

@@ -123,6 +123,9 @@ exports.deletePerson = function (id) {
 	let text = `
 	match (person: Person)
 	where ID(person) = ${id}
+	match (person)-[c0:HAS]->()
+	match (person)-[c1:LIVES_IN]->()
+	delete c0, c1
 	delete person
 	return person
 	`;
