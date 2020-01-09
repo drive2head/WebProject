@@ -18,12 +18,10 @@ class WavePlayer extends React.Component {
   getOptions = async () =>
   {
     var response = await fetch('/records', {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-      })
+      }
     });
     let body = await response.json();
     for (let i of body)
