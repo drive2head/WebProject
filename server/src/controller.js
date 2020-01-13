@@ -94,32 +94,72 @@ app.post('/add_record', (req, res) => {
 			SpeakersDB.findSpeakerByID(personID)
 			.then(result => {
 				const personNodeID = result.nodeID;
-				SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID)
-				.then(result => {
-					log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
-					if (result.completed == false) {
-						res.send({ status: false, msg: result.output });
-						return;
-					}
-
-					RecordsDB.addRecord(files.filetoupload.name, newpath, personID)
-					.then(result => {
-						log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
-						if (result.completed) {
-							res.redirect('/');
-						} else {
-							res.send({ status: false, msg: result.output });
-						}
-					})
-					.catch(err => { throw err; })
-				})
-				.catch(err => { throw err; })
+				return SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID);
 			})
+			.then(result => {
+				log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
+				if (result.completed == false) {
+					res.send({ status: false, msg: result.output });
+					return;
+				}
+				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID)
+			})
+			.then(result => {
+				log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
+				if (result.completed) {
+					res.redirect('/');
+				} else {
+					res.send({ status: false, msg: result.output });
+				}
+			})
+			.catch(err => { throw err; })
 		} catch (err) {
 			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');
 		};
 	})
 });
+
+// app.post('/add_record', (req, res) => {
+// 	let form = new formidable.IncomingForm();
+// 	form.parse(req, function (err, fields, files) {
+// 		let personID = fields.text;
+// 		let oldpath = files.filetoupload.path;
+// 		let newpath = cfg.records_dir + files.filetoupload.name;
+// 		let recordName = files.filetoupload.name;
+// 		try {
+// 			fs.rename(oldpath, newpath, function (err) {
+// 				if (err) throw err;
+// 			});
+
+// 			SpeakersDB.findSpeakerByID(personID)
+// 			.then(result => {
+// 				const personNodeID = result.nodeID;
+// 				SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID)
+// 				.then(result => {
+// 					log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
+// 					if (result.completed == false) {
+// 						res.send({ status: false, msg: result.output });
+// 						return;
+// 					}
+
+// 					RecordsDB.addRecord(files.filetoupload.name, newpath, personID)
+// 					.then(result => {
+// 						log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
+// 						if (result.completed) {
+// 							res.redirect('/');
+// 						} else {
+// 							res.send({ status: false, msg: result.output });
+// 						}
+// 					})
+// 					.catch(err => { throw err; })
+// 				})
+// 				.catch(err => { throw err; })
+// 			})
+// 		} catch (err) {
+// 			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');
+// 		};
+// 	})
+// });
 
 app.post('/add_data', (req, res) => {
 	SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
@@ -152,6 +192,9 @@ app.post('/get_data', (req, res) => {
 });
 
 app.post('/delete_person', (req, res) => {
+	const personNodeID = result.nodeID;
+	const id = result._id;
+
 	SpeakersDB.findSpeakerByName(req.body.name)
 	.then(result => {
 		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.findSpeakerByName', result.completed, result.output, '/delete_person');
@@ -159,29 +202,24 @@ app.post('/delete_person', (req, res) => {
 			res.send({ status: false, msg: 'Person was not found' });
 			return;
 		}
-		const personNodeID = result.nodeID;
-		const id = result._id;
-		SpeechDB.deletePerson(personNodeID)
-		.then(result => {
-			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deletePerson', result.completed, result.output, '/delete_person');
-			if (!result.completed) {
-				res.send({ status: false, msg: result.output });
-				return;
-			}
+		return SpeechDB.deletePerson(personNodeID)
+	})
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deletePerson', result.completed, result.output, '/delete_person');
+		if (!result.completed) {
+			res.send({ status: false, msg: result.output });
+			return;
+		}
 
-			SpeakersDB.deleteSpeakerByID(id)
-			.then(result => {
-				log.addLog(req.body.username, 'query.delete', 'SpeakersDB.deleteSpeakerByID', result.completed, result.output, '/delete_person');
-				if (!result.completed) {
-					res.send({ status: false, msg: result.output });
-				} else {
-					res.send({ status: true, msg: 'Person was successfully deleted!'})
-				}
-			})
-			.catch(err => { throw err; })
-		})
-		.catch(err => { throw err; })
-
+		return SpeakersDB.deleteSpeakerByID(id)
+	})
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.deleteSpeakerByID', result.completed, result.output, '/delete_person');
+		if (!result.completed) {
+			res.send({ status: false, msg: result.output });
+		} else {
+			res.send({ status: true, msg: 'Person was successfully deleted!'})
+		}
 	})
 	.catch(err => {
 		console.log("Error occured:\n", err);
