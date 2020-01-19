@@ -46,6 +46,7 @@ app.get('/records', (req, res) => {
 app.post('/markups', (req, res) => {
 	SpeechDB.getMarkups(req.body.username)
 	.then(result => {
+		console.log(result);
 		log.addLog(req.body.username, 'access.markups', 'getMarkups', result.completed, result.output, '/markups');
 		res.send(result);
 	})
