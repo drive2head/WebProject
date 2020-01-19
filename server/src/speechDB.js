@@ -53,6 +53,16 @@ function runQuery(queryFunc, multipleRecords=false) {
 	}
 }
 
+function validateDeleteResult(deleteFunc) {
+	return function() {
+		var result = deleteFunc.apply(this, arguments);
+
+		if (result.output === null) {
+			return { completed: false, output: 'Node was not deleted'};
+		}
+	}
+}
+
 addRecordPersonPhonemes = runQuery(query.addRecordPersonPhonemes);
 changePhoneme = runQuery(query.changePhoneme);
 changePerson = runQuery(query.changePerson);
@@ -61,9 +71,9 @@ addRecord = runQuery(query.addRecord);
 addMarkup = runQuery(query.addMarkup);
 getMarkup = runQuery(query.getMarkup, true);
 getMarkups = runQuery(query.getMarkups, true);
-deletePerson = runQuery(query.deletePerson);
-deleteRecord = runQuery(query.deleteRecord);
-deleteMarkup = runQuery(query.deleteMarkup);
+deletePerson = validateDeleteResult(runQuery(query.deletePerson));
+deleteRecord = validateDeleteResult(runQuery(query.deleteRecord));
+deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup));
 
 // exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
 exports.changePhoneme = changePhoneme;
@@ -72,6 +82,7 @@ exports.addPerson = addPerson;
 exports.addRecord = addRecord;
 exports.addMarkup = addMarkup;
 exports.getMarkup = getMarkup;
+exports.getMarkups = getMarkups;
 exports.deletePerson = deletePerson;
 exports.deleteRecord = deleteRecord;
 exports.deleteMarkup = deleteMarkup;
