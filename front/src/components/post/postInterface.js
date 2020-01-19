@@ -36,6 +36,7 @@ class PostInterface extends React.Component {
 
   saveSound()
   {
+    console.log(this.state.sounds, this.state.soundList);
     let object = entity.Phoneme(
       this.state.soundValue,
       this.state.startTime,

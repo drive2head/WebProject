@@ -62,9 +62,12 @@ class PersonInterface extends React.Component {
 		}
 	}
 
-	changeMarkup()
+	changeMarkup(a)
 	{
-		return 0;
+		const cookies = new Cookies();
+		console.log(a);
+		cookies.set('record', a.label, { path: '/' });
+		window.location.href = "/get";
 	}
 
 	render()
@@ -77,7 +80,8 @@ class PersonInterface extends React.Component {
 		    		<div className="row">
 		   				<div className="col-md-3"></div>
 					    <div className="col-md-8 ">
-		    				<PersonPhonemes markups={this.state.markups} />
+		    				<PersonPhonemes markups={this.state.markups}
+		    				changeMarkup={this.changeMarkup.bind(this)} />
 		    			</div>
 		    			<div className="col-md-1"></div>
 		    		</div>
