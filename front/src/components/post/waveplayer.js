@@ -109,9 +109,8 @@ class WavePlayer extends React.Component {
         });
         deleteButton.title = "Delete region";
         let css = {
-         display: 'block',
-          float: 'center',
-          position: 'relative',
+         display: 'flex',
+          "justify-content": 'center',
           zIndex: 10,
           cursor: 'pointer',
           cursor: 'hand',
