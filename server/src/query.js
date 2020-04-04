@@ -47,7 +47,6 @@ exports.addMarkup = function (username, record_name, phonemes) {
 	match (record: Record {name: '${record_name}'})
 	create (markup: Markup {username: '${username}'})
 	create (markup)-[:MARKED_ON]->(record)`;
-
 	let returnPh = `return `;
 	phonemes.forEach((phoneme, i) => {
 		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',
@@ -62,7 +61,6 @@ exports.addMarkup = function (username, record_name, phonemes) {
 
 	});
 	text += `\n` + returnPh;
-
 	return notabs(text);
 }
 

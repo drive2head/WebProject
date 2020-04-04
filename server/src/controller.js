@@ -53,6 +53,7 @@ app.post('/markups', (req, res) => {
 });
 
 app.post('/add_person', (req, res) => {
+	console.log(req.body);
 	SpeechDB.addPerson(req.body.person)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'addPerson', result.completed, result.output, '/add_person');
@@ -180,6 +181,7 @@ app.post('/add_data', (req, res) => {
 });
 
 app.post('/get_data', (req, res) => {
+	console.log(req.body.username, req.body.record);
 	SpeechDB.getMarkup(req.body.username, req.body.record)
 	.then(result => {
 		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/add_data');
