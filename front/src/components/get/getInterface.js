@@ -35,41 +35,41 @@ class GetInterface extends React.Component {
   }
 
   init = async () => {
-	const cookies = new Cookies();
-	cookies.getAll();
-	let response = await fetch('/get_data', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			record: cookies.cookies.record,
-			username: cookies.cookies.username,
-		})
-	});
+  	const cookies = new Cookies();
+  	cookies.getAll();
+  	let response = await fetch('/get_data', {
+  		method: 'POST',
+  		headers: {
+  			'Content-Type': 'application/json'
+  		},
+  		body: JSON.stringify({
+  			record: cookies.cookies.record,
+  			username: cookies.cookies.username,
+  		})
+  	});
 
-	let body = await response.json();
-	if (body == false)
-		alert('Bad data, FILOLUX!');
-	else
-	{
-		this.setState({soundDialect: body.output[0].properties.dialect})
-		this.setState({soundLang: body.output[0].properties.language})
-		let sd = [];
-		console.log(body.output);
-		for (let i = 0; i < body.output.length; i++)
-		{
-			sd.push(body.output[i].properties);
-			document.getElementById('prevEnd').innerText = body.output[i].properties.end;
-		    document.getElementById('prevStart').innerText = body.output[i].properties.start;
-			document.getElementById('selPhoneme').innerText = body.output[i].properties.notation;
-		    var evt = new KeyboardEvent('keydown', {'keyCode':31, 'which':31});
-		    document.dispatchEvent(evt);
-		}
-		document.getElementById('selPhoneme').innerText = '';
-		this.setState({sounds: sd});
-		this.setState({record: cookies.cookies.record});
-	}
+  	let body = await response.json();
+  	if (body == false)
+  		alert('Bad data, FILOLUX!');
+  	else
+  	{
+  		this.setState({soundDialect: body.output[0].properties.dialect})
+  		this.setState({soundLang: body.output[0].properties.language})
+  		let sd = [];
+  		console.log(body.output);
+  		for (let i = 0; i < body.output.length; i++)
+  		{
+  			sd.push(body.output[i].properties);
+  			document.getElementById('prevEnd').innerText = body.output[i].properties.end;
+  		    document.getElementById('prevStart').innerText = body.output[i].properties.start;
+  			document.getElementById('selPhoneme').innerText = body.output[i].properties.notation;
+  		    var evt = new KeyboardEvent('keydown', {'keyCode':31, 'which':31});
+  		    document.dispatchEvent(evt);
+  		}
+  		document.getElementById('selPhoneme').innerText = '';
+  		this.setState({sounds: sd});
+  		this.setState({record: cookies.cookies.record});
+  	}
   }
 
   saveSound()

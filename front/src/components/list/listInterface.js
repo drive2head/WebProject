@@ -16,15 +16,20 @@ class ListInterface extends React.Component {
 
   getOptions = async () =>
   {
-    var response = await fetch('/records', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+  	const cookies = new Cookies();
+	cookies.getAll();
+    let response = await fetch('/markups', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			username: cookies.cookies.username,
+		})
+	});
     let body = await response.json();
-    for (let i of body)
-      this.options.push({value: i.name, label: i.name})
+    for (let i of body.output)
+      this.options.push({value: i.properties.name, label: i.properties.name})
     this.forceUpdate();
   }
 
