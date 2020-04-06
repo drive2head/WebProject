@@ -62,10 +62,7 @@ class SoundInfo extends React.Component {
       soundLang: '',
       soundValue: '',
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({soundLang: nextProps.value})
+    this.setState({soundLang: this.props.value})
   }
 
   renderSelect()
@@ -117,6 +114,7 @@ class SoundInfo extends React.Component {
       <div className="col-md-6">
         <div className="card flex-md-row mb-4 box-shadow h-md-250">
           <div className="card-body d-flex flex-column align-items-start">
+            Слово: <input name="letterValue" id="letterValue" onChange={this.props.handleInputChange} type="text"/><br/>
             <p> Описание фонемы: </p>
             Язык: <div id="select" style={{width: '100%'}}>
               {this.renderSelect()}
@@ -127,6 +125,7 @@ class SoundInfo extends React.Component {
             </div>
             <p> </p>
             <button className="btn btn-dark" name="saveSound" onClick={this.props.saveSound}>Добавить фонему</button>
+            <button className="btn btn-ligth" name="saveLetter" onClick={this.props.saveLetter}>Добавить слово</button>
           </div>
         </div>
       </div>

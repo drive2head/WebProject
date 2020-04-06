@@ -9,7 +9,7 @@ class WavePlayer extends React.Component {
   constructor(props)
   {
     super(props);
-    this.createWavePlayer = this.createWavePlayer.bind(this);
+    this.createWavePlayerLetter = this.createWavePlayerLetter.bind(this);
     this.options = [];
     this.getOptions();
     this.state = {selectedOption: {}}
@@ -48,16 +48,15 @@ class WavePlayer extends React.Component {
   }
 
   changeSelected(selectedOpt){
-    document.getElementById('waveform').innerHTML = '';
-    this.createWavePlayer('http://speechdb.ru/audio/' + selectedOpt.value);
+    document.getElementById('waveformletter').innerHTML = '';
+    this.createWavePlayerLetter('http://speechdb.ru/audio/' + selectedOpt.value);
     this.setState({selectedOption: selectedOpt});
-    document.getElementById('waveform').focus();
   }
 
-  createWavePlayer(url)
+  createWavePlayerLetter(url)
   {
     let wavesurfer = WaveSurfer.create({
-      container: '#waveform',
+      container: '#waveformletter',
       waveColor: 'red',
       progressColor: 'red',
       backend: 'MediaElement',
@@ -68,46 +67,29 @@ class WavePlayer extends React.Component {
         Timeline.create({
           primaryLabelInterval: 10,
           timeInterval: 1,
-          container: "#timeline"
+          container: "#timelineletter"
         })
       ]
     });
 
     document.onkeydown = (e) => {
       let keyCode = e.keyCode;
-      if(keyCode == 32) {
-        wavesurfer.playPause();
-      }
 
-      if(keyCode == 31) {
-        let end = document.getElementById('prevEnd');
-        let start = document.getElementById('prevStart');
-        //wavesurfer.clearRegions();
+      if(keyCode == 29) {
+        let end = document.getElementById('prevEndLetter');
+        let start = document.getElementById('prevStartLetter');
 
+        wavesurfer.addRegion({id: document.getElementById('letterValue').value, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
         console.log(wavesurfer.regions.list);
-
-        wavesurfer.addRegion({id: document.getElementById('selectPhoneme').innerText, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
-
         let region = {};
         for (let i in wavesurfer.regions.list)
         {
           region = wavesurfer.regions.list[i];
         }
 
-        region.attributes.label = 'Phoneme';
-        region.phoneme = true;    
-
+        region.attributes.label = 'Letter';
 
         let regionEl = region.element;
-      
-        let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
-        deleteButton.className = 'fa fa-trash';
-        deleteButton.addEventListener('click', (e) => {
-          e.stopImmediatePropagation();
-          this.props.deleteRegion(region.start.toFixed(3));
-          region.remove();
-        });
-        deleteButton.title = "Delete region";
         let css = {
          display: 'flex',
           "justify-content": 'center',
@@ -116,52 +98,25 @@ class WavePlayer extends React.Component {
           cursor: 'hand',
           color: '#129fdd'
         };
-        region.style(deleteButton, css);
-
-
-        let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'));
-        phonemeNotation.title = "Edit region";
-        phonemeNotation.innerHTML = region.id;
-        phonemeNotation.addEventListener('click', (e) => {
-          //e.stopImmediatePropagation();
-          this.props.changeSoundInfoWave(region.start.toFixed(3));
-        });
-        region.style(phonemeNotation, css);
-      }
-      if(keyCode == 30) {
-        for (let i in wavesurfer.regions.list)
-        {
-          if (!wavesurfer.regions.list[i].phoneme)
-          {
-            wavesurfer.regions.list[i].remove();
-          }
-        }
-        let not = this.props.soundValue;
-        let region = {};
-        for (let i in wavesurfer.regions.list)
-          if (wavesurfer.regions.list[i].id == not)
-          {
-            region = wavesurfer.regions.list[i];
-            break;
-          }
-        //region.color = 'hsla(137, 60%, 80%, 0.1)';
-        //console.log(region);
+        let letterNotation = regionEl.appendChild(document.createElement('letterNotation'));
+        
+        region.style(letterNotation, css);
       }
     };
 
     wavesurfer.on('ready', function ()
     {
-      document.getElementById('slider').oninput = function()
+      document.getElementById('sliderletter').oninput = function()
       {
-        let slider = document.getElementById('slider');
+        let slider = document.getElementById('sliderletter');
         let zoomLevel = Number(slider.value);
         wavesurfer.zoom(zoomLevel);
       };
     });
 
     wavesurfer.on('region-update-end', (region, event) => {  
-      document.getElementById('waveform').focus();
-      this.props.newTimeInterval(region.start.toFixed(3), region.end.toFixed(3))
+      document.getElementById('waveformletter').focus();
+      this.props.newTimeIntervalLetter(region.start.toFixed(3), region.end.toFixed(3))
     });
     //wavesurfer.on('region-update-end', (region) => {this.props.newTimeInterval(region.start.toFixed(3), region.end.toFixed(3))});
     wavesurfer.on('region-created', (region) => {
@@ -184,9 +139,9 @@ class WavePlayer extends React.Component {
   render() {  
     return (
         <div className="col-md-12 px-0">
-          <div id="waveform"></div>
-          <div id="timeline"></div>
-          <input id="slider" type="range" min="1" max="1000" defaultValue="1"/>
+          <div id="waveformletter"></div>
+          <div id="timelineletter"></div>
+          <input id="sliderletter" type="range" min="1" max="1000" defaultValue="1"/>
           <br/><div className="row">
             <div className="col-md-3"></div>
             <div className="col-md-6">
@@ -196,7 +151,7 @@ class WavePlayer extends React.Component {
             </div>
             <div className="col-md-3"></div>
           </div>
-          <div style={{display: "none"}}> <input id="prevEnd" value={this.props.state.endTime} type="text" /><input id="prevStart" value={this.props.state.startTime} type="text" /> </div>
+          <div style={{display: "none"}}> <input id="prevEndLetter" value={this.props.state.endTimeLetter} type="text" /><input id="prevStartLetter" value={this.props.state.startTimeLetter} type="text" /> </div>
           <p></p>
         </div>
     );
