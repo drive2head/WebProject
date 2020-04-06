@@ -6,6 +6,7 @@ import WavePlayerLetter from './waveplayerletter.js';
 import Sounds from './sounds.js';
 import Header from '../header.js';
 import Cookies from 'universal-cookie';
+import Select from 'react-select';
 
 let entity = require("./../../model.js")
 
@@ -38,6 +39,41 @@ class PostInterface extends React.Component {
       sent: [],
       soundsList: [],
     };
+    this.file='';
+    this.options = [];
+    this.getOptions();
+  }
+
+  getOptions = async () =>
+  {
+    var response = await fetch('/records', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    let body = await response.json();
+    for (let i of body)
+      this.options.push({value: i.name, label: i.name})
+    console.log(this.options);
+  }
+
+  renderSelect()
+  {
+    return (
+      <Select
+        autoFocus={false}
+        id="files"
+        name="Файлы"
+        options={this.options}
+        openMenuOnFocus
+        closeMenuOnSelect={true}
+        value={this.state.selectedOption}
+        onChange={
+          (selectedOpt) => {this.changeSelected(selectedOpt)}
+        }
+      />
+    );
   }
 
   saveSound()
@@ -56,10 +92,6 @@ class PostInterface extends React.Component {
     list.push({id: list.length, label: this.state.soundValue});
     this.setState({soundsList: list});
     this.setState({soundValue: ''});
-    setTimeout( () => {
-      var evt = new KeyboardEvent('keydown', {'keyCode':31, 'which':31});
-      document.dispatchEvent(evt);}
-      , 100);
   }
 
   saveLetter()
@@ -67,10 +99,6 @@ class PostInterface extends React.Component {
     let newLetters = this.state.letters;
     newLetters.push({id: document.getElementById('letterValue').value, end: document.getElementById('prevEndLetter').value, start: document.getElementById('prevStartLetter').value});
     this.setState({sounds: newLetters});
-    setTimeout( () => {
-      var evt = new KeyboardEvent('keydown', {'keyCode':29, 'which':29});
-      document.dispatchEvent(evt);}
-      , 100);
   }
 
   saveAll()
@@ -122,9 +150,26 @@ class PostInterface extends React.Component {
     for(let i = 0; i < list.length; i++)
       if (list[i].id != i)
         list[i].id = i;
-
     this.setState({sounds: newSounds, soundsList: list});
+  }
 
+  deleteLetter(st)
+  {
+    let i = 0;
+    let newLetters = this.state.letters;
+    for (i = 0; i < newLetters.length; i++)
+      if (newLetters[i].start == st)
+        break;
+    let tmp = newLetters[i];
+    newLetters.splice(i, 1);
+
+    this.setState({letters: newLetters});
+  }
+
+  changeSelected(selectedOpt){
+    this.file = selectedOpt;
+    this.refs.wave.init(this.file);
+    this.refs.waveletter.init(this.file);
   }
 
   changeLang(l) {this.setState({soundLang: l})}
@@ -139,16 +184,24 @@ class PostInterface extends React.Component {
       <div className="container">
         <Header/>
         <div className="jumbotron" style={{borderRadius: "25px"}}>
+          <div id="select" style={{width: '100%'}}>
+            {this.renderSelect()}
+          </div>
+          <WavePlayerLetter
+            ref="waveletter"
+            handleInputChange={this.handleInputChange.bind(this)}
+            newTimeIntervalLetter={this.newTimeIntervalLetter.bind(this)}
+            deleteLetter={this.deleteLetter.bind(this)}
+            state={this.state}
+          />
           <WavePlayer
+            ref="wave"
+            file={this.file}
             newTimeInterval={this.newTimeInterval.bind(this)}
             state={this.state}
             changeSoundInfoWave={this.changeSoundInfoWave.bind(this)}
             soundValue={this.state.soundValue}
             deleteRegion={this.deleteRegion.bind(this)}
-          />
-          <WavePlayerLetter
-            newTimeIntervalLetter={this.newTimeIntervalLetter.bind(this)}
-            state={this.state}
           />
           <div className="row">
             <div className="col-md-3"></div>
