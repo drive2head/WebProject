@@ -13,39 +13,7 @@ class WavePlayer extends React.Component {
     this.createWavePlayer = this.createWavePlayer.bind(this);
     this.btn = this.btn.bind(this);
     this.options = [];
-    this.getOptions();
     this.state = {selectedOption: {}}
-  }
-
-  getOptions = async () =>
-  {
-    var response = await fetch('/records', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    let body = await response.json();
-    for (let i of body)
-      this.options.push({value: i.name, label: i.name})
-  }
-
-  renderSelect()
-  {
-    return (
-      <Select
-        autoFocus={false}
-        id="files"
-        name="Файлы"
-        options={this.options}
-        openMenuOnFocus
-        closeMenuOnSelect={true}
-        value={this.state.selectedOption}
-        onChange={
-          (selectedOpt) => {this.changeSelected(selectedOpt)}
-        }
-      />
-    );
   }
 
   init(f)
@@ -85,12 +53,10 @@ class WavePlayer extends React.Component {
     document.onkeydown = (e) => {
       let keyCode = e.keyCode;
       if(keyCode == 32) {
+        console.log('hey');
         this.wavesurfer.playPause();
       }
 
-      if(keyCode == 31) {
-        console.log("hey");
-      }
       if(keyCode == 30) {
         for (let i in this.wavesurfer.regions.list)
         {
@@ -206,11 +172,10 @@ class WavePlayer extends React.Component {
         <div className="col-md-12 px-0">
           <div id="waveform"></div>
           <div id="timeline"></div>
-          <input id="slider" type="range" min="1" max="1000" onInput={this.slide} defaultValue="1"/>
+          <input id="slider" type="range" min="1" max="1000" onInput={this.props.slide} defaultValue="1"/>
           <br/><div className="row">
             <div className="col-md-3"></div>
             <div className="col-md-6">
-              <button className="btn btn-dark" name="saveSound" onClick={this.btn}>Добавить фонему</button>
             </div>
             <div className="col-md-3"></div>
           </div>

@@ -3,6 +3,7 @@ import axios from "axios";
 import SoundInfo from './soundInfo.js';
 import WavePlayer from './waveplayer.js';
 import WavePlayerLetter from './waveplayerletter.js';
+import WavePlayerSent from './waveplayersent.js';
 import Sounds from './sounds.js';
 import Header from '../header.js';
 import Cookies from 'universal-cookie';
@@ -24,6 +25,7 @@ class PostInterface extends React.Component {
     this.state = {  
       // Sound info
       letterValue: "",
+      sentValue: "",
       startTime: 0,
       endTime: 0,
       endTimeLetter: 0,
@@ -36,12 +38,18 @@ class PostInterface extends React.Component {
       selectedOptions: [],
       sounds: [],
       letters: [],
+      sents: [],
       sent: [],
       soundsList: [],
     };
     this.file='';
     this.options = [];
     this.getOptions();
+    window.addEventListener('keydown', function(e) {
+      if(e.keyCode == 32 && e.target == document.body) {
+        e.preventDefault();
+      }
+    });
   }
 
   getOptions = async () =>
@@ -78,6 +86,7 @@ class PostInterface extends React.Component {
 
   saveSound()
   {
+    this.refs.wave.btn();
     let object = entity.Phoneme(
       this.state.soundValue,
       this.state.startTime,
@@ -98,18 +107,28 @@ class PostInterface extends React.Component {
   {
     let newLetters = this.state.letters;
     newLetters.push({id: document.getElementById('letterValue').value, end: document.getElementById('prevEndLetter').value, start: document.getElementById('prevStartLetter').value});
-    this.setState({sounds: newLetters});
+    this.setState({letters: newLetters});
+  }
+
+  saveSent()
+  {
+    let newSents = this.state.sents;
+    newSents.push({id: document.getElementById('sentValue').value, end: document.getElementById('prevEndSent').value, start: document.getElementById('prevStartSent').value});
+    this.setState({sents: newSents});
   }
 
   saveAll()
   {
     const cookies = new Cookies();
     cookies.getAll();
+    console.log(this.state.sents, this.state.letters, this.state.sounds);
     console.log(document.getElementById('files').textContent);
     axios.post('/add_data', {
       username: cookies.cookies.username,
       record: document.getElementById('files').textContent,
-      phonemes: this.state.sounds
+      phonemes: this.state.sounds,
+      letters: this.state.letters,
+      sents: this.state.sents
     });
     window.alert('Done!');
     window.location.href = "/";
@@ -166,10 +185,31 @@ class PostInterface extends React.Component {
     this.setState({letters: newLetters});
   }
 
+  deleteSent(st)
+  {
+    let i = 0;
+    let newSents = this.state.sents;
+    for (i = 0; i < newSents.length; i++)
+      if (newSents[i].start == st)
+        break;
+    let tmp = newSents[i];
+    newSents.splice(i, 1);
+
+    this.setState({sents: newSents});
+  }
+
   changeSelected(selectedOpt){
     this.file = selectedOpt;
     this.refs.wave.init(this.file);
     this.refs.waveletter.init(this.file);
+    this.refs.wavesent.init(this.file);
+  }
+
+  slide()
+  {
+    this.refs.wave.slide();
+    this.refs.waveletter.slide();
+    this.refs.wavesent.slide();
   }
 
   changeLang(l) {this.setState({soundLang: l})}
@@ -177,6 +217,7 @@ class PostInterface extends React.Component {
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
   handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
   newTimeIntervalLetter(start, end){this.setState({startTimeLetter: start, endTimeLetter: end});}
+  newTimeIntervalSent(start, end){this.setState({startTimeSent: start, endTimeSent: end});}
 
   render() {  
     document.title = "Новая разметка";
@@ -187,14 +228,26 @@ class PostInterface extends React.Component {
           <div id="select" style={{width: '100%'}}>
             {this.renderSelect()}
           </div>
+          <WavePlayerSent
+            slide={this.slide.bind(this)}
+            ref="wavesent"
+            handleInputChange={this.handleInputChange.bind(this)}
+            newTimeIntervalSent={this.newTimeIntervalSent.bind(this)}
+            deleteSent={this.deleteSent.bind(this)}
+            saveSent={this.saveSent.bind(this)}
+            state={this.state}
+          />
           <WavePlayerLetter
+            slide={this.slide.bind(this)}
             ref="waveletter"
             handleInputChange={this.handleInputChange.bind(this)}
             newTimeIntervalLetter={this.newTimeIntervalLetter.bind(this)}
             deleteLetter={this.deleteLetter.bind(this)}
+            saveLetter={this.saveLetter.bind(this)}
             state={this.state}
           />
           <WavePlayer
+            slide={this.slide.bind(this)}
             ref="wave"
             file={this.file}
             newTimeInterval={this.newTimeInterval.bind(this)}

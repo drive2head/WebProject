@@ -5,11 +5,11 @@ import Timeline from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import axios from "axios";
 import Select from 'react-select';
 
-class WavePlayer extends React.Component {  
+class WavePlayerSent extends React.Component {  
   constructor(props)
   {
     super(props);
-    this.createWavePlayerLetter = this.createWavePlayerLetter.bind(this);
+    this.createWavePlayerSent = this.createWavePlayerSent.bind(this);
     this.slide = this.slide.bind(this);
     this.btn = this.btn.bind(this);
     this.options = [];
@@ -18,21 +18,15 @@ class WavePlayer extends React.Component {
 
   init(f)
   {
-    document.getElementById('waveformletter').innerHTML = '';
-    this.createWavePlayerLetter('http://speechdb.ru/audio/' + f.value);
+    document.getElementById('waveformsent').innerHTML = '';
+    this.createWavePlayerSent('http://speechdb.ru/audio/' + f.value);
     this.setState({selectedOption: f.value});
   }
 
-  changeSelected(selectedOpt){
-    document.getElementById('waveformletter').innerHTML = '';
-    this.createWavePlayerLetter('http://speechdb.ru/audio/' + selectedOpt.value);
-    this.setState({selectedOption: selectedOpt});
-  }
-
-  createWavePlayerLetter(url)
+  createWavePlayerSent(url)
   {
     this.wavesurfer = wavesurfer.create({
-      container: '#waveformletter',
+      container: '#waveformsent',
       waveColor: 'red',
       progressColor: 'red',
       backend: 'MediaElement',
@@ -43,14 +37,14 @@ class WavePlayer extends React.Component {
         Timeline.create({
           primaryLabelInterval: 10,
           timeInterval: 1,
-          container: "#timelineletter"
+          container: "#timelinesent"
         })
       ]
     });
-
+    
     this.wavesurfer.on('region-update-end', (region, event) => {  
-      document.getElementById('waveformletter').focus();
-      this.props.newTimeIntervalLetter(region.start.toFixed(3), region.end.toFixed(3))
+      document.getElementById('waveformsent').focus();
+      this.props.newTimeIntervalSent(region.start.toFixed(3), region.end.toFixed(3))
     });
     //this.wavesurfer.on('region-update-end', (region) => {this.props.newTimeInterval(region.start.toFixed(3), region.end.toFixed(3))});
     this.wavesurfer.on('region-created', (region) => {
@@ -72,10 +66,10 @@ class WavePlayer extends React.Component {
 
   btn()
   {
-    let end = document.getElementById('prevEndLetter');
-    let start = document.getElementById('prevStartLetter');
-    this.props.saveLetter();
-    this.wavesurfer.addRegion({id: document.getElementById('letterValue').value, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
+    let end = document.getElementById('prevEndSent');
+    let start = document.getElementById('prevStartSent');
+    this.props.saveSent();
+    this.wavesurfer.addRegion({id: document.getElementById('sentValue').value, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
     console.log(this.wavesurfer.regions.list);
     let region = {};
     for (let i in this.wavesurfer.regions.list)
@@ -83,7 +77,7 @@ class WavePlayer extends React.Component {
       region = this.wavesurfer.regions.list[i];
     }
 
-    region.attributes.label = 'Letter';
+    region.attributes.label = 'Sent';
     region.phoneme = true;  
 
     let regionEl = region.element;
@@ -91,7 +85,7 @@ class WavePlayer extends React.Component {
     deleteButton.className = 'fa fa-trash';
     deleteButton.addEventListener('click', (e) => {
       e.stopImmediatePropagation();
-      this.props.deleteLetter(region.start.toFixed(3));
+      this.props.deleteSent(region.start.toFixed(3));
       region.remove();
     });
     deleteButton.title = "Delete region";
@@ -106,12 +100,12 @@ class WavePlayer extends React.Component {
     region.style(deleteButton, css);
 
     regionEl = region.element;
-    let letterNotation = regionEl.appendChild(document.createElement('letterNotation'));
+    let sentNotation = regionEl.appendChild(document.createElement('sentNotation'));
     console.log(region.id);
 
-    letterNotation.title = "Edit region";
-    letterNotation.innerHTML = region.id;
-    region.style(letterNotation, css);
+    sentNotation.title = "Edit region";
+    sentNotation.innerHTML = region.id;
+    region.style(sentNotation, css);
   }
 
   slide()
@@ -125,21 +119,21 @@ class WavePlayer extends React.Component {
   render() {  
     return (
         <div className="col-md-12 px-0">
-          <div id="waveformletter"></div>
-          <div id="timelineletter"></div>
+          <div id="waveformsent"></div>
+          <div id="timelinesent"></div>
           <br/><div className="row">
             <div className="col-md-3"></div>
             <div className="col-md-6">
-                <input name="letterValue" id="letterValue" onChange={this.props.handleInputChange} type="text"/><br/>
-                <button className="btn btn-dark" name="saveSound" onClick={this.btn}>Добавить слово</button>
+                <input name="sentValue" id="sentValue" onChange={this.props.handleInputChange} type="text"/><br/>
+                <button className="btn btn-dark" name="saveSound" onClick={this.btn}>Добавить предложение</button>
             </div>
             <div className="col-md-3"></div>
           </div>
-          <div style={{display: "none"}}> <input id="prevEndLetter" value={this.props.state.endTimeLetter} type="text" /><input id="prevStartLetter" value={this.props.state.startTimeLetter} type="text" /> </div>
+          <div style={{display: "none"}}> <input id="prevEndSent" value={this.props.state.endTimeSent} type="text" /><input id="prevStartSent" value={this.props.state.startTimeSent} type="text" /> </div>
           <p></p>
         </div>
     );
   }
 }
 
-export default WavePlayer;
+export default WavePlayerSent;
