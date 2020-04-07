@@ -35,58 +35,61 @@ class ListInterface extends React.Component {
 
   init = async () => {
   	await(this.getOptions());
-	const cookies = new Cookies();
-	cookies.getAll();
-	for(let i of this.options)
-	{
-		let response = await fetch('/get_data', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				record: i.value,
-				username: cookies.cookies.username,
-			})
-		});
+  	const cookies = new Cookies();
+  	cookies.getAll();
+  	for(let i of this.options)
+  	{
+  		let response = await fetch('/get_data', {
+  			method: 'POST',
+  			headers: {
+  				'Content-Type': 'application/json'
+  			},
+  			body: JSON.stringify({
+  				record: i.value,
+  				username: cookies.cookies.username,
+  			})
+  		});
 
-		let body = await response.json();
-		if (body == false)
-			alert('Bad data, FILOLUX!');
-		else
-		{
-			console.log(body);
-		}
-	}
-	//this.renderTable();
-  }
-
-  renderTable()
-  {
-  	let table = '<br><table id="table" className="table table-dark"><thead><tr><th scope="col"></th>';
-    table += '</tr></thead><tbody>';
-    for (let i = 0; i < this.options.length; i++)
-    {
-		table += '<tr><th scope="row">' + (i) + '</th>';
-		table += '<td>' + '<button className="btn btn-dark" onClick={this.handleClick}>' + this.options[i].value + '</button>' + '</td>';
-		table += '</tr>';
-	}
-    table += '</tbody></table><br/>';
-  	document.getElementById('table').innerHTML = table;
+  		let body = await response.json();
+  		if (body == false)
+  			alert('Bad data, FILOLUX!');
+  		else
+  		{
+  			console.log(body);
+  		}
+  	}
   }
 
   handleClick(event)
   {
   	const cookies = new Cookies();
-	cookies.getAll();
-	cookies.set('record', event.target.id, { path: '/' });
+    cookies.getAll();
+    cookies.set('record', event.target.id, { path: '/' });
   	console.log("hey", );
   	window.location.href = "/get";
   }
 
+  deletePlease = async (event) =>
+  {
+    const cookies = new Cookies();
+    cookies.getAll();
+    let response = await fetch('/remove_markup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        record: event.target.id,
+        username: cookies.cookies.username,
+      })
+    });
+    let body = await response.json();
+    window.location.href = "/list";
+  }
+
   render() {  
     document.title = "Мои разметки";
-    const listItems = this.options.map((d) => <li key={d.value}><button id={d.value} onClick={this.handleClick}>{d.value}</button></li>);
+    const listItems = this.options.map((d) => <li key={d.value}><button id={d.value} onClick={this.handleClick}>{d.value}</button><button id={d.value} onClick={this.deletePlease}>Удалить</button></li>);
     console.log(this.options);
     return (
       <div className="container">
