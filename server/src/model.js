@@ -32,3 +32,25 @@ exports.Phoneme = function(notation, start, end, language, dialect=null) {
 			dialect: dialect
 		}
 	};
+
+exports.Word = function(value, start, end) {
+		/*
+			Здесь должна быть проверка значений на ошибки
+		*/
+		return {
+			value: value,
+			start: start,
+			end: end
+		}
+	};
+
+exports.Sentence = function(value, start, end) {
+		/*
+			Здесь должна быть проверка значений на ошибки
+		*/
+		return {
+			value: value,
+			start: start,
+			end: end
+		}
+	};

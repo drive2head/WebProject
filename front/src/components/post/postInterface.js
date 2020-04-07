@@ -103,17 +103,27 @@ class PostInterface extends React.Component {
     this.setState({soundValue: ''});
   }
 
-  saveLetter()
+  saveLetter() // Oh, sorry... a letter, yeah?
   {
+    let object = entity.Word(
+      document.getElementById('letterValue').value,
+      document.getElementById('prevStartLetter').value,
+      document.getElementById('prevEndLetter').value
+    );
     let newLetters = this.state.letters;
-    newLetters.push({id: document.getElementById('letterValue').value, end: document.getElementById('prevEndLetter').value, start: document.getElementById('prevStartLetter').value});
+    newLetters.push(object);
     this.setState({letters: newLetters});
   }
 
   saveSent()
   {
+    let object = entity.Sentence(
+      document.getElementById('sentValue').value,
+      document.getElementById('prevStartSent').value,
+      document.getElementById('prevEndSent').value
+    );
     let newSents = this.state.sents;
-    newSents.push({id: document.getElementById('sentValue').value, end: document.getElementById('prevEndSent').value, start: document.getElementById('prevStartSent').value});
+    newSents.push(object);
     this.setState({sents: newSents});
   }
 
