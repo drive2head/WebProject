@@ -157,7 +157,7 @@ app.post('/add_data', (req, res) => {
 app.post('/get_data', (req, res) => {
 	SpeechDB.getMarkup(req.body.username, req.body.record)
 	.then(result => {
-		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/add_data');
+		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
 		if (result.completed) {
 			res.send(result);
 		}
