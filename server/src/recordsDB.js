@@ -19,10 +19,6 @@ async function findRecordByName (name) {
 	return await Record.findOne({ name: name });
 };
 
-// async function getRecord (recordID) {
-	// return await Record.findOne({ _id: recordID });
-// };
-
 async function addRecord(name, path, speakerID) {
 	try {
 		var record = await findRecordByName(name);
@@ -37,7 +33,6 @@ async function addRecord(name, path, speakerID) {
 	}
 };
 
-// exports.getRecord = getRecord;
 exports.findRecordByName = findRecordByName;
 exports.addRecord = addRecord;
 exports.getAllRecords = getAllRecords;

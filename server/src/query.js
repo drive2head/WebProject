@@ -64,6 +64,46 @@ exports.addMarkup = function (username, record_name, phonemes) {
 	return notabs(text);
 }
 
+exports.addSentences = function (username, record_name, sentences) {
+	let text = `\
+	match (record: Record {name: '${record_name}'})
+	create (sMarkup: SentenceMarkup {username: '${username}'})
+	create (sMarkup)-[:MARKED_ON]->(record)`;
+	let returnSent = `return `;
+	sentences.forEach((sentence, i) => {
+		text += `create (sent${i}: Sentence {value:'${sentence.value}', start:'${sentence.start}', end:'${sentence.end}'})
+				create (sent${i})-[:CONTAINED_IN]->(sMarkup)`;
+
+		if (i < sentences.length - 1) {
+			returnSent += `sent${i}, `;
+		} else {
+			returnSent += `sent${i}`;
+		}
+	});
+	text += `\n` + returnSent;
+	return notabs(text);
+}
+
+exports.addWords = function (username, record_name, words) {
+	let text = `\
+	match (record: Record {name: '${record_name}'})
+	create (wMarkup: WordMarkup {username: '${username}'})
+	create (wMarkup)-[:MARKED_ON]->(record)`;
+	let returnWord = `return `;
+	words.forEach((word, i) => {
+		text += `create (word${i}: Word {value:'${word.value}', start:'${word.start}', end:'${word.end}'})
+				create (word${i})-[:CONTAINED_IN]->(wMarkup)`;
+
+		if (i < words.length - 1) {
+			returnWord += `word${i}, `;
+		} else {
+			returnWord += `word${i}`;
+		}
+	});
+	text += `\n` + returnWord;
+	return notabs(text);
+};
+
 exports.getMarkups = function (username) {
 	let text = `
 	match (markup:Markup {username: '${username}'})
@@ -161,37 +201,3 @@ exports.deletePhoneme = function (id) {
 	return phoneme
 	`;
 }
-
-// exports.addRecordPersonPhonemes = function (record, personID, phonemes) {
-// 	// let text = `\
-
-// 	// merge (rec:Record {name:'${record.recname}'})
-// 	// create (person: Person {fullname:'${person.fullName}', age:'${person.age}', 
-// 	// 	sex:'${person.sex}', nativeLanguage:'${person.nativeLanguage}'})
-// 	// merge (country: Country {name:'${person.country}'})
-// 	// merge (city: City {name:'${person.city}'})
-// 	// create (rec)-[:SPOKEN_BY]->(person)
-// 	// create (person)-[:LIVES_IN]->(city)
-// 	// merge (city)-[:LOCATED_IN]->(country)`;
-// 	let text = `\
-	
-// 	match (person: Person)
-// 	where ID(person) = ${personID}
-// 	merge (rec:Record {name:'${record.recname}'})`;
-// 	// merge (country: Country {name:'${person.country}'})
-// 	// merge (city: City {name:'${person.city}'})
-// 	// create (rec)-[:SPOKEN_BY]->(person)
-// 	// create (person)-[:LIVES_IN]->(city)
-// 	// merge (city)-[:LOCATED_IN]->(country)`;
-	
-// 	let returnPh = ``;
-// 	phonemes.forEach((phoneme, i) => {
-// 		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',
-// 					end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})
-// 				create (ph${i})-[:CONTAINED_IN]->(rec)`;
-// 		returnPh += `, ph${i}`;
-// 	});
-// 	text += `\n return person `+ returnPh;
-
-// 	return notabs(text);
-// };

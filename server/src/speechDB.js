@@ -69,76 +69,23 @@ changePerson = runQuery(query.changePerson);
 addPerson = runQuery(query.addPerson);
 addRecord = runQuery(query.addRecord);
 addMarkup = runQuery(query.addMarkup);
+addSentences = runQuery(query.addSentences);
+addWords = runQuery(query.addWords);
 getMarkup = runQuery(query.getMarkup, true);
 getMarkups = runQuery(query.getMarkups, true);
 deletePerson = validateDeleteResult(runQuery(query.deletePerson));
 deleteRecord = validateDeleteResult(runQuery(query.deleteRecord));
 deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup));
 
-// exports.addRecordPersonPhonemes = addRecordPersonPhonemes;
 exports.changePhoneme = changePhoneme;
 exports.changePerson = changePerson;
 exports.addPerson = addPerson;
 exports.addRecord = addRecord;
 exports.addMarkup = addMarkup;
+exports.addSentences = addSentences;
+exports.addWords = addWords;
 exports.getMarkup = getMarkup;
 exports.getMarkups = getMarkups;
 exports.deletePerson = deletePerson;
 exports.deleteRecord = deleteRecord;
 exports.deleteMarkup = deleteMarkup;
-
-// function test_addRecordPersonPhonemes() {
-// 	let queryText = `\
-// 	merge (rec:Record {description:'REC'})
-// 	create (person: Person {fullname:'PERS',
-// 			nativeLanguage:'NLANG', accent:'ACCENT'})
-// 	merge (country: Country {name:'CNTRY'})
-// 	merge (city: City {name:'CITY'})
-// 	create (rec)-[:SPOKEN_BY]->(person)
-// 	create (person)-[:LIVES_IN]->(city)
-// 	merge (city)-[:LOCATED_IN]->(country)
-
-// 	merge (dis0: Disorder {name:'DIS0'})
-// 	create (person)-[:HAS]->(dis0)
-// 	merge (dis1: Disorder {name:'DIS1'})
-// 	create (person)-[:HAS]->(dis1)
-		
-// 	create (ph0: Phoneme {notation:'P0', start:'0',
-// 					end:'0', language:'LANG', dialect:'DIALECT'})
-// 	create (ph0)-[:CONTAINED_IN]->(rec)
-// 	create (ph1: Phoneme {notation:'P1', start:'0',
-// 					end:'0', language:'LANG', dialect:'DIALECT'})
-// 	create (ph1)-[:CONTAINED_IN]->(rec)
-
-// 	return person, ph0, ph1
-// 	`;
-
-// 	let session = driver.session();
-// 	return session.run(queryText)
-// 	.then((result) => {
-// 		console.log("result: ", result);
-// 		var createdNodes = [];
-// 		const singleRecord = result.records[0];
-// 		singleRecord.forEach((node) => {
-// 			createdNodes.push({ id: Integer.toString(node.identity), label: node.labels[0] });
-// 		});
-// 		return { completed: true, output: createdNodes };
-// 	})
-// 	.catch((err) => {
-// 		return { completed: false, output: err };
-// 	});
-// };
-
-// test_addRecordPersonPhonemes()
-// .then((result) => {
-// 	console.log("test_addRecordPersonPhonemes():\n", result);
-// })
-
-// const pers = entity.Person('Name', '18', 'M', 'RU', 'MSK', 'RF');
-// const ph0 = entity.Phoneme('A', '0:00:00', '0:05:00', 'RU');
-// const ph1 = entity.Phoneme('B', '0:06:00', '0:10:00', 'RU');
-// const rec = entity.Record('rec.wav', 'empty');
-// addRecordPersonPhonemes(rec, pers, [ph0, ph1])
-// .then((result) => {
-	// console.log("result: ", result);
-// });

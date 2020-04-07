@@ -137,8 +137,8 @@ class PostInterface extends React.Component {
       username: cookies.cookies.username,
       record: document.getElementById('files').textContent,
       phonemes: this.state.sounds,
-      letters: this.state.letters,
-      sents: this.state.sents
+      words: this.state.letters,
+      sentences: this.state.sents
     });
     window.alert('Done!');
     window.location.href = "/";

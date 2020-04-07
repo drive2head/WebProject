@@ -42,10 +42,3 @@ async function updateNodeInfo(recordID, nodeID, label, username) {
 
 exports.getNodeInfo = getNodeInfo;
 exports.updateNodeInfo = updateNodeInfo;
-
-
-// updateNodeInfo('recordID', '301', 'Person', 'test')
-// .then((result) => { console.log(result) });
-
-// getNodeInfo('300')
-// .then((result) => { console.log(result.lastEditDate.toString()); });

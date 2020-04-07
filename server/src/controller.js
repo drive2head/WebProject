@@ -104,7 +104,7 @@ app.post('/add_record', (req, res) => {
 					res.send({ status: false, msg: result.output });
 					return;
 				}
-				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID)
+				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID);
 			})
 			.then(result => {
 				log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
@@ -121,63 +121,37 @@ app.post('/add_record', (req, res) => {
 	})
 });
 
-// app.post('/add_record', (req, res) => {
-// 	let form = new formidable.IncomingForm();
-// 	form.parse(req, function (err, fields, files) {
-// 		let personID = fields.text;
-// 		let oldpath = files.filetoupload.path;
-// 		let newpath = cfg.records_dir + files.filetoupload.name;
-// 		let recordName = files.filetoupload.name;
-// 		try {
-// 			fs.rename(oldpath, newpath, function (err) {
-// 				if (err) throw err;
-// 			});
-
-// 			SpeakersDB.findSpeakerByID(personID)
-// 			.then(result => {
-// 				const personNodeID = result.nodeID;
-// 				SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID)
-// 				.then(result => {
-// 					log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
-// 					if (result.completed == false) {
-// 						res.send({ status: false, msg: result.output });
-// 						return;
-// 					}
-
-// 					RecordsDB.addRecord(files.filetoupload.name, newpath, personID)
-// 					.then(result => {
-// 						log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
-// 						if (result.completed) {
-// 							res.redirect('/');
-// 						} else {
-// 							res.send({ status: false, msg: result.output });
-// 						}
-// 					})
-// 					.catch(err => { throw err; })
-// 				})
-// 				.catch(err => { throw err; })
-// 			})
-// 		} catch (err) {
-// 			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');
-// 		};
-// 	})
-// });
-
 app.post('/add_data', (req, res) => {
-	SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
-	.then(result => {
-		log.addLog(req.body.username, 'query.add', 'addMarkup', result.completed, result.output, '/add_data');
-		if (result.completed) {
-			// result.output.forEach((node) => {
-				// const recordID = node.id;
-				// NodeStats.updateNodeInfo(recordID, node.id, node.label, req.body.username);
-			// });
-			res.send("Data was successfully loaded!");
-		}
-		else {
-			res.send("Data WAS NOT loaded!");
-		}
-	});
+	try {
+		SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
+		.then(result => {
+			log.addLog(req.body.username, 'query.add', 'addMarkup', result.completed, result.output, '/add_data');
+			if (result.completed == false) {
+				res.send({ status: false, msg: result.output });
+				return;
+			}
+			return SpeechDB.addSentences(req.body.username, req.body.record, req.body.sentences);
+		})
+		.then(result => {
+			log.addLog(req.body.username, 'query.add', 'addSentences', result.completed, result.output, '/add_data');
+			if (result.completed == false) {
+				res.send({ status: false, msg: result.output });
+				return;
+			}
+			return SpeechDB.addWords(req.body.username, req.body.record, req.body.words);
+		})
+		.then(result => {
+			log.addLog(req.body.username, 'query.add', 'addWords', result.completed, result.output, '/add_data');
+			if (result.completed == false) {
+				res.send({ status: false, msg: result.output });
+				return;
+			}
+			res.send({ status: true, msg: 'Data was uploaded!' });
+		})
+		.catch(err => { throw err; })
+	} catch (err) {
+		log.addLog(req.body.username, 'query.add', '', false, err, '/add_data');
+	};
 });
 
 app.post('/get_data', (req, res) => {
