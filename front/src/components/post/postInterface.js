@@ -63,7 +63,7 @@ class PostInterface extends React.Component {
     let body = await response.json();
     for (let i of body)
       this.options.push({value: i.name, label: i.name})
-    console.log(this.options);
+    //console.log(this.options);
   }
 
   renderSelect()
@@ -86,7 +86,6 @@ class PostInterface extends React.Component {
 
   saveSound()
   {
-    this.refs.wave.btn();
     let object = entity.Phoneme(
       this.state.soundValue,
       this.state.startTime,
@@ -100,7 +99,9 @@ class PostInterface extends React.Component {
     let list = this.state.soundsList;
     list.push({id: list.length, label: this.state.soundValue});
     this.setState({soundsList: list});
-    this.setState({soundValue: ''});
+    console.log(object);
+    this.refs.wave.btn();
+    //this.setState({soundValue: ''});
   }
 
   saveLetter() // Oh, sorry... a letter, yeah?
@@ -157,7 +158,7 @@ class PostInterface extends React.Component {
       }
     let list = this.state.soundsList;
     this.setState({soundValue: tmp.notation, startTime: tmp.start, endTime: tmp.end, soundLang: tmp.language, soundDialect: tmp.dialect, sounds: newSounds, soundsList: list});
-    console.log(this.state.soundValue);
+    //console.log(this.state.soundValue);
     setTimeout( () => {
       var evt = new KeyboardEvent('keydown', {'keyCode':30, 'which':30});
       document.dispatchEvent(evt);}

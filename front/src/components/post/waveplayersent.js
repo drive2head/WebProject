@@ -69,7 +69,7 @@ class WavePlayerSent extends React.Component {
     let end = document.getElementById('prevEndSent');
     let start = document.getElementById('prevStartSent');
     this.props.saveSent();
-    this.wavesurfer.addRegion({id: document.getElementById('sentValue').value, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
     console.log(this.wavesurfer.regions.list);
     let region = {};
     for (let i in this.wavesurfer.regions.list)
@@ -104,7 +104,7 @@ class WavePlayerSent extends React.Component {
     console.log(region.id);
 
     sentNotation.title = "Edit region";
-    sentNotation.innerHTML = region.id;
+    sentNotation.innerHTML = document.getElementById('sentValue').value;
     region.style(sentNotation, css);
   }
 

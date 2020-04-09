@@ -114,16 +114,22 @@ class WavePlayer extends React.Component {
     let start = document.getElementById('prevStart');
     //wavesurfer.clearRegions();
 
-    console.log(this.wavesurfer.regions.list);
+    //console.log('phoneme: ', end.value, start.value, document.getElementById('selectPhoneme').innerText);
 
-    this.wavesurfer.addRegion({id: document.getElementById('selectPhoneme').innerText, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
+    //console.log(this.wavesurfer.regions.list);
 
-    let region = {};
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
+
+    //console.log(this.wavesurfer.regions.list.length);
+    let region = {}
+    //this.wavesurfer.regions.list[this.wavesurfer.regions.list.length-1];
     for (let i in this.wavesurfer.regions.list)
     {
       region = this.wavesurfer.regions.list[i];
     }
 
+    //console.log('list: ', this.wavesurfer.regions.list);
+    //region = this.wavesurfer.regions.list[this.wavesurfer.regions.list.length-1];
     region.attributes.label = 'Phoneme';
     region.phoneme = true;    
 
@@ -150,12 +156,12 @@ class WavePlayer extends React.Component {
 
 
     let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'));
-    phonemeNotation.title = "Edit region";
-    phonemeNotation.innerHTML = region.id;
-    phonemeNotation.addEventListener('click', (e) => {
-      //e.stopImmediatePropagation();
-      this.props.changeSoundInfoWave(region.start.toFixed(3));
-    });
+    //phonemeNotation.title = "Edit region";
+    phonemeNotation.innerHTML = document.getElementById('selectPhoneme').innerText;
+    // phonemeNotation.addEventListener('click', (e) => {
+    //   //e.stopImmediatePropagation();
+    //   this.props.changeSoundInfoWave(region.start.toFixed(3));
+    // });
     region.style(phonemeNotation, css);
   }
 

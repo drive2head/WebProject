@@ -75,7 +75,7 @@ class WavePlayer extends React.Component {
     let end = document.getElementById('prevEndLetter');
     let start = document.getElementById('prevStartLetter');
     this.props.saveLetter();
-    this.wavesurfer.addRegion({id: document.getElementById('letterValue').value, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
     console.log(this.wavesurfer.regions.list);
     let region = {};
     for (let i in this.wavesurfer.regions.list)
@@ -110,7 +110,7 @@ class WavePlayer extends React.Component {
     console.log(region.id);
 
     letterNotation.title = "Edit region";
-    letterNotation.innerHTML = region.id;
+    letterNotation.innerHTML = document.getElementById('letterValue').value;
     region.style(letterNotation, css);
   }
 
