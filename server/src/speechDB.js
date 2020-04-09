@@ -38,7 +38,11 @@ function runQuery(queryFunc, multipleRecords=false) {
 							recordNodes.forEach((node) => { nodes.push(node); } );
 						});
 				} else {
-					nodes = extractNodes(result.records[0]);
+					if (result.records.length === 0) {
+						nodes = null;
+					} else {
+						nodes = extractNodes(result.records[0]);
+					}
 				}
 				return { completed: true, output: nodes };
 			})
@@ -54,8 +58,8 @@ function runQuery(queryFunc, multipleRecords=false) {
 }
 
 function validateDeleteResult(deleteFunc) {
-	return function() {
-		var result = deleteFunc.apply(this, arguments);
+	return async function() {
+		var result = await deleteFunc.apply(this, arguments);
 
 		if (result.output === null) {
 			return { completed: false, output: 'Node was NOT deleted'};
@@ -78,6 +82,8 @@ getMarkups = runQuery(query.getMarkups, true);
 deletePerson = validateDeleteResult(runQuery(query.deletePerson));
 deleteRecord = validateDeleteResult(runQuery(query.deleteRecord));
 deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup));
+deleteSentences = validateDeleteResult(runQuery(query.deleteSentences))
+deleteWords = validateDeleteResult(runQuery(query.deleteWords))
 
 exports.changePhoneme = changePhoneme;
 exports.changePerson = changePerson;
@@ -91,3 +97,5 @@ exports.getMarkups = getMarkups;
 exports.deletePerson = deletePerson;
 exports.deleteRecord = deleteRecord;
 exports.deleteMarkup = deleteMarkup;
+exports.deleteSentences = deleteSentences;
+exports.deleteWords = deleteWords;

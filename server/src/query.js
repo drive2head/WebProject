@@ -193,6 +193,30 @@ exports.deleteMarkup = function (username, record_name) {
 	return notabs(text);
 }
 
+exports.deleteSentences = function (username, record_name) {
+	let text = `
+	match (sMarkup: SentenceMarkup {username: '${username}'})-[c0:MARKED_ON]->(record: Record {name: '${record_name}'})
+	match (sent:Sentence)-[c1:CONTAINED_IN]->(sMarkup)
+	delete c1, sent
+	delete c0, sMarkup
+	return sMarkup
+	`;
+
+	return notabs(text);
+}
+
+exports.deleteWords = function (username, record_name) {
+	let text = `
+	match (wMarkup: WordMarkup {username: '${username}'})-[c0:MARKED_ON]->(record: Record {name: '${record_name}'})
+	match (word:Word)-[c1:CONTAINED_IN]->(wMarkup)
+	delete c1, word
+	delete c0, wMarkup
+	return wMarkup
+	`;
+
+	return notabs(text);
+}
+
 exports.deletePhoneme = function (id) {
 	let text =`
 	match (phoneme: Phoneme)

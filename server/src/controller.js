@@ -46,7 +46,6 @@ app.get('/records', (req, res) => {
 app.post('/markups', (req, res) => {
 	SpeechDB.getMarkups(req.body.username)
 	.then(result => {
-		console.log(result);
 		log.addLog(req.body.username, 'access.markups', 'getMarkups', result.completed, result.output, '/markups');
 		res.send(result);
 	})
@@ -203,13 +202,48 @@ app.post('/remove_person', (req, res) => {
 });
 
 app.post('/remove_markup', (req, res) => {
-	let result = SpeechDB.deleteMarkup(req.body.username, req.body.record)
-	log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', result.completed, result.output, '/remove_markup');
-	if (result.completed == false) {
-		res.send({ status: false, msg: result.output });
-		return;
-	}
-	res.send({ status: true, msg: 'markup was successfully deleted!'});
+	SpeechDB.deleteMarkup(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', result.completed, result.output, '/remove_markup');
+		if (result.completed == false) {
+			res.send({ status: false, msg: result.output });
+			return;
+		}
+		res.send({ status: true, msg: 'Markup was successfully deleted!'});
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_markup');
+	});
+});
+
+app.post('/remove_sentences_markup', (req, res) => {
+	SpeechDB.deleteSentences(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteSentences', result.completed, result.output, '/remove_sentences_markup');
+		if (result.completed == false) {
+			res.send({ status: false, msg: result.output });
+			return;
+		}
+		res.send({ status: true, msg: 'Sentence markup was successfully deleted!'});
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_sentences_markup');
+	});
+});
+
+app.post('/remove_words_markup', (req, res) => {
+	SpeechDB.deleteWords(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteWords', result.completed, result.output, '/remove_words_markup');
+		if (result.completed == false) {
+			res.send({ status: false, msg: result.output });
+			return;
+		}
+		res.send({ status: true, msg: 'Word markup was successfully deleted!'});
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_words_markup');
+	});
 });
 
 /* AUTHENTICATION AND ACCOUNT ACCESS */
