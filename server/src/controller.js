@@ -216,7 +216,7 @@ app.post('/remove_markup', (req, res) => {
 	});
 });
 
-app.post('/remove_sentences_markup', (req, res) => {
+app.post('/remove_sentence_markup', (req, res) => {
 	SpeechDB.deleteSentences(req.body.username, req.body.record)
 	.then(result => {
 		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteSentences', result.completed, result.output, '/remove_sentences_markup');
@@ -231,7 +231,7 @@ app.post('/remove_sentences_markup', (req, res) => {
 	});
 });
 
-app.post('/remove_words_markup', (req, res) => {
+app.post('/remove_word_markup', (req, res) => {
 	SpeechDB.deleteWords(req.body.username, req.body.record)
 	.then(result => {
 		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteWords', result.completed, result.output, '/remove_words_markup');
