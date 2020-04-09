@@ -58,8 +58,10 @@ function validateDeleteResult(deleteFunc) {
 		var result = deleteFunc.apply(this, arguments);
 
 		if (result.output === null) {
-			return { completed: false, output: 'Node was not deleted'};
+			return { completed: false, output: 'Node was NOT deleted'};
 		}
+
+		return { completed: true, output: 'Node(s) was succesfully deleted!'};
 	}
 }
 

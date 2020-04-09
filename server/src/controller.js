@@ -155,10 +155,9 @@ app.post('/add_data', (req, res) => {
 });
 
 app.post('/get_data', (req, res) => {
-	console.log(req.body.username, req.body.record);
 	SpeechDB.getMarkup(req.body.username, req.body.record)
 	.then(result => {
-		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/add_data');
+		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
 		if (result.completed) {
 			res.send(result);
 		}
@@ -168,7 +167,7 @@ app.post('/get_data', (req, res) => {
 	});
 });
 
-app.post('/delete_person', (req, res) => {
+app.post('/remove_person', (req, res) => {
 	const personNodeID = result.nodeID;
 	const id = result._id;
 
@@ -201,6 +200,16 @@ app.post('/delete_person', (req, res) => {
 	.catch(err => {
 		console.log("Error occured:\n", err);
 	});
+});
+
+app.post('/remove_markup', (req, res) => {
+	let result = SpeechDB.deleteMarkup(req.body.username, req.body.record)
+	log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', result.completed, result.output, '/remove_markup');
+	if (result.completed == false) {
+		res.send({ status: false, msg: result.output });
+		return;
+	}
+	res.send({ status: true, msg: 'markup was successfully deleted!'});
 });
 
 /* AUTHENTICATION AND ACCOUNT ACCESS */
