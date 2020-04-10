@@ -1,0 +1,12 @@
+{
+  "name": "none",
+  "version": "1.0.0",
+  "description": "none",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "cd ./front && npm start",
+    "server": "nodemon ./server/src/index.js",
+    "start": "npm-run-all --parallel server client"
+  }
+}
