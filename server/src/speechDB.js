@@ -84,7 +84,15 @@ deleteRecord = validateDeleteResult(runQuery(query.deleteRecord));
 deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup));
 deleteSentences = validateDeleteResult(runQuery(query.deleteSentences))
 deleteWords = validateDeleteResult(runQuery(query.deleteWords))
+getMarkupsSentences = runQuery(query.getMarkupsSentences, true);
+getMarkupSentences = runQuery(query.getMarkupSentences, true);
+getMarkupsWords = runQuery(query.getMarkupsWords, true);
+getMarkupWords = runQuery(query.getMarkupWords, true);
 
+exports.getMarkupsSentences = getMarkupsSentences;
+exports.getMarkupSentences = getMarkupSentences;
+exports.getMarkupsWords = getMarkupsWords;
+exports.getMarkupWords = getMarkupWords;
 exports.changePhoneme = changePhoneme;
 exports.changePerson = changePerson;
 exports.addPerson = addPerson;
