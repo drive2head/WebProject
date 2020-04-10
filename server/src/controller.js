@@ -165,7 +165,7 @@ app.post('/get_data', (req, res) => {
 });
 
 app.post('/get_data_sentences', (req, res) => {
-	SpeechDB.getMarkupSentences(req.body.username, req.body.record)
+	SpeechDB.getSentenceMarkup(req.body.username, req.body.record)
 	.then(result => {
 		log.addLog(req.body.username, 'access.markup', 'getMarkupSenetnces', result.completed, result.output, '/get_data_sentences');
 		if (result.completed) {
@@ -178,7 +178,7 @@ app.post('/get_data_sentences', (req, res) => {
 });
 
 app.post('/get_data_words', (req, res) => {
-	SpeechDB.getMarkupWords(req.body.username, req.body.record)
+	SpeechDB.getWordMarkup(req.body.username, req.body.record)
 	.then(result => {
 		log.addLog(req.body.username, 'access.markup', 'getMarkupWords', result.completed, result.output, '/get_data_words');
 		if (result.completed) {

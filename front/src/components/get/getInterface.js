@@ -191,7 +191,7 @@ class GetInterface extends React.Component {
     this.setState({soundsList: list});
     //console.log(object);
     this.refs.wave.btn();
-    this.refs.waveletter.btn();
+    //this.refs.waveletter.btn();
     //this.setState({soundValue: ''});
   }
 
@@ -219,8 +219,20 @@ class GetInterface extends React.Component {
     this.setState({sents: newSents});
   }
 
-  saveAll()
+  removeAll = async () =>
   {
+    const cookies = new Cookies();
+    cookies.getAll();
+    await(axios.post('/remove_data', {
+      username: cookies.cookies.username,
+      record: this.state.record
+    }));
+    return true;
+  }
+
+  saveAll = async () =>
+  {
+    await(this.removeAll());
     const cookies = new Cookies();
     cookies.getAll();
     console.log(this.state.sents, this.state.letters, this.state.sounds);
