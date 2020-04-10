@@ -127,7 +127,7 @@ exports.getMarkup = function (username, record_name) {
 	return notabs(text);
 };
 
-exports.getMarkupsSentences = function (username) {
+exports.getSentenceMarkups = function (username) {
 	let text = `
 	match (sMarkup:SentenceMarkup {username: '${username}'})
 	match (rec:Record)
@@ -138,19 +138,19 @@ exports.getMarkupsSentences = function (username) {
 	return notabs(text);
 };
 
-exports.getMarkupSentences = function (username, record_name) {
+exports.getSentenceMarkup = function (username, record_name) {
 	let text = `
 	match (sMarkup:SentenceMarkup {username: '${username}'})
 	match (rec:Record {name: '${record_name}'})
 	match (sMarkup)-[:MARKED_ON]->(rec)
-	match (ph:Sentence)-[:CONTAINED_IN]->(sMarkup)
-	return ph
+	match (sent:Sentence)-[:CONTAINED_IN]->(sMarkup)
+	return sent
 	`;
 
 	return notabs(text);
 };
 
-exports.getMarkupsWords = function (username) {
+exports.getWordMarkups = function (username) {
 	let text = `
 	match (wMarkup:WordMarkup {username: '${username}'})
 	match (rec:Record)
@@ -161,13 +161,13 @@ exports.getMarkupsWords = function (username) {
 	return notabs(text);
 };
 
-exports.getMarkupWords = function (username, record_name) {
+exports.getWordMarkup = function (username, record_name) {
 	let text = `
 	match (wMarkup:WordMarkup {username: '${username}'})
 	match (rec:Record {name: '${record_name}'})
 	match (wMarkup)-[:MARKED_ON]->(rec)
-	match (ph:Word)-[:CONTAINED_IN]->(wMarkup)
-	return ph
+	match (word:Word)-[:CONTAINED_IN]->(wMarkup)
+	return word
 	`;
 
 	return notabs(text);
