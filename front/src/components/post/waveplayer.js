@@ -12,6 +12,7 @@ class WavePlayer extends React.Component {
     this.slide = this.slide.bind(this);
     this.createWavePlayer = this.createWavePlayer.bind(this);
     this.btn = this.btn.bind(this);
+    this.btnLoad = this.btnLoad.bind(this);
     this.options = [];
     this.state = {selectedOption: {}}
   }
@@ -53,7 +54,7 @@ class WavePlayer extends React.Component {
     document.onkeydown = (e) => {
       let keyCode = e.keyCode;
       if(keyCode == 32) {
-        console.log('hey');
+        //console.log('hey');
         this.wavesurfer.playPause();
       }
 
@@ -112,35 +113,21 @@ class WavePlayer extends React.Component {
   {
     let end = document.getElementById('prevEnd');
     let start = document.getElementById('prevStart');
-    //wavesurfer.clearRegions();
-
-    //console.log('phoneme: ', end.value, start.value, document.getElementById('selectPhoneme').innerText);
-
-    //console.log(this.wavesurfer.regions.list);
-
-    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
-
-    //console.log(this.wavesurfer.regions.list.length);
+    
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 80%, 40%, 0.4)'});
     let region = {}
-    //this.wavesurfer.regions.list[this.wavesurfer.regions.list.length-1];
     for (let i in this.wavesurfer.regions.list)
-    {
       region = this.wavesurfer.regions.list[i];
-    }
 
-    //console.log('list: ', this.wavesurfer.regions.list);
-    //region = this.wavesurfer.regions.list[this.wavesurfer.regions.list.length-1];
     region.attributes.label = 'Phoneme';
     region.phoneme = true;    
-
-
+    region.drag = false;
     let regionEl = region.element;
-  
     let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
     deleteButton.className = 'fa fa-trash';
     deleteButton.addEventListener('click', (e) => {
       e.stopImmediatePropagation();
-      this.props.deleteRegion(region.start.toFixed(3));
+      this.props.deleteRegion(region.start.toFixed(3), document.getElementById('selectPhoneme').innerText);
       region.remove();
     });
     deleteButton.title = "Delete region";
@@ -153,9 +140,7 @@ class WavePlayer extends React.Component {
       color: '#129fdd'
     };
     region.style(deleteButton, css);
-
-
-    let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'));
+    let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'+this.wavesurfer.regions.list.length-1));
     //phonemeNotation.title = "Edit region";
     phonemeNotation.innerHTML = document.getElementById('selectPhoneme').innerText;
     // phonemeNotation.addEventListener('click', (e) => {
@@ -165,11 +150,48 @@ class WavePlayer extends React.Component {
     region.style(phonemeNotation, css);
   }
 
+  btnLoad(a, b, c)
+  {
+    let end = a;
+    let start = b;
+    ////console.log("a, b = ", a, b);
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start, end: +end, color: 'hsla(100, 80%, 40%, 0.4)'});
+    let region = {}
+    for (let i in this.wavesurfer.regions.list)
+      region = this.wavesurfer.regions.list[i];
+
+    region.attributes.label = 'Phoneme';
+    region.phoneme = true;
+    region.drag = false;    
+    //console.log(region);
+    let regionEl = region.element;
+    let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
+    deleteButton.className = 'fa fa-trash';
+    deleteButton.addEventListener('click', (e) => {
+      e.stopImmediatePropagation();
+      this.props.deleteRegion(region.start.toFixed(3), c);
+      region.remove();
+    });
+    deleteButton.title = "Delete region";
+    let css = {
+     display: 'flex',
+      "justify-content": 'center',
+      zIndex: 10,
+      cursor: 'pointer',
+      cursor: 'hand',
+      color: '#129fdd'
+    };
+    region.style(deleteButton, css);
+    let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'+this.wavesurfer.regions.list.length-1));
+    phonemeNotation.innerHTML = c;
+    region.style(phonemeNotation, css);
+  }
+
   slide()
   {
     let slider = document.getElementById('slider');
     let zoomLevel = Number(slider.value);
-    console.log(this.wavesurfer);
+    //console.log(this.wavesurfer);
     this.wavesurfer.zoom(zoomLevel);
   }
 

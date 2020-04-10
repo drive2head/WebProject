@@ -11,26 +11,32 @@ class ListInterface extends React.Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.options = [];
-    this.init(); 
   }
 
   getOptions = async () =>
   {
   	const cookies = new Cookies();
-	cookies.getAll();
+    cookies.getAll();
+
     let response = await fetch('/markups', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			username: cookies.cookies.username,
-		})
-	});
+  		method: 'POST',
+  		headers: {
+  			'Content-Type': 'application/json'
+  		},
+  		body: JSON.stringify({
+  			username: cookies.cookies.username,
+  		})
+    });
+
     let body = await response.json();
+    console.log('BODY: ', body);
     for (let i of body.output)
       this.options.push({value: i.properties.name, label: i.properties.name})
     this.forceUpdate();
+  }
+
+  componentDidMount() {
+    this.init();
   }
 
   init = async () => {

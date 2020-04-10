@@ -127,6 +127,52 @@ exports.getMarkup = function (username, record_name) {
 	return notabs(text);
 };
 
+exports.getMarkupsSentences = function (username) {
+	let text = `
+	match (sMarkup:SentenceMarkup {username: '${username}'})
+	match (rec:Record)
+	match (sMarkup)-[:MARKED_ON]->(rec)
+	return rec
+	`;
+
+	return notabs(text);
+};
+
+exports.getMarkupSentences = function (username, record_name) {
+	let text = `
+	match (sMarkup:SentenceMarkup {username: '${username}'})
+	match (rec:Record {name: '${record_name}'})
+	match (sMarkup)-[:MARKED_ON]->(rec)
+	match (ph:Sentence)-[:CONTAINED_IN]->(sMarkup)
+	return ph
+	`;
+
+	return notabs(text);
+};
+
+exports.getMarkupsWords = function (username) {
+	let text = `
+	match (wMarkup:WordMarkup {username: '${username}'})
+	match (rec:Record)
+	match (wMarkup)-[:MARKED_ON]->(rec)
+	return rec
+	`;
+
+	return notabs(text);
+};
+
+exports.getMarkupWords = function (username, record_name) {
+	let text = `
+	match (wMarkup:WordMarkup {username: '${username}'})
+	match (rec:Record {name: '${record_name}'})
+	match (wMarkup)-[:MARKED_ON]->(rec)
+	match (ph:Word)-[:CONTAINED_IN]->(wMarkup)
+	return ph
+	`;
+
+	return notabs(text);
+};
+
 exports.changePerson = function (person, id) {
 	let text = `\
 	match (person)

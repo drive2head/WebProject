@@ -69,8 +69,8 @@ class WavePlayerSent extends React.Component {
     let end = document.getElementById('prevEndSent');
     let start = document.getElementById('prevStartSent');
     this.props.saveSent();
-    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 100%, 30%, 0.1)'});
-    console.log(this.wavesurfer.regions.list);
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 80%, 40%, 0.4)'});
+    //console.log(this.wavesurfer.regions.list);
     let region = {};
     for (let i in this.wavesurfer.regions.list)
     {
@@ -78,14 +78,15 @@ class WavePlayerSent extends React.Component {
     }
 
     region.attributes.label = 'Sent';
-    region.phoneme = true;  
+    region.phoneme = true;
+    region.drag = false;
 
     let regionEl = region.element;
     let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
     deleteButton.className = 'fa fa-trash';
     deleteButton.addEventListener('click', (e) => {
       e.stopImmediatePropagation();
-      this.props.deleteSent(region.start.toFixed(3));
+      this.props.deleteSent(region.start.toFixed(3), document.getElementById('sentValue').value);
       region.remove();
     });
     deleteButton.title = "Delete region";
@@ -100,11 +101,54 @@ class WavePlayerSent extends React.Component {
     region.style(deleteButton, css);
 
     regionEl = region.element;
-    let sentNotation = regionEl.appendChild(document.createElement('sentNotation'));
-    console.log(region.id);
+    let sentNotation = regionEl.appendChild(document.createElement('sentNotation'+this.wavesurfer.regions.list.length-1));
+    //console.log(region.id);
 
     sentNotation.title = "Edit region";
     sentNotation.innerHTML = document.getElementById('sentValue').value;
+    region.style(sentNotation, css);
+  }
+
+  btnLoad(a, b, c)
+  {
+    let end = a;
+    let start = b;
+    this.props.saveSent();
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start, end: +end, color: 'hsla(100, 80%, 40%, 0.4)'});
+    //console.log(this.wavesurfer.regions.list);
+    let region = {};
+    for (let i in this.wavesurfer.regions.list)
+      region = this.wavesurfer.regions.list[i];
+
+    region.attributes.label = 'Sent';
+    region.phoneme = true;  
+    region.drag = false;
+
+    let regionEl = region.element;
+    let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
+    deleteButton.className = 'fa fa-trash';
+    deleteButton.addEventListener('click', (e) => {
+      e.stopImmediatePropagation();
+      this.props.deleteSent(region.start.toFixed(3), c);
+      region.remove();
+    });
+    deleteButton.title = "Delete region";
+    let css = {
+     display: 'flex',
+      "justify-content": 'center',
+      zIndex: 10,
+      cursor: 'pointer',
+      cursor: 'hand',
+      color: '#129fdd'
+    };
+    region.style(deleteButton, css);
+
+    regionEl = region.element;
+    let sentNotation = regionEl.appendChild(document.createElement('sentNotation'+this.wavesurfer.regions.list.length-1));
+    //console.log(region.id);
+
+    sentNotation.title = "Edit region";
+    sentNotation.innerHTML = c;
     region.style(sentNotation, css);
   }
 
@@ -112,7 +156,7 @@ class WavePlayerSent extends React.Component {
   {
     let slider = document.getElementById('slider');
     let zoomLevel = Number(slider.value);
-    console.log(this.wavesurfer);
+    //console.log(this.wavesurfer);
     this.wavesurfer.zoom(zoomLevel);
   }
 

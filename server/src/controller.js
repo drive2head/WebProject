@@ -122,6 +122,42 @@ app.post('/add_record', (req, res) => {
 
 app.post('/add_data', (req, res) => {
 	try {
+		SpeechDB.deleteMarkup(req.body.username, req.body.record)
+		.then(result => {
+			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', result.completed, result.output, '/remove_markup');
+			if (result.completed == false) {
+				res.send({ status: false, msg: result.output });
+				return;
+			}
+			res.send({ status: true, msg: 'Markup was successfully deleted!'});
+		})
+		.catch(err => {
+			log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_markup');
+		});
+		SpeechDB.deleteSentences(req.body.username, req.body.record)
+		.then(result => {
+			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteSentences', result.completed, result.output, '/remove_sentences_markup');
+			if (result.completed == false) {
+				res.send({ status: false, msg: result.output });
+				return;
+			}
+			res.send({ status: true, msg: 'Sentence markup was successfully deleted!'});
+		})
+		.catch(err => {
+			log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_sentences_markup');
+		});
+		SpeechDB.deleteWords(req.body.username, req.body.record)
+		.then(result => {
+			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteWords', result.completed, result.output, '/remove_words_markup');
+			if (result.completed == false) {
+				res.send({ status: false, msg: result.output });
+				return;
+			}
+			res.send({ status: true, msg: 'Word markup was successfully deleted!'});
+		})
+		.catch(err => {
+			log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_words_markup');
+		});
 		SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
 		.then(result => {
 			log.addLog(req.body.username, 'query.add', 'addMarkup', result.completed, result.output, '/add_data');
@@ -157,6 +193,32 @@ app.post('/get_data', (req, res) => {
 	SpeechDB.getMarkup(req.body.username, req.body.record)
 	.then(result => {
 		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
+		if (result.completed) {
+			res.send(result);
+		}
+		else {
+			res.send("Data WAS NOT loaded!");
+		}
+	});
+});
+
+app.post('/get_data_sentences', (req, res) => {
+	SpeechDB.getMarkupSentences(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'access.markup', 'getMarkupSenetnces', result.completed, result.output, '/get_data_sentences');
+		if (result.completed) {
+			res.send(result);
+		}
+		else {
+			res.send("Data WAS NOT loaded!");
+		}
+	});
+});
+
+app.post('/get_data_words', (req, res) => {
+	SpeechDB.getMarkupWords(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'access.markup', 'getMarkupWords', result.completed, result.output, '/get_data_words');
 		if (result.completed) {
 			res.send(result);
 		}
