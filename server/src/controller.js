@@ -225,6 +225,39 @@ app.post('/remove_person', (req, res) => {
 	});
 });
 
+app.post('/remove_data', (req, res) => {
+	SpeechDB.deleteMarkup(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', result.completed, result.output, '/remove_data');
+		if (result.completed == false) {
+			res.send({ status: false, msg: result.output });
+			return;
+		}
+		
+		return SpeechDB.deleteSentences(req.body.username, req.body.record);
+	})
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteSentences', result.completed, result.output, '/remove_data');
+		if (result.completed == false) {
+			res.send({ status: false, msg: result.output });
+			return;
+		}
+		
+		return SpeechDB.deleteWords(req.body.username, req.body.record);
+	})
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteWords', result.completed, result.output, '/remove_data');
+		if (result.completed == false) {
+			res.send({ status: false, msg: result.output });
+			return;
+		}
+		res.send({ status: true, msg: 'Markups was successfully deleted!'});
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_data');
+	});
+});
+
 app.post('/remove_markup', (req, res) => {
 	SpeechDB.deleteMarkup(req.body.username, req.body.record)
 	.then(result => {
