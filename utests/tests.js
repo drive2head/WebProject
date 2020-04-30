@@ -22,5 +22,4 @@ describe('query', function () {
   it('should return string', () => {
     expect(addRecord({}, 1)).to.be.a('string')
   })
-
 });

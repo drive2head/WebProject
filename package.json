@@ -4,12 +4,13 @@
   "description": "none",
   "main": "index.js",
   "scripts": {
-    "test": "mocha './utests/tests.js' && eslint test lib",
+    "test": "mocha './utests/tests.js'",
     "client": "cd ./front && npm start",
     "server": "nodemon ./server/src/index.js",
     "start": "npm-run-all --parallel server client"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
     "npm-run-all": "^4.1.5"
   },
   "dependencies": {
