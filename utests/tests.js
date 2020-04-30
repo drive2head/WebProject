@@ -1,35 +1,8 @@
 const {describe, it} = require('mocha')
 const {expect} = require('chai')
-const {addUser, getUser} = require('.././server/src/userAuth.js')
 const {Record, Person, Phoneme} = require('.././server/src/model.js')
 const {addRecord, addPhonemes, notabs} = require('.././server/src/query.js')
-const {findRecordByName} = require('.././server/src/recordsDB.js')
 
-describe('user auth functions', function () {
-  it('shouldnt add user', function() {
-    return addUser('testName1')
-      .then(function(res) {
-        expect(res.completed)
-          .to.equal(false);
-      })
-  })
-  it('should find user', function() {
-    return getUser('testName1')
-      .then(function(res) {
-        expect(res)
-          .to.be.a('object');
-      })
-  })
-
-  it('shouldnt find user', function() {
-    return getUser('testName3')
-      .then(function(res) {
-        expect(res)
-          .to.be.a('null');
-      })
-  })
-  //removeUser('testName1');
-});
 
 describe('model', function () {
   it('should be an array', () => {
@@ -50,14 +23,4 @@ describe('query', function () {
     expect(addRecord({}, 1)).to.be.a('string')
   })
 
-});
-
-describe('records in db', function () {
-  it('should return null (record with this name doesnt exist)', function() {
-    return findRecordByName('name')
-      .then(function(res) {
-        expect(res)
-          .to.equal(null);
-      })
-  })
 });
