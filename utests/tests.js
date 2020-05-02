@@ -4,31 +4,44 @@ const {Record, Person, Phoneme} = require('.././server/src/model.js')
 const {addRecord, addPhonemes, notabs} = require('.././server/src/query.js')
 const {addPerson} = require('.././server/src/speechDB.js')
 
-describe('model', function () {
-  it('should be an array', () => {
-    expect(Record('name', ['1', '2']).tags).to.be.a('array')
-  })
+tests = async () => {
+  describe('model', function () {
+    it('should be an array', () => {
+      expect(Record('name', ['1', '2']).tags).to.be.a('array')
+    })
 
-  it('should be an object', () => {
-    expect(Record('name', ['1', '2'])).to.be.a('object')
-  })
+    it('should be an object', () => {
+      expect(Record('name', ['1', '2'])).to.be.a('object')
+    })
 
-  it('should fill null by default', () => {
-    expect(Phoneme('1', '2', '3', '4').dialect).to.equal(null)
-  })
-});
+    it('should fill null by default', () => {
+      expect(Phoneme('1', '2', '3', '4').dialect).to.equal(null)
+    })
+  });
 
-describe('query', function () {
-  it('should return string', () => {
-    expect(addRecord({}, 1)).to.be.a('string')
-  })
-});
+  describe('query', function () {
+    it('should return string', () => {
+      expect(addRecord({}, 1)).to.be.a('string')
+    })
+  });
 
-describe('Graph database (speechDB)', function () {
-  it('should add person', () => {
-    return addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'))
-    .then(result => {
-      expect(result.completed).to.equal(true);
-    });
-  })
-});
+  describe('Graph database (speechDB)', function () {
+    it('should add person', () => {
+      return addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'))
+      .then(result => {
+        expect(result.completed).to.equal(true);
+      });
+    })
+  });
+
+}
+
+main = async () => {
+  let res = await tests();
+  var testPromise = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        process.exit(0);
+      }, 10000);
+  });
+}
+main();
