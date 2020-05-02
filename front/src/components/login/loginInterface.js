@@ -27,7 +27,9 @@ class LoginInterface extends React.Component {
     * Функция производит редирект на страницу регистрации.
   */
   signUp() { window.location.href = "/signup" };
-
+  /**
+    * Функция производит авторизацию пользователя. В случае успешной авторизации редиректит на главную страницу.
+  */
   signIn = async () => {
     var response = await fetch('/signin', {
       method: 'POST',
