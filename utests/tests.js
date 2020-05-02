@@ -28,7 +28,7 @@ describe('query', function () {
 describe
 
 describe('Graph database (speechDB)', function () {
-  it('adding person', () => {
+  it('should add person', () => {
     expect(addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation')).completed).to.equal(true)
   })
 });
