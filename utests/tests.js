@@ -23,3 +23,6 @@ describe('query', function () {
     expect(addRecord({}, 1)).to.be.a('string')
   })
 });
+
+// describe('Graph database (speechDB)', function () {
+// });
