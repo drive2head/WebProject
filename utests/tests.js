@@ -5,6 +5,7 @@ const {addRecord, addPhonemes, notabs} = require('.././server/src/query.js')
 const {addPerson} = require('.././server/src/speechDB.js')
 
 
+
 describe('model', function () {
   it('should be an array', () => {
     expect(Record('name', ['1', '2']).tags).to.be.a('array')
@@ -28,10 +29,11 @@ describe('query', function () {
 describe
 
 describe('Graph database (speechDB)', function () {
-  it('should add person', () => {
-    const result = await addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'));
-    expect(result.completed).to.equal(true)
+  it('should add person', (done) => {
+    addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'))
+    .then(result => {
+      expect(result.completed).to.equal(true);
+    });
+    done();
   })
 });
-
-// //
