@@ -1,13 +1,6 @@
-require('leaked-handles').set({
-    fullStack: true, // use full stack traces
-    timeout: 30000, // run every 30 seconds instead of 5.
-    debugSockets: true // pretty print tcp thrown exceptions.
-});
-
 const {describe, it} = require('mocha')
 const {expect} = require('chai')
 const {Record, Person, Phoneme} = require('.././server/src/model.js')
-// const query = require('.././server/src/query.js')
 const speechDB = require('.././server/src/speechDB.js')
 
 describe('model', function () {
@@ -82,12 +75,9 @@ describe('Graph database (speechDB)', function () {
   // })
 });
 
-describe('MongoDB (records-/speakers-DB, userAuth)', function () {
-  it('should add person', async () => {
-    const result = await speechDB.addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'));
-    expect(result.completed).to.equal(true);
-
-    personId = parseInt(result.output[0].id);
-  })
-  
-});
+// describe('MongoDB (records-/speakers-DB, userAuth)', function () {
+  // it('should register user', async () => {
+// 
+  // })
+  // 
+// });
