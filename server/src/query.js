@@ -207,9 +207,8 @@ exports.deletePerson = function (id) {
 	let text = `
 	match (person: Person)
 	where ID(person) = ${id}
-	match (person)-[c0:HAS]->()
-	match (person)-[c1:LIVES_IN]->()
-	delete c0, c1
+	match ()-[c]-(person)
+	delete c
 	delete person
 	return person
 	`;
@@ -219,7 +218,8 @@ exports.deletePerson = function (id) {
 
 exports.deleteRecord = function (record_name) {
 	let text = `
-	match (record: Record {name:'${record_recname}'})
+	match ()-[c]-(record: Record {name:'${record_name}'})
+	delete c
 	delete record
 	return record
 	`;

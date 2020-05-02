@@ -28,4 +28,3 @@ jobs:
     - run: npm ci
     - run: /var/www/workflowprep.sh 
     - run: npm test
-    #- run: /var/www/test.sh
