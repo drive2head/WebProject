@@ -29,7 +29,8 @@ describe
 
 describe('Graph database (speechDB)', function () {
   it('should add person', () => {
-    expect(addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation')).completed).to.equal(true)
+    const result = await addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'));
+    expect(result.completed).to.equal(true)
   })
 });
 
