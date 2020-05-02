@@ -70,9 +70,9 @@ describe('Graph database (speechDB)', function () {
     expect(result.completed).to.equal(true);
   })
 
-  // it('..', () => {
-  //   process.exit();
-  // })
+  it('..', () => {
+    process.exit();
+  })
 });
 
 // describe('MongoDB (records-/speakers-DB, userAuth)', function () {
