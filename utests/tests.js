@@ -2,6 +2,7 @@ const {describe, it} = require('mocha')
 const {expect} = require('chai')
 const {Record, Person, Phoneme} = require('.././server/src/model.js')
 const {addRecord, addPhonemes, notabs} = require('.././server/src/query.js')
+const {addPerson} = require('.././server/src/speechDB.js')
 
 
 describe('model', function () {
@@ -24,5 +25,10 @@ describe('query', function () {
   })
 });
 
-// describe('Graph database (speechDB)', function () {
-// });
+describe
+
+describe('Graph database (speechDB)', function () {
+  it('adding person', () => {
+    expect(addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation')).completed).to.equal(true)
+  })
+});
