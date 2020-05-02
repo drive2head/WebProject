@@ -1,21 +1,25 @@
 var cfg = require('./cfg');
 
 var mongoose = require('mongoose');
-var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var speakerSchema = new mongoose.Schema({
 	name: String,
 	nodeID: String
 });
 
-var Speaker = users_connection.model('Speaker', speakerSchema);
-
 /**
     * Функция возвращает всех дикторов.
     * @returns {object} записи из базы.
 */
 async function getAllSpeakers() {
-	return await Speaker.aggregate().project({name: 1});
+	try {
+		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = users_connection.model('Speaker', speakerSchema);
+		
+		return await Speaker.aggregate().project({name: 1});
+	} finally {
+		users_connection.close();
+	}
 };
 /**
     * Функция возвращает диктора по имени.
@@ -23,7 +27,14 @@ async function getAllSpeakers() {
     * @returns {object} запись из базы.
 */
 async function findSpeakerByName (name) {
-	return await Speaker.findOne({ name: name });
+	try {
+		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = users_connection.model('Speaker', speakerSchema);
+		
+		return await Speaker.findOne({ name: name });
+	} finally {
+		users_connection.close();
+	}
 };
 
 /**
@@ -32,7 +43,14 @@ async function findSpeakerByName (name) {
     * @returns {object} запись из базы.
 */
 async function findSpeakerByID (speakerID) {
-	return await Speaker.findOne({ _id: speakerID });
+	try {
+		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = users_connection.model('Speaker', speakerSchema);
+		
+		return await Speaker.findOne({ _id: speakerID });
+	} finally {
+		users_connection.close();
+	}
 };
 
 /**
@@ -41,7 +59,14 @@ async function findSpeakerByID (speakerID) {
     * @returns {object} запись из базы.
 */
 async function deleteSpeakerByID (speakerID) {
-	return await Speaker.deleteOne({ _id: speakerID});
+	try {
+		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = users_connection.model('Speaker', speakerSchema);
+		
+		return await Speaker.deleteOne({ _id: speakerID});
+	} finally {
+		users_connection.close();
+	}
 };
 
 /**
@@ -52,6 +77,9 @@ async function deleteSpeakerByID (speakerID) {
 */
 async function addSpeaker(name, nodeID) {
 	try {
+		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = users_connection.model('Speaker', speakerSchema);
+
 		var speaker = await findSpeakerByName(name);
 		if (speaker) {
 			return { completed: false, output: `This speaker name is already in use` };
@@ -61,6 +89,8 @@ async function addSpeaker(name, nodeID) {
 		return { completed: true, output: newSpeaker };
 	} catch (err) {
 		return { completed: false, output: err };
+	} finally {
+		users_connection.close();
 	}
 };
 

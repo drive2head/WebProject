@@ -1,7 +1,6 @@
 let cfg = require('./cfg');
 
 var mongoose = require('mongoose');
-var logs_connection = mongoose.createConnection(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var logSchema = new mongoose.Schema({
 	date: Date,			// date of log
@@ -12,8 +11,6 @@ var logSchema = new mongoose.Schema({
 	result: Object, 	// for queries it's array of nodes etc.
 	logFrom: String,	// name of function, where log was added
 });
-
-var Log = logs_connection.model('Log', logSchema);
 
 /**
     * Функция добавляет логи в журнал.
@@ -38,6 +35,9 @@ async function addLog (username, type, logOf, completed, result = null, logFrom 
 		logFrom: logFrom, 
 	});
 	try {
+		var logs_connection = mongoose.createConnection(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Log = logs_connection.model('Log', logSchema);
+
 		let res = await log.save((err, user) => {
 			if (err) {
 				return null;
@@ -46,7 +46,9 @@ async function addLog (username, type, logOf, completed, result = null, logFrom 
 		return { completed: true, log_id: res._id.toString() };
 	} catch (err) {
 		return { completed: true, error: err };
-	};
+	} finally {
+		logs_connection.close();
+	}
 };
 
 exports.addLog = addLog;

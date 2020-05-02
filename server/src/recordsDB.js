@@ -1,7 +1,6 @@
 var cfg = require('./cfg');
 
 var mongoose = require('mongoose');
-var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var recordSchema = new mongoose.Schema({
 	name: String,
@@ -9,23 +8,35 @@ var recordSchema = new mongoose.Schema({
 	speakerID: mongoose.ObjectId
 });
 
-var Record = users_connection.model('Record', recordSchema);
-
 /**
     * Функция возвращает все записи.
     * @returns {object} записи из базы.
 */
 async function getAllRecords() {
-	return await Record.find();
+	try {
+		var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Record = users_connection.model('Record', recordSchema);
+
+		return await Record.find();
+	} finally {
+		users_connection.close();
+	}
 };
 
 /**
-    * Функция возвращает записи по названию.
+    * Функция возвращает запись по названию.
     * @param {string} name название записи.
     * @returns {object} запись из базы.
 */
 async function findRecordByName (name) {
-	return await Record.findOne({ name: name });
+	try {
+		var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Record = users_connection.model('Record', recordSchema);
+		
+		return await Record.findOne({ name: name });
+	} finally {
+		users_connection.close();
+	}
 };
 /**
     * Функция добавляет запись в базу.
@@ -36,6 +47,9 @@ async function findRecordByName (name) {
 */
 async function addRecord(name, path, speakerID) {
 	try {
+		var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Record = users_connection.model('Record', recordSchema);
+
 		var record = await findRecordByName(name);
 		if (record) {
 			return { completed: false, output: `This record name is already in use` };
@@ -45,6 +59,8 @@ async function addRecord(name, path, speakerID) {
 		return { completed: true, output: newRecord };
 	} catch (err) {
 		return { completed: false, output: err };
+	} finally {
+		users_connection.close();
 	}
 };
 

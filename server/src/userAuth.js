@@ -1,6 +1,5 @@
 var cfg = require('./cfg');
 var mongoose = require('mongoose');
-var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var userSchema = new mongoose.Schema({
   username: String,
@@ -9,20 +8,27 @@ var userSchema = new mongoose.Schema({
   surname: String,
 });
 
-var User = users_connection.model('User', userSchema);
-
 async function verifyUser(username, password) {
-	var user = await getUser(username);
-	console.log(`username: ${username}, password: ${password}`);
-	console.log(`user: ${user}`)
-	if (user) {
-		if (password === user.password) {
-			return { completed: true, output: `User was succesfully verified` };
-		} else {
-			return { completed: false, output: `Wrong password was given` };
+	try {
+		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var User = users_connection.model('User', userSchema);
+
+		var user = await getUser(username);
+		console.log(`username: ${username}, password: ${password}`);
+		console.log(`user: ${user}`)
+		if (user) {
+			if (password === user.password) {
+				return { completed: true, output: `User was succesfully verified` };
+			} else {
+				return { completed: false, output: `Wrong password was given` };
+			}
 		}
+		return { completed: false, output: `User was not found`};
+	} catch (err) {
+		return { completed: false, output: err };
+	} finally {
+		users_connection.close();
 	}
-	return { completed: false, output: `User was not found`}
 }
 /**
     * Функция возвращает данные о пользователе.
@@ -30,7 +36,16 @@ async function verifyUser(username, password) {
     * @returns {object} запись из базы.
 */
 async function getUser (username) {
-	return await User.findOne({ username: username });
+	try {
+		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var User = users_connection.model('User', userSchema);
+
+		return await User.findOne({ username: username });
+	} catch (err) {
+		return { completed: false, output: err };
+	} finally {
+		users_connection.close();
+	}
 }
 /**
     * Функция добавляет пользователя в базу.
@@ -42,6 +57,9 @@ async function getUser (username) {
 */
 async function addUser (username, password, name, surname) {
 	try {
+		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var User = users_connection.model('User', userSchema);
+
 		var userExists = await getUser(username);
 		if (userExists) {
 			return { completed: false, output: `The username '${username}' is already in use` };
@@ -51,9 +69,35 @@ async function addUser (username, password, name, surname) {
 		return { completed: true, output: newUser };
 	} catch (err) {
 		return { completed: false, output: err };
+	} finally {
+		users_connection.close();
+	}
+}
+/**
+    * Функция удаляет пользователя из базы.
+    * @param {string} username логин пользователя.
+    * @returns {object} успех или неуспех операции.
+*/
+async function deleteUser (username) {
+	try {
+		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var User = users_connection.model('User', userSchema);
+
+		var userExists = await getUser(username);
+		if (!userExists) {
+			return { completed: false, output: `User '${username}' doesn't exist`};
+		}
+
+		await User.deleteOne({ username: username });
+		return { completed: true, out: `User was succesfully deleted` };
+	} catch (err) {
+		return { completed: false, output: err };
+	} finally {
+		users_connection.close();
 	}
 }
 
 exports.addUser = addUser;
 exports.getUser = getUser;
 exports.verifyUser = verifyUser;
+exports.deleteUser = deleteUser;
