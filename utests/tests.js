@@ -26,14 +26,11 @@ describe('query', function () {
   })
 });
 
-describe
-
 describe('Graph database (speechDB)', function () {
-  it('should add person', (done) => {
-    addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'))
+  it('should add person', () => {
+    return addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'))
     .then(result => {
       expect(result.completed).to.equal(true);
     });
-    done();
   })
 });
