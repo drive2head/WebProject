@@ -10,7 +10,10 @@ class SignupInterface extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {username: "", password: "", name: "", surname: ""};
   }
-
+  /**
+    * Функция изменяет значения переменных, соответствующих полям пользовательского ввода.
+    * @param {object} event объект события, хранящий новое значение и имя поля.
+  */
   handleInputChange(event) {
     const target = event.target;
     const value = target.value;
@@ -20,7 +23,9 @@ class SignupInterface extends React.Component {
       [name]: value
     });
   }
-
+  /**
+    * Функция производит регистрацию пользователя. В случае успешной авторизации редиректит на страницу авторизации.
+  */
   signUp = async () => {
     var response = await fetch('/signup', {
       method: 'POST',
@@ -42,7 +47,9 @@ class SignupInterface extends React.Component {
       window.location.href = "/signin";   
     }
   }
-
+  /**
+    * Функция производит редирект на страницу регистрации.
+  */
   back () { window.location.href = "/signin" }
 
   render() {  

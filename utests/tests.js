@@ -29,7 +29,7 @@ tests = async () => {
     it('should add person', () => {
       return addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'))
       .then(result => {
-        expect(result.completed).to.equal(true);
+        expect(result.completed).to.equal(false);
       });
     })
   });
@@ -38,10 +38,10 @@ tests = async () => {
 
 main = async () => {
   let res = await tests();
-  var testPromise = new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        process.exit(0);
-      }, 10000);
-  });
+  // var testPromise = new Promise(function(resolve, reject) {
+  //     setTimeout(function() {
+  //       process.exit(0);
+  //     }, 10000);
+  // });
 }
 main();

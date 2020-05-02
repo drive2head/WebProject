@@ -354,7 +354,10 @@ class DictorInfo extends React.Component {
 	    ];
 	    this.state = {nativeLang: '', country: ''};
 	}
-  
+  	/**
+	    * Функция рендерит список дефектов речи.
+	    * @returns {JSX} объект JSX со списком дефектов речи.
+	*/
 	renderSelect()
 	{
 	    return (
@@ -374,7 +377,10 @@ class DictorInfo extends React.Component {
 			/>
 	    );
 	}
-
+	/**
+	    * Функция рендерит список доступных языков.
+	    * @returns {JSX} объект JSX со списком доступных языков.
+	*/
 	renderSelectLang()
 	{
 		return (
@@ -397,7 +403,10 @@ class DictorInfo extends React.Component {
 			/>
 		);
 	}
-
+	/**
+	    * Функция рендерит список доступных стран.
+	    * @returns {JSX} объект JSX со списком доступных стран.
+	*/
 	renderSelectCountry()
 	{
 		return (
