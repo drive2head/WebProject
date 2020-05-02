@@ -29,7 +29,7 @@ tests = async () => {
     it('should add person', () => {
       return addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation'))
       .then(result => {
-        expect(result.completed).to.equal(false);
+        expect(result.completed).to.equal(true);
       });
     })
   });
