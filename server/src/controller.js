@@ -123,38 +123,44 @@ app.post('/add_record', (req, res) => {
 app.post('/add_data', (req, res) => {
 		var status = 0;
 
-		SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
-		.then(result => {
-			log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', result.completed, result.output, '/add_data');
-			if (result.completed == false) {
-				status |= 1;
-			}
-		})
-		.catch(err => {
-			log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', false, err, '/add_data');
-		})
+		if (req.body.phonemes.length) {
+			SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
+			.then(result => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', result.completed, result.output, '/add_data');
+				if (result.completed == false) {
+					status |= 1;
+				}
+			})
+			.catch(err => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', false, err, '/add_data');
+			})
+		}
 
-		SpeechDB.addWords(req.body.username, req.body.record, req.body.words)
-		.then(result => {
-			log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', result.completed, result.output, '/add_data');
-			if (result.completed == false) {
-				status |= 1 << 1;
-			}
-		})
-		.catch(err => {
-			log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', false, err, '/add_data'); 
-		})
+		if (req.body.words.length) {
+			SpeechDB.addWords(req.body.username, req.body.record, req.body.words)
+			.then(result => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', result.completed, result.output, '/add_data');
+				if (result.completed == false) {
+					status |= 1 << 1;
+				}
+			})
+			.catch(err => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', false, err, '/add_data'); 
+			})
+		}
 
-		SpeechDB.addSentences(req.body.username, req.body.record, req.body.sentences)
-		.then(result => {
-			log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', result.completed, result.output, '/add_data');
-			if (result.completed == false) {
-				status |= 1 << 2;
-			}
-		})
-		.catch(err => {
-			log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', false, err, '/add_data'); 
-		})
+		if (req.body.sentences.length) {
+			SpeechDB.addSentences(req.body.username, req.body.record, req.body.sentences)
+			.then(result => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', result.completed, result.output, '/add_data');
+				if (result.completed == false) {
+					status |= 1 << 2;
+				}
+			})
+			.catch(err => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', false, err, '/add_data'); 
+			})
+		}
 
 		if (status) {
 			msg = 'Data was not uploaded: ';
