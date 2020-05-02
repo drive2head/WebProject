@@ -1,0 +1,1308 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset='utf-8'>
+  <title>none 1.0.0 | Documentation</title>
+  <meta name='description' content='none'>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' rel='stylesheet'>
+  <link href='assets/style.css' rel='stylesheet'>
+  <link href='assets/github.css' rel='stylesheet'>
+  <link href='assets/split.css' rel='stylesheet'>
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>none</h3>
+          <div class='mb1'><code>1.0.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            spellcheck='false'
+            autocapitalize='off'
+            autocorrect='off'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#loggedin'
+                  class="">
+                  loggedIn
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getoptions'
+                  class="">
+                  getOptions
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#renderselect'
+                  class="">
+                  renderSelect
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#savesound'
+                  class="">
+                  saveSound
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#saveletter'
+                  class="">
+                  saveLetter
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#savesent'
+                  class="">
+                  saveSent
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#saveall'
+                  class="">
+                  saveAll
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#deleteregion'
+                  class="">
+                  deleteRegion
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#deleteletter'
+                  class="">
+                  deleteLetter
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#deletesent'
+                  class="">
+                  deleteSent
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#changeselected'
+                  class="">
+                  changeSelected
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#slide'
+                  class="">
+                  slide
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#changelang'
+                  class="">
+                  changeLang
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#changenotation'
+                  class="">
+                  changeNotation
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#newtimeinterval'
+                  class="">
+                  newTimeInterval
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#handleinputchange'
+                  class="">
+                  handleInputChange
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#newtimeintervalletter'
+                  class="">
+                  newTimeIntervalLetter
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#newtimeintervalsent'
+                  class="">
+                  newTimeIntervalSent
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='https://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='loggedin'>
+      loggedIn
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция проверяет, авторизован ли пользователь.</p>
+
+    <div class='pre p1 fill-light mt0'>loggedIn(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        "username", если авторизован, "" иначе.
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getoptions'>
+      getOptions
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция запоняет список аудиозаписей.</p>
+
+    <div class='pre p1 fill-light mt0'>getOptions</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='renderselect'>
+      renderSelect
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция рендерит список аудиозаписей.</p>
+
+    <div class='pre p1 fill-light mt0'>renderSelect(): JSX</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>JSX</code>:
+        объект JSX.
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='savesound'>
+      saveSound
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция сохраняет очередную фонему.</p>
+
+    <div class='pre p1 fill-light mt0'>saveSound()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='saveletter'>
+      saveLetter
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция сохраняет очередное слово.</p>
+
+    <div class='pre p1 fill-light mt0'>saveLetter()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='savesent'>
+      saveSent
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция сохраняет очередное предложение.</p>
+
+    <div class='pre p1 fill-light mt0'>saveSent()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='saveall'>
+      saveAll
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция сохраняет всю разметку (посылает запрос /add_data). Далее, происходит редирект на основную страницу.</p>
+
+    <div class='pre p1 fill-light mt0'>saveAll()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='deleteregion'>
+      deleteRegion
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция удаляет фонему из списка добавленных.</p>
+
+    <div class='pre p1 fill-light mt0'>deleteRegion(st: float)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>st</span> <code class='quiet'>(float)</code>
+	    начало интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='deleteletter'>
+      deleteLetter
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция удаляет слово из списка добавленных.</p>
+
+    <div class='pre p1 fill-light mt0'>deleteLetter(st: float)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>st</span> <code class='quiet'>(float)</code>
+	    начало интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='deletesent'>
+      deleteSent
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция удаляет предложение из списка добавленных.</p>
+
+    <div class='pre p1 fill-light mt0'>deleteSent(st: float)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>st</span> <code class='quiet'>(float)</code>
+	    начало интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='changeselected'>
+      changeSelected
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция инициализирует 3 визуализатора с выбранным аудиофайломх.</p>
+
+    <div class='pre p1 fill-light mt0'>changeSelected(selectedOpt: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>selectedOpt</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    название аудиофайла.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='slide'>
+      slide
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция инициализирует 3 слайдера для масштабирования визуализатора.</p>
+
+    <div class='pre p1 fill-light mt0'>slide()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='changelang'>
+      changeLang
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция изменяет язык диктора.</p>
+
+    <div class='pre p1 fill-light mt0'>changeLang(l: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>l</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    язык диктора.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='changenotation'>
+      changeNotation
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция изменяет значение фонемы.</p>
+
+    <div class='pre p1 fill-light mt0'>changeNotation(l: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>l</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    значение фонемы.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='newtimeinterval'>
+      newTimeInterval
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция изменяет временные границы выбранного отрезка для фонем.</p>
+
+    <div class='pre p1 fill-light mt0'>newTimeInterval(start: float, end: float)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>start</span> <code class='quiet'>(float)</code>
+	    начало интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>end</span> <code class='quiet'>(float)</code>
+	    конец интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='handleinputchange'>
+      handleInputChange
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция изменяет значения переменных, соответствующих полям пользовательского ввода.</p>
+
+    <div class='pre p1 fill-light mt0'>handleInputChange(event: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>event</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    объект события, хранящий новое значение и имя поля.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='newtimeintervalletter'>
+      newTimeIntervalLetter
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция изменяет временные границы выбранного отрезка для слов.</p>
+
+    <div class='pre p1 fill-light mt0'>newTimeIntervalLetter(start: float, end: float)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>start</span> <code class='quiet'>(float)</code>
+	    начало интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>end</span> <code class='quiet'>(float)</code>
+	    конец интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='newtimeintervalsent'>
+      newTimeIntervalSent
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Функция изменяет временные границы выбранного отрезка для предложений.</p>
+
+    <div class='pre p1 fill-light mt0'>newTimeIntervalSent(start: float, end: float)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>start</span> <code class='quiet'>(float)</code>
+	    начало интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>end</span> <code class='quiet'>(float)</code>
+	    конец интервала с точностью до 3 знаков после запятой.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

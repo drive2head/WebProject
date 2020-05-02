@@ -23,6 +23,10 @@ class App extends React.Component {
     this.state = {userAuth: false, username: "", password: ""};
   }
 
+  /**
+    * Функция проверяет, авторизован ли пользователь.
+    * @returns {string} "username", если авторизован, "" иначе.
+  */
   loggedIn()
   {
     const cookies = new Cookies();

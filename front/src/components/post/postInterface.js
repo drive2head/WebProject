@@ -51,7 +51,10 @@ class PostInterface extends React.Component {
       }
     });
   }
-
+  /**
+    * Функция запоняет список аудиозаписей.
+    * @returns {}.
+  */
   getOptions = async () =>
   {
     var response = await fetch('/records', {
@@ -66,6 +69,10 @@ class PostInterface extends React.Component {
     //console.log(this.options);
   }
 
+  /**
+    * Функция рендерит список аудиозаписей.
+    * @returns {JSX} объект JSX.
+  */
   renderSelect()
   {
     return (
@@ -84,6 +91,9 @@ class PostInterface extends React.Component {
     );
   }
 
+  /**
+    * Функция сохраняет очередную фонему.
+  */
   saveSound()
   {
     let object = entity.Phoneme(
@@ -103,7 +113,9 @@ class PostInterface extends React.Component {
     this.refs.wave.btn();
     //this.setState({soundValue: ''});
   }
-
+  /**
+    * Функция сохраняет очередное слово.
+  */
   saveLetter() // Oh, sorry... a letter, yeah?
   {
     let object = entity.Word(
@@ -115,7 +127,9 @@ class PostInterface extends React.Component {
     newLetters.push(object);
     this.setState({letters: newLetters});
   }
-
+  /**
+    * Функция сохраняет очередное предложение.
+  */
   saveSent()
   {
     let object = entity.Sentence(
@@ -127,7 +141,9 @@ class PostInterface extends React.Component {
     newSents.push(object);
     this.setState({sents: newSents});
   }
-
+  /**
+    * Функция сохраняет всю разметку (посылает запрос /add_data). Далее, происходит редирект на основную страницу.
+  */
   saveAll()
   {
     const cookies = new Cookies();
@@ -164,7 +180,10 @@ class PostInterface extends React.Component {
       document.dispatchEvent(evt);}
       , 100); //НЕ СМОТРИТЕ СЮДА, ЭТО КОСТЫЛЬ, ПО-ДРУГОМУ НИКАК, WAVESURFER МАКСИМАЛЬНО КРИВАЯ ЛИБА, ОБЪЕКТ ПЛЕЕРА НЕВОЗМОЖНО ЗАПИХНУТЬ В THIS
   }
-
+  /**
+    * Функция удаляет фонему из списка добавленных.
+    * @param {float} st начало интервала с точностью до 3 знаков после запятой.
+  */
   deleteRegion(st)
   {
     let i = 0;
@@ -183,6 +202,10 @@ class PostInterface extends React.Component {
     this.setState({sounds: newSounds, soundsList: list});
   }
 
+  /**
+    * Функция удаляет слово из списка добавленных.
+    * @param {float} st начало интервала с точностью до 3 знаков после запятой.
+  */
   deleteLetter(st)
   {
     let i = 0;
@@ -195,7 +218,10 @@ class PostInterface extends React.Component {
 
     this.setState({letters: newLetters});
   }
-
+  /**
+    * Функция удаляет предложение из списка добавленных.
+    * @param {float} st начало интервала с точностью до 3 знаков после запятой.
+  */
   deleteSent(st)
   {
     let i = 0;
@@ -209,25 +235,57 @@ class PostInterface extends React.Component {
     this.setState({sents: newSents});
   }
 
+  /**
+    * Функция инициализирует 3 визуализатора с выбранным аудиофайломх.
+    * @param {string} selectedOpt название аудиофайла.
+  */
   changeSelected(selectedOpt){
     this.file = selectedOpt;
     this.refs.wave.init(this.file);
     this.refs.waveletter.init(this.file);
     this.refs.wavesent.init(this.file);
   }
-
+  /**
+    * Функция инициализирует 3 слайдера для масштабирования визуализатора.
+  */
   slide()
   {
     this.refs.wave.slide();
     this.refs.waveletter.slide();
     this.refs.wavesent.slide();
   }
-
+  /**
+    * Функция изменяет язык диктора.
+    * @param {string} l язык диктора.
+  */
   changeLang(l) {this.setState({soundLang: l})}
+  /**
+    * Функция изменяет значение фонемы.
+    * @param {string} l значение фонемы.
+  */
   changeNotation(l) {this.setState({soundValue: l})}
+  /**
+    * Функция изменяет временные границы выбранного отрезка для фонем.
+    * @param {float} start начало интервала с точностью до 3 знаков после запятой.
+    * @param {float} end конец интервала с точностью до 3 знаков после запятой.
+  */
   newTimeInterval(start, end){this.setState({startTime: start, endTime: end})}
+  /**
+    * Функция изменяет значения переменных, соответствующих полям пользовательского ввода.
+    * @param {object} event объект события, хранящий новое значение и имя поля.
+  */
   handleInputChange(event) {this.setState({[event.target.name]: event.target.value});}
+  /**
+    * Функция изменяет временные границы выбранного отрезка для слов.
+    * @param {float} start начало интервала с точностью до 3 знаков после запятой.
+    * @param {float} end конец интервала с точностью до 3 знаков после запятой.
+  */
   newTimeIntervalLetter(start, end){this.setState({startTimeLetter: start, endTimeLetter: end});}
+  /**
+    * Функция изменяет временные границы выбранного отрезка для предложений.
+    * @param {float} start начало интервала с точностью до 3 знаков после запятой.
+    * @param {float} end конец интервала с точностью до 3 знаков после запятой.
+  */
   newTimeIntervalSent(start, end){this.setState({startTimeSent: start, endTimeSent: end});}
 
   render() {  
