@@ -32,3 +32,5 @@ describe('Graph database (speechDB)', function () {
     expect(addPerson(Person('TestPerson', '18', 'Test', 'testian', 'Testow', 'Testian Federation')).completed).to.equal(true)
   })
 });
+
+//
