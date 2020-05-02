@@ -69,7 +69,6 @@ function validateDeleteResult(deleteFunc) {
 	}
 }
 
-addRecordPersonPhonemes = runQuery(query.addRecordPersonPhonemes);
 changePhoneme = runQuery(query.changePhoneme);
 changePerson = runQuery(query.changePerson);
 addPerson = runQuery(query.addPerson);
