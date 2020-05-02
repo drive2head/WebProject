@@ -53,7 +53,6 @@ class PostInterface extends React.Component {
   }
   /**
     * Функция запоняет список аудиозаписей.
-    * @returns {}.
   */
   getOptions = async () =>
   {
@@ -71,7 +70,7 @@ class PostInterface extends React.Component {
 
   /**
     * Функция рендерит список аудиозаписей.
-    * @returns {JSX} объект JSX.
+    * @returns {JSX} объект JSX со списком аудиозаписей.
   */
   renderSelect()
   {

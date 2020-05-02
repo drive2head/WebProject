@@ -10,7 +10,10 @@ class LoginInterface extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {username: "", password: ""};
   }
-
+  /**
+    * Функция изменяет значения переменных, соответствующих полям пользовательского ввода.
+    * @param {object} event объект события, хранящий новое значение и имя поля.
+  */
   handleInputChange(event) {
     const target = event.target;
     const value = target.value;
@@ -20,7 +23,9 @@ class LoginInterface extends React.Component {
       [name]: value
     });
   }
-
+  /**
+    * Функция производит редирект на страницу регистрации.
+  */
   signUp() { window.location.href = "/signup" };
 
   signIn = async () => {

@@ -7,7 +7,10 @@ class PersonPhonemes extends React.Component {
 		super(props);
 		this.state = {value: ''};
 	}
-
+	/**
+	    * Функция рендерит список разметок.
+	    * @returns {JSX} объект JSX со списком разметок.
+	*/
 	renderMarkups()
 	{
 		console.log(this.props.markups);

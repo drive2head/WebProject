@@ -12,7 +12,9 @@ class PersonInterface extends React.Component {
 		this.getMarkups();
 		this.state={ username: "", password: "", name: "", surname: "", markups: {}};
 	}
-
+	/**
+	    * Функция заполняет список разметок пользователя.
+	*/
 	getMarkups = async () => {
 		const cookies = new Cookies();
     	cookies.getAll();
@@ -38,7 +40,9 @@ class PersonInterface extends React.Component {
 			this.setState({ markups: result });      
 		}
 	}
-
+	/**
+		* Функция получает информацию о пользователе (профиль).
+	*/
 	getUser = async () => {
 		const cookies = new Cookies();
     	cookies.getAll();
@@ -61,7 +65,10 @@ class PersonInterface extends React.Component {
 			this.setState({ username: body.username, password: body.password, name: body.name, surname: body.surname })      
 		}
 	}
-
+	/**
+	    * Функция запускает редактирование выбранной разметки. Производит редирект на страницу редактирования.
+	    * @param {string} a название аудиозаписи, для которой необходимо изменить разметку.
+	*/
 	changeMarkup(a)
 	{
 		const cookies = new Cookies();
