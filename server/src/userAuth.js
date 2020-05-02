@@ -24,11 +24,22 @@ async function verifyUser(username, password) {
 	}
 	return { completed: false, output: `User was not found`}
 }
-
+/**
+    * Функция возвращает данные о пользователе.
+    * @param {string} username логин пользователя.
+    * @returns {object} запись из базы.
+*/
 async function getUser (username) {
 	return await User.findOne({ username: username });
 }
-
+/**
+    * Функция добавляет пользователя в базу.
+    * @param {string} username логин пользователя.
+    * @param {string} password пароль пользователя.
+    * @param {string} name имя пользователя.
+    * @param {string} surname фамилия пользователя.
+    * @returns {object} успех или неуспех операции.
+*/
 async function addUser (username, password, name, surname) {
 	try {
 		var userExists = await getUser(username);

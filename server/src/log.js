@@ -15,6 +15,16 @@ var logSchema = new mongoose.Schema({
 
 var Log = logs_connection.model('Log', logSchema);
 
+/**
+    * Функция добавляет логи в журнал.
+    * @param {string} username имя пользователя.
+    * @param {string} type тип действия.
+    * @param {object} logOf функция, вызвавшая логирование.
+    * @param {bool} completed статус добавления лога.
+    * @param {object} result null.
+    * @param {string} logFrom null.
+    * @returns {object} объект результата добавления лога.
+*/
 async function addLog (username, type, logOf, completed, result = null, logFrom = null) {
 	const date = new Date();
 	let log = new Log(

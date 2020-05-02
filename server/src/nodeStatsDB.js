@@ -13,11 +13,22 @@ var nodeInfoSchema = new mongoose.Schema({
 });
 
 var NodeInfo = users_connection.model('NodeInfo', nodeInfoSchema);
-
+/**
+    * Функция возвращает информацию о узле.
+    * @param {int} nodeID id узла.
+    * @returns {bool} факт наличия узла в базе.
+*/
 async function getNodeInfo (nodeID) {
 	return await NodeInfo.findOne({ nodeID: nodeID });
 }
-
+/**
+    * Функция изменяет значение узла.
+    * @param {int} recordID id аудиозаписи.
+    * @param {int} nodeID id узла.
+    * @param {string} label метка узла.
+    * @param {string} username логин пользователя.
+    * @returns {object} успех или неуспех операции.
+*/
 async function updateNodeInfo(recordID, nodeID, label, username) {
 	try {
 		var currentDate = new Date();

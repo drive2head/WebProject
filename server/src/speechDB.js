@@ -8,6 +8,11 @@ let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login,
 
 // function extractNodes returns array of nodes, returned by the query
 // each returned node is extended with fields 'label' and 'id'
+/**
+    * Функция извлекает узлы из записи из бд.
+    * @param {string} record название записи.
+    * @returns {array} узлы.
+*/
 function extractNodes(record) {
 	var recordNodes = [];
 	record.forEach((node) => {
@@ -21,7 +26,12 @@ function extractNodes(record) {
 	});
 	return recordNodes;
 }
-
+/**
+    * Функция запускает запрос в бд.
+    * @param {pointer} queryFunc функция запроса.
+    * @param {bool} multipleRecords флаг на использование нескольких записей в одном запросе.
+    * @returns {object} успех или неуспех операции.
+*/
 function runQuery(queryFunc, multipleRecords=false) {
 	return function() {
 		var queryText = queryFunc.apply(this, arguments);

@@ -11,14 +11,29 @@ var recordSchema = new mongoose.Schema({
 
 var Record = users_connection.model('Record', recordSchema);
 
+/**
+    * Функция возвращает все записи.
+    * @returns {object} записи из базы.
+*/
 async function getAllRecords() {
 	return await Record.find();
 };
 
+/**
+    * Функция возвращает записи по названию.
+    * @param {string} name название записи.
+    * @returns {object} запись из базы.
+*/
 async function findRecordByName (name) {
 	return await Record.findOne({ name: name });
 };
-
+/**
+    * Функция добавляет запись в базу.
+    * @param {string} name название записи.
+    * @param {string} path путь к аудиозаписи.
+    * @param {int} speakerID id диктора.
+    * @returns {object} успех или неуспех операции.
+*/
 async function addRecord(name, path, speakerID) {
 	try {
 		var record = await findRecordByName(name);
