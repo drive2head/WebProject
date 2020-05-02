@@ -79,7 +79,7 @@ class ListInterface extends React.Component {
   {
     const cookies = new Cookies();
     cookies.getAll();
-    let response = await fetch('/remove_markup', {
+    let response = await fetch('/remove_data', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

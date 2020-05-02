@@ -121,34 +121,57 @@ app.post('/add_record', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-		SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
-		.then(result => {
-			log.addLog(req.body.username, 'query.add', 'speechDB.addMarkup', result.completed, result.output, '/add_data');
-			if (result.completed == false) {
-				res.send({ status: false, msg: result.output });
-				return;
-			}
-			return SpeechDB.addSentences(req.body.username, req.body.record, req.body.sentences);
-		})
-		.then(result => {
-			log.addLog(req.body.username, 'query.add', 'speechDB.addSentences', result.completed, result.output, '/add_data');
-			if (result.completed == false) {
-				res.send({ status: false, msg: result.output });
-				return;
-			}
-			return SpeechDB.addWords(req.body.username, req.body.record, req.body.words);
-		})
-		.then(result => {
-			log.addLog(req.body.username, 'query.add', 'speechDB.addWords', result.completed, result.output, '/add_data');
-			if (result.completed == false) {
-				res.send({ status: false, msg: result.output });
-				return;
-			}
+		var status = 0;
+
+		if (req.body.phonemes.length) {
+			SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes)
+			.then(result => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', result.completed, result.output, '/add_data');
+				if (result.completed == false) {
+					status |= 1;
+				}
+			})
+			.catch(err => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', false, err, '/add_data');
+			})
+		}
+
+		if (req.body.words.length) {
+			SpeechDB.addWords(req.body.username, req.body.record, req.body.words)
+			.then(result => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', result.completed, result.output, '/add_data');
+				if (result.completed == false) {
+					status |= 1 << 1;
+				}
+			})
+			.catch(err => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', false, err, '/add_data'); 
+			})
+		}
+
+		if (req.body.sentences.length) {
+			SpeechDB.addSentences(req.body.username, req.body.record, req.body.sentences)
+			.then(result => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', result.completed, result.output, '/add_data');
+				if (result.completed == false) {
+					status |= 1 << 2;
+				}
+			})
+			.catch(err => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', false, err, '/add_data'); 
+			})
+		}
+
+		if (status) {
+			msg = 'Data was not uploaded: ';
+			if (status & 1) { msg += 'phonemes '; }
+			if (status & 1 << 1) { msg += 'words '; }
+			if (status & 1 << 2) { msg += 'sentences '; }
+			log.addLog(req.body.username, 'query.add', '', false, msg, '/add_data');
+			res.send({ status: false, msg: msg });
+		} else {
 			res.send({ status: true, msg: 'Data was uploaded!' });
-		})
-		.catch(err => {
-			log.addLog(req.body.username, 'query.add', '', false, err, '/add_data');
-		})
+		}
 });
 
 app.post('/get_data', (req, res) => {
@@ -226,36 +249,51 @@ app.post('/remove_person', (req, res) => {
 });
 
 app.post('/remove_data', (req, res) => {
+	var status = 0;
+
 	SpeechDB.deleteMarkup(req.body.username, req.body.record)
 	.then(result => {
 		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', result.completed, result.output, '/remove_data');
 		if (result.completed == false) {
-			res.send({ status: false, msg: result.output });
-			return;
+			status |= 1;
 		}
-		
-		return SpeechDB.deleteSentences(req.body.username, req.body.record);
-	})
-	.then(result => {
-		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteSentences', result.completed, result.output, '/remove_data');
-		if (result.completed == false) {
-			res.send({ status: false, msg: result.output });
-			return;
-		}
-		
-		return SpeechDB.deleteWords(req.body.username, req.body.record);
-	})
-	.then(result => {
-		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteWords', result.completed, result.output, '/remove_data');
-		if (result.completed == false) {
-			res.send({ status: false, msg: result.output });
-			return;
-		}
-		res.send({ status: true, msg: 'Markups was successfully deleted!'});
 	})
 	.catch(err => {
 		log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_data');
 	});
+
+	SpeechDB.deleteWords(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteWords', result.completed, result.output, '/remove_data');
+		if (result.completed == false) {
+			status |= 1 << 1;
+		}
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_data');
+	});
+
+	SpeechDB.deleteSentences(req.body.username, req.body.record)
+	.then(result => {
+		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteSentences', result.completed, result.output, '/remove_data');
+		if (result.completed == false) {
+			status |= 1 << 2;
+		}
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'query.delete', '', false, err, '/remove_data');
+	});
+
+	if (status) {
+		msg = 'Data was not removed: ';
+		if (status & 1) { msg += 'phonemes '; }
+		if (status & 1 << 1) { msg += 'words '; }
+		if (status & 1 << 2) { msg += 'sentences '; }
+		log.addLog(req.body.username, 'query.delete', '', false, msg, '/remove_data');
+		res.send({ status: false, msg: msg });
+	} else {
+		res.send({ status: true, msg: 'Markups was successfully deleted!'});
+	}
 });
 
 app.post('/remove_markup', (req, res) => {
