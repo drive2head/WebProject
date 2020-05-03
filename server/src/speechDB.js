@@ -6,6 +6,10 @@ let Integer = require('neo4j-driver/lib/v1/integer.js');
 let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
 
+process.on('exit', async () => {
+	await driver.close();
+});
+
 // function extractNodes returns array of nodes, returned by the query
 // each returned node is extended with fields 'label' and 'id'
 /**
@@ -117,3 +121,4 @@ exports.deleteRecord = deleteRecord;
 exports.deleteMarkup = deleteMarkup;
 exports.deleteSentences = deleteSentences;
 exports.deleteWords = deleteWords;
+exports.driver = driver;

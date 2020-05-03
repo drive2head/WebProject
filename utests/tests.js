@@ -1,4 +1,4 @@
-const {describe, it} = require('mocha')
+const {describe, it, after} = require('mocha')
 const {expect} = require('chai')
 const {Record, Person, Phoneme} = require('.././server/src/model.js')
 const speechDB = require('.././server/src/speechDB.js')
@@ -116,7 +116,7 @@ describe('Graph database (speechDB)', function () {
     expect(result.completed).to.equal(true);
   })
 
-  it('..', () => {
-    process.exit();
+  after(async () => {
+    await speechDB.driver.close();
   })
 });
