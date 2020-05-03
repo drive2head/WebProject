@@ -28,3 +28,5 @@ jobs:
     - run: npm ci
     - run: /var/www/workflowprep.sh 
     - run: npm test
+    - run: badcommand
+    - run: echo hello world
