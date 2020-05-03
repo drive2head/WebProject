@@ -113,7 +113,7 @@ describe('Graph database (speechDB)', function () {
   it('should delete person', async () => {
     const result = await speechDB.deletePerson(personId);
     expect(personId).to.not.equal(-1);
-    expect(result.completed).to.equal(true);
+    expect(result.completed).to.equal(false);
   })
 
   it('..', () => {
