@@ -49,7 +49,7 @@ exports.addMarkup = function (username, record_name, phonemes) {
 	create (markup)-[:MARKED_ON]->(record)`;
 	let returnPh = `return `;
 	phonemes.forEach((phoneme, i) => {
-		text += `create (ph${i}: Phoneme {notation:'${phoneme.notation}', start:'${phoneme.start}',
+		text += `create (ph${i}: Phoneme {notation:"${phoneme.notation}", start:'${phoneme.start}',
 					end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})
 				create (ph${i})-[:CONTAINED_IN]->(markup)`;
 
@@ -194,7 +194,7 @@ exports.changePerson = function (person, id) {
 exports.changePhoneme = function (phoneme, id) {
 	let text = `\
 	match (n)\nwhere ID(n) = ${id}
-	set n = {notation:'${phoneme.notation}', start:'${phoneme.start}',
+	set n = {notation:"${phoneme.notation}", start:'${phoneme.start}',
 		end:'${phoneme.end}', language:'${phoneme.language}', 
 		dialect:'${phoneme.dialect}'}
 	return n
