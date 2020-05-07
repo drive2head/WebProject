@@ -25,7 +25,7 @@ class Header extends React.Component {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className="nav-link" href="/">Main Page</a>
+                            <a className="nav-link" href="/">Главная страница</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" href="/list">Просмотр разметок</a>
