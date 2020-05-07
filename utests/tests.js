@@ -7,7 +7,7 @@ const speakersDB = require('.././server/src/speakersDB.js')
 
 describe('Model', function () {
   it('should be an array', () => {
-    expect(Record('name', ['1', '2']).tags).to.be.a(null)
+    expect(Record('name', ['1', '2']).tags).to.be.a('array')
   })
 
   it('should be an object', () => {
