@@ -24,19 +24,20 @@ var logSchema = new mongoose.Schema({
 */
 async function addLog (username, type, logOf, completed, result = null, logFrom = null) {
 	const date = new Date();
-	let log = new Log(
-	{
-		date: date, 
-		username: username, 
-		type: type, 
-		logOf: logOf, 
-		completed: completed, 
-		result: result, 
-		logFrom: logFrom, 
-	});
 	try {
 		var logs_connection = mongoose.createConnection(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var Log = logs_connection.model('Log', logSchema);
+		
+		let log = new Log(
+		{
+			date: date, 
+			username: username, 
+			type: type, 
+			logOf: logOf, 
+			completed: completed, 
+			result: result, 
+			logFrom: logFrom, 
+		});
 
 		let res = await log.save((err, user) => {
 			if (err) {
