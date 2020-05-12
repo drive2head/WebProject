@@ -39,11 +39,7 @@ async function addLog (username, type, logOf, completed, result = null, logFrom 
 			logFrom: logFrom, 
 		});
 
-		let res = await log.save((err, user) => {
-			if (err) {
-				return null;
-			}
-		});
+		let res = await log.save();
 		return { completed: true, log_id: res._id.toString() };
 	} catch (err) {
 		return { completed: true, error: err };
@@ -51,5 +47,6 @@ async function addLog (username, type, logOf, completed, result = null, logFrom 
 		logs_connection.close();
 	}
 };
+
 
 exports.addLog = addLog;
