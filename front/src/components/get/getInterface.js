@@ -94,10 +94,11 @@ class GetInterface extends React.Component {
     			//document.getElementById('selectPhoneme').innerText = body.output[i].properties.notation;
     		  this.refs.wave.btnLoad(body.output[i].properties.end, body.output[i].properties.start, body.output[i].properties.notation);
     		}
+
+    		//document.getElementById('selectPhoneme').innerText = '';
+    		this.setState({sounds: sd});
+    		this.setState({record: cookies.cookies.record});
       }
-  		//document.getElementById('selectPhoneme').innerText = '';
-  		this.setState({sounds: sd});
-  		this.setState({record: cookies.cookies.record});
   	}
     this.initWords();
   }
