@@ -33,11 +33,15 @@ class PersonInterface extends React.Component {
 			alert('Bad data, FILOLUX!');
 		else
 		{
-			let tmp = body.output;
-			let result = [];
-			for (let i = 0; i < tmp.length; i++)
-				result.push({value: tmp[i].id, label: tmp[i].properties.name});
-			this.setState({ markups: result });      
+			if (body.completed) {
+				let tmp = body.output;
+				let result = [];
+				for (let i of body.output)
+					result.push({value: i, label: i});
+				this.setState({ markups: result });
+			} else {
+				alert('Произошла ошибка на сервере при загрузке разметок');
+			}
 		}
 	}
 	/**
