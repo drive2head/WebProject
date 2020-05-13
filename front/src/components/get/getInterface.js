@@ -80,9 +80,11 @@ class GetInterface extends React.Component {
   	{
       if (body.output != null)
       {
-        document.getElementById('soundDialect').innerText = body.output[0].properties.dialect;
-    		this.setState({soundDialect: body.output[0].properties.dialect})
-    		this.setState({soundLang: body.output[0].properties.language})
+        if (body.output.length > 0) {
+          document.getElementById('soundDialect').innerText = body.output[0].properties.dialect;
+    		  this.setState({soundDialect: body.output[0].properties.dialect})
+    		  this.setState({soundLang: body.output[0].properties.language})
+        }
     		let sd = [];
     		//console.log(body.output);
 
