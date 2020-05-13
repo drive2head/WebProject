@@ -38,17 +38,34 @@ app.get('/persons', (req, res) => {
 app.get('/records', (req, res) => {
 	RecordsDB.getAllRecords()
 	.then(result => {
-		log.addLog(req.body.username, 'access.records', 'getAllRecords', true, result, '/records');
+		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
 		res.send(result);
 	});
 });
 
 app.post('/markups', (req, res) => {
+	var markups = [];
+
 	SpeechDB.getMarkups(req.body.username)
 	.then(result => {
-		log.addLog(req.body.username, 'access.markups', 'getMarkups', result.completed, result.output, '/markups');
-		res.send(result);
-	})
+		log.addLog(req.body.username, 'access.markups', 'SpeechDB.getMarkups', result.completed, result.output, '/markups');
+		result.forEach(markup => markups.push(markup));
+	});
+
+	SpeechDB.getSentenceMarkups(req.body.username)
+	.then(result => {
+		log.addLog(req.body.username, 'access.sentenceMarkups', 'SpeechDB.getSentenceMarkups', result.completed, result.output, '/markups');
+		result.forEach(markup => markups.push(markup));
+	});
+
+	SpeechDB.getWordMarkups(req.body.username)
+	.then(result => {
+		log.addLog(req.body.username, 'access.wordMarkups', 'SpeechDB.getWordMarkups', result.completed, result.output, '/markups');
+		result.forEach(markup => markups.push(markup));
+	});
+
+	let set_markups = new Set(markups);
+	res.send(Array.from(set_markups));
 });
 
 app.post('/add_person', (req, res) => {
