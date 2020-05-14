@@ -150,7 +150,14 @@ exports.deleteSentences = deleteSentences;
 exports.deleteWords = deleteWords;
 exports.driver = driver;
 
-exports.extractMarkdowns = async function(func) {
+exports.extractMarkdowns = extractMarkdowns;
+
+/**
+    * Функция возвращает все разметки аудиозаписей, для которых был размечен слой с фонемами.
+    * @param {function} fucn функция-обработчик, которая будет применяться к каждой отдельной разметке (опциональный параметр).
+    * @returns {object} список JSON-объектов с разметками.
+*/
+async function extractMarkdowns(func=null) {
 	n = 0;
 
 	res = await _getAllMarkupID();
@@ -161,15 +168,13 @@ exports.extractMarkdowns = async function(func) {
 
 	const promises = markup_ids.map(async markup_id => {
 		let jsonObj = (await _getMarkupInfoByID(markup_id)).output;
-		phonemes = _getMarkupByID(markup_id);
-		words = _getWordMarkupClean(jsonObj['username'], jsonObj['recordName']);
-		sentences = _getSentenceMarkupClean(jsonObj['username'], jsonObj['recordName']);
 
-		jsonObj['phonemes'] = (await phonemes).output;
-		jsonObj['words'] = (await words).output;
-		jsonObj['sentences'] = (await sentences).output;
+		jsonObj['phonemes'] = (await _getMarkupByID(markup_id)).output;
+		jsonObj['words'] = (await _getWordMarkupClean(jsonObj['username'], jsonObj['recordName'])).output;
+		jsonObj['sentences'] = (await _getSentenceMarkupClean(jsonObj['username'], jsonObj['recordName'])).output;
 
-		func(jsonObj);
+		if (func)
+			func(jsonObj);
 
 		return jsonObj;
 	});

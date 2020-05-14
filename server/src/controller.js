@@ -158,14 +158,17 @@ app.post('/add_record', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
+		console.log("/add_data");
+
 		var status = 0;
 
 		let date = new Date();
 		let now = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + 'T' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
-		fs.writeFile(cfg.phonemes_dir + req.body.record + now + '.json', JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
-		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, 'Created ' + filename + ' at ' + path, '/extract_markdowns');
-		    if (err)
-		        return;
+		let path = cfg.phonemes_dir;
+		let filename = req.body.username + '_' + req.body.record.split('.').slice(0, -1).join('.') + '_' + now + '.json';
+		fs.writeFile(path + filename, JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
+			result = err == null ? 'Created ' + filename + ' at ' + path : 'File ' + filename + ' was not created';
+		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, result, '/extract_markdowns');
 		}); 
 
 		if (req.body.phonemes.length) {
