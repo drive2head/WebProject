@@ -144,7 +144,7 @@ app.post('/add_data', (req, res) => {
 		var status = 0;
 
 		let now = new Date();
-		fs.writeFile(cfg.phonemes_dir + req.body.record + now + '.txt', JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
+		fs.writeFile(cfg.phonemes_dir + req.body.record + now + '.json', JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
 		    if(err)
 		        return console.log(err);
 		    console.log("The file was saved!");
