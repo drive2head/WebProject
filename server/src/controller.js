@@ -160,11 +160,12 @@ app.post('/add_record', (req, res) => {
 app.post('/add_data', (req, res) => {
 		var status = 0;
 
-		let now = new Date();
+		let date = new Date();
+		let now = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + 'T' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
 		fs.writeFile(cfg.phonemes_dir + req.body.record + now + '.json', JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
-		    if(err)
-		        return console.log(err);
-		    console.log("The file was saved!");
+		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, 'Created ' + filename + ' at ' + path, '/extract_markdowns');
+		    if (err)
+		        return;
 		}); 
 
 		if (req.body.phonemes.length) {
