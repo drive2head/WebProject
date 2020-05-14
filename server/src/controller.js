@@ -27,7 +27,7 @@ function files() {
 	});
 }
 
-app.get('/extract_markdowns', (req, res) => {
+app.get('/extract_markdowns', async (req, res) => {
 	let now = new Date();
 
 	res = await speechDB._getAllMarkupID();
@@ -42,13 +42,13 @@ app.get('/extract_markdowns', (req, res) => {
 		jsonObj['words'] = (await speechDB._getWordMarkupClean(jsonObj['username'], jsonObj['recordName'])).output;
 		jsonObj['sentences'] = (await speechDB._getSentenceMarkupClean(jsonObj['username'], jsonObj['recordName'])).output;
 
-		filename = cfg.phonemes_dir + jsonObj['username'] + ' ' + jsonObj['recordName'] + now + '.json', JSON.stringify(jsonObj, null, 2), function(err) {
+		filename = cfg.phonemes_dir + jsonObj['username'] + ' ' + jsonObj['recordName'] + now + '.json';
+		fs.writeFile(filename, JSON.stringify(jsonObj, null, 2), function(err) {
 			if(err)
 				return console.log(err);
 			console.log("The file was saved!");
-		} 
-		fs.writeFile(cfg.phonemes_dir + )
-	})
+		}); 
+	});
 
 	res.send("Ok!");
 });
