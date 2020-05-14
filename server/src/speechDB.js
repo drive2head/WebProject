@@ -81,6 +81,7 @@ function runQuery(queryFunc, multipleRecords=false) {
 		} catch (err) {
 			return { completed: false, output: { error: err, query: queryText } };
 		} finally {
+			console.log("session closed");
 			session.close();
 		};
 	}
@@ -148,3 +149,31 @@ exports.deleteMarkup = deleteMarkup;
 exports.deleteSentences = deleteSentences;
 exports.deleteWords = deleteWords;
 exports.driver = driver;
+
+exports.extractMarkdowns = async function(func) {
+	n = 0;
+
+	res = await _getAllMarkupID();
+	markup_ids = []
+	res.output.forEach(obj => {
+		markup_ids.push(Integer.toString(obj['ID']));
+	})
+
+	const promises = markup_ids.map(async markup_id => {
+		let jsonObj = (await _getMarkupInfoByID(markup_id)).output;
+		phonemes = _getMarkupByID(markup_id);
+		words = _getWordMarkupClean(jsonObj['username'], jsonObj['recordName']);
+		sentences = _getSentenceMarkupClean(jsonObj['username'], jsonObj['recordName']);
+
+		r = await (async () => {
+			jsonObj['phonemes'] = (await phonemes).output;
+			jsonObj['words'] = (await words).output;
+			jsonObj['sentences'] = (await sentences).output;
+		});
+
+		func(jsonObj);
+		return jsonObj;
+	});
+
+	return Promise.all(promises);
+}
