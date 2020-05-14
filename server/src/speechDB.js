@@ -42,18 +42,17 @@ function extractNodes(record) {
     * @returns {object} успех или неуспех операции.
 */
 function runQuery(queryFunc, multipleRecords=false) {
-	return function() {
+	return async function() {
 		var queryText = queryFunc.apply(this, arguments);
 
 		let session = null;
 		try {
 			session = driver.session();
-			return session.run(queryText)
+			const query_result = await session.run(queryText)
 			.then((result) => {
 				var nodes = [];
 				if (multipleRecords) {
 					result.records.forEach((record) => {
-						// console.log(record);
 						if (isNode(record.get(0))) {
 							recordNodes = extractNodes(record);
 							recordNodes.forEach((node) => { nodes.push(node); } );
@@ -78,10 +77,11 @@ function runQuery(queryFunc, multipleRecords=false) {
 			.catch((err) => {
 				return { completed: false, output: { error: err, query: queryText } };
 			})
+
+			return query_result;
 		} catch (err) {
 			return { completed: false, output: { error: err, query: queryText } };
 		} finally {
-			console.log("session closed");
 			session.close();
 		};
 	}
@@ -118,11 +118,11 @@ getSentenceMarkups = runQuery(query.getSentenceMarkups, true);
 getWordMarkup = runQuery(query.getWordMarkup, true);
 getWordMarkups = runQuery(query.getWordMarkups, true);
 
-_getAllMarkupID = runQuery(query._getAllMarkupID, true);
-_getMarkupInfoByID = runQuery(query._getMarkupInfoByID);
-_getMarkupByID = runQuery(query._getMarkupByID, true);
-_getSentenceMarkupClean = runQuery(query._getSentenceMarkupClean, true);
-_getWordMarkupClean = runQuery(query._getWordMarkupClean, true);
+_getAllMarkupID = runQuery(query._getAllMarkupID, true, "_getAllMarkupID");
+_getMarkupInfoByID = runQuery(query._getMarkupInfoByID, false, "_getMarkupInfoByID");
+_getMarkupByID = runQuery(query._getMarkupByID, true, "_getMarkupByID");
+_getSentenceMarkupClean = runQuery(query._getSentenceMarkupClean, true, "_getSentenceMarkupClean");
+_getWordMarkupClean = runQuery(query._getWordMarkupClean, true, "_getWordMarkupClean");
 
 exports._getAllMarkupID = _getAllMarkupID;
 exports._getMarkupInfoByID = _getMarkupInfoByID;
@@ -165,13 +165,12 @@ exports.extractMarkdowns = async function(func) {
 		words = _getWordMarkupClean(jsonObj['username'], jsonObj['recordName']);
 		sentences = _getSentenceMarkupClean(jsonObj['username'], jsonObj['recordName']);
 
-		r = await (async () => {
-			jsonObj['phonemes'] = (await phonemes).output;
-			jsonObj['words'] = (await words).output;
-			jsonObj['sentences'] = (await sentences).output;
-		});
+		jsonObj['phonemes'] = (await phonemes).output;
+		jsonObj['words'] = (await words).output;
+		jsonObj['sentences'] = (await sentences).output;
 
 		func(jsonObj);
+
 		return jsonObj;
 	});
 
