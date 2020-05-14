@@ -27,6 +27,32 @@ function files() {
 	});
 }
 
+app.get('/extract_markdowns', (req, res) => {
+	let now = new Date();
+
+	res = await speechDB._getAllMarkupID();
+	markup_ids = []
+	res.output.forEach(obj => {
+		markup_ids.push(Integer.toString(obj['ID']));
+	})
+
+	markup_ids.forEach(async markup_id => {
+		jsonObj = (await speechDB._getMarkupInfoByID(markup_id)).output;
+		jsonObj['phonemes'] = (await speechDB._getMarkupByID(markup_id)).output;
+		jsonObj['words'] = (await speechDB._getWordMarkupClean(jsonObj['username'], jsonObj['recordName'])).output;
+		jsonObj['sentences'] = (await speechDB._getSentenceMarkupClean(jsonObj['username'], jsonObj['recordName'])).output;
+
+		filename = cfg.phonemes_dir + jsonObj['username'] + ' ' + jsonObj['recordName'] + now + '.json', JSON.stringify(jsonObj, null, 2), function(err) {
+			if(err)
+				return console.log(err);
+			console.log("The file was saved!");
+		} 
+		fs.writeFile(cfg.phonemes_dir + )
+	})
+
+	res.send("Ok!");
+});
+
 app.get('/persons', (req, res) => {
 	SpeakersDB.getAllSpeakers()
 	.then(result => {

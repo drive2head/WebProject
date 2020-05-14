@@ -5,10 +5,15 @@ let query = require("./query.js");
 let Integer = require('neo4j-driver/lib/v1/integer.js');
 let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
+let graphTypes = require('neo4j-driver/lib/v1/graph-types.js')
 
 process.on('exit', async () => {
 	await driver.close();
 });
+
+function isNode(object) {
+	return object instanceof graphTypes.Node;
+}
 
 // function extractNodes returns array of nodes, returned by the query
 // each returned node is extended with fields 'label' and 'id'
@@ -48,14 +53,24 @@ function runQuery(queryFunc, multipleRecords=false) {
 				var nodes = [];
 				if (multipleRecords) {
 					result.records.forEach((record) => {
-						var recordNodes = extractNodes(record);
+						// console.log(record);
+						if (isNode(record.get(0))) {
+							recordNodes = extractNodes(record);
 							recordNodes.forEach((node) => { nodes.push(node); } );
-						});
+						} else {
+							nodes.push(record.toObject());
+						}
+					});
 				} else {
 					if (result.records.length === 0) {
 						nodes = null;
 					} else {
-						nodes = extractNodes(result.records[0]);
+						record = result.records[0];
+						if (isNode(record.get(0))) {
+							nodes = extractNodes(record);
+						} else {
+							nodes = record.toObject();
+						}
 					}
 				}
 				return { completed: true, output: nodes };
@@ -102,10 +117,17 @@ getSentenceMarkups = runQuery(query.getSentenceMarkups, true);
 getWordMarkup = runQuery(query.getWordMarkup, true);
 getWordMarkups = runQuery(query.getWordMarkups, true);
 
-exports.getSentenceMarkup = getSentenceMarkup;
-exports.getSentenceMarkups = getSentenceMarkups;
-exports.getWordMarkup = getWordMarkup;
-exports.getWordMarkups = getWordMarkups;
+_getAllMarkupID = runQuery(query._getAllMarkupID, true);
+_getMarkupInfoByID = runQuery(query._getMarkupInfoByID);
+_getMarkupByID = runQuery(query._getMarkupByID, true);
+_getSentenceMarkupClean = runQuery(query._getSentenceMarkupClean, true);
+_getWordMarkupClean = runQuery(query._getWordMarkupClean, true);
+
+exports._getAllMarkupID = _getAllMarkupID;
+exports._getMarkupInfoByID = _getMarkupInfoByID;
+exports._getMarkupByID = _getMarkupByID;
+exports._getSentenceMarkupClean = _getSentenceMarkupClean;
+exports._getWordMarkupClean = _getWordMarkupClean;
 
 exports.changePhoneme = changePhoneme;
 exports.changePerson = changePerson;
@@ -116,6 +138,10 @@ exports.addSentences = addSentences;
 exports.addWords = addWords;
 exports.getMarkup = getMarkup;
 exports.getMarkups = getMarkups;
+exports.getSentenceMarkup = getSentenceMarkup;
+exports.getSentenceMarkups = getSentenceMarkups;
+exports.getWordMarkup = getWordMarkup;
+exports.getWordMarkups = getWordMarkups;
 exports.deletePerson = deletePerson;
 exports.deleteRecord = deleteRecord;
 exports.deleteMarkup = deleteMarkup;

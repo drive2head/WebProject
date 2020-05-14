@@ -8,6 +8,64 @@ function notabs(string) {
 	return string.replace(/\t*/g, '');
 }
 
+/* QUERIES FOR EXTRACTING DATA FROM SPEECH DATABASE */
+exports._getMarkupInfoByID = function(id) {
+	let text = `\
+	match (markup:Markup)
+	where ID(markup) = ${id}
+	match (rec:Record)
+	match (markup)-[:MARKED_ON]->(rec)
+	return markup.username as username, rec.name as recordName 
+	`;
+
+	return notabs(text);
+}
+
+exports._getMarkupByID = function(id) {
+	let text = `\
+	match (markup:Markup)
+	where ID(markup) = ${id}
+	match (ph:Phoneme)-[:CONTAINED_IN]->(markup)
+	return ph.notation as notation, ph.start as start, ph.end as end
+	`;
+
+	return notabs(text);
+}
+
+exports._getAllMarkupID = function() {
+	let text = `\
+	match (markup:Markup)
+	return ID(markup) as ID
+	`;
+
+	return notabs(text);
+}
+
+exports._getSentenceMarkupClean = function(username, record_name) {
+	let text = `
+	match (sMarkup:SentenceMarkup {username: '${username}'})
+	match (rec:Record {name: '${record_name}'})
+	match (sMarkup)-[:MARKED_ON]->(rec)
+	match (sent:Sentence)-[:CONTAINED_IN]->(sMarkup)
+	return sent.value as value, sent.start as start, sent.end as end
+	`;
+
+	return notabs(text);
+}
+
+exports._getWordMarkupClean = function(username, record_name) {
+	let text = `
+	match (wMarkup:WordMarkup {username: '${username}'})
+	match (rec:Record {name: '${record_name}'})
+	match (wMarkup)-[:MARKED_ON]->(rec)
+	match (word:Word)-[:CONTAINED_IN]->(wMarkup)
+	return word.value as value, word.start as start, word.end as end
+	`;
+
+	return notabs(text);
+}
+
+/* QUERIES FOR WEB-APPLICATION */
 exports.addPerson = function (person) {
 	let text = `\
 	merge (person: Person {fullname:'${person.fullName}', age:'${person.age}', 
