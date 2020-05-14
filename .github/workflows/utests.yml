@@ -28,4 +28,4 @@ jobs:
     - run: npm ci
     - run: /var/www/workflowprep.sh 
     - run: npm test
-    - run: /var/www/workflowcomp.sh
+ #   - run: /var/www/workflowcomp.sh
