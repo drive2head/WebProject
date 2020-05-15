@@ -41,7 +41,7 @@ app.get('/extract_markdowns', async (req, res) => {
 	}
 
 	r = await SpeechDB.extractMarkdowns(write_json_to_file);
-	res.send("Now check you folder, baby :3");
+	res.send(r);
 });
 
 app.get('/persons', (req, res) => {
