@@ -26,6 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: /var/www/workflowprep.sh 
+    - run: /var/www/workflowprep.sh
     - run: npm test
     - run: /var/www/workflowcomp.sh
