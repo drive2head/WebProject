@@ -362,7 +362,7 @@ class GetInterface extends React.Component {
     return (
       <div className="container">
         <Header/>
-        <div className="jumbotron" style={{borderRadius: "25px"}}>
+        <div className="jumbotron bg-dark shadow-lg p-3 mb-5" style={{borderRadius: "25px"}}>
           <WavePlayerSent
             slide={this.slide.bind(this)}
             ref="wavesent"
