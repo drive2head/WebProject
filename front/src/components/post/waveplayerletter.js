@@ -177,8 +177,8 @@ class WavePlayer extends React.Component {
           <br/><div className="row">
             <div className="col-md-3"></div>
             <div className="col-md-6">
-                <input name="letterValue" id="letterValue" onChange={this.props.handleInputChange} type="text"/><br/>
-                <button className="btn btn-dark" name="saveSound" onClick={this.btn}>Добавить слово</button>
+                <input className="" name="letterValue" id="letterValue" onChange={this.props.handleInputChange} type="text"/><br/>
+                <button className="btn btn-info btn-lg btn3d" name="saveSound" onClick={this.btn}>Добавить слово</button>
             </div>
             <div className="col-md-3"></div>
           </div>

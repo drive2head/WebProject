@@ -116,7 +116,7 @@ class SoundInfo extends React.Component {
             <div id="selectPhoneme" style={{width: '100%'}}>
               {this.renderNotations()}
             </div>
-            <button className="btn btn-dark" name="saveSound" onClick={this.props.saveSound}>Добавить фонему</button>
+            <button className="btn btn-info btn-lg btn3d" name="saveSound" onClick={this.props.saveSound}><span class="glyphicon glyphicon-ok"></span>Добавить фонему</button>
             Язык: <div id="select" style={{width: '100%'}}>
               {this.renderSelect()}
             </div>

@@ -123,7 +123,7 @@ class SoundInfo extends React.Component {
               {this.renderNotations()}
             </div>
             <p> </p>
-            <button className="btn btn-dark" name="saveSound" onClick={this.props.saveSound}>Добавить фонему</button>
+            <button className="btn btn-success btn-lg btn3d">" name="saveSound" onClick={this.props.saveSound}><span class="glyphicon glyphicon-ok"></span>Добавить фонему</button>
           </div>
         </div>
       </div>

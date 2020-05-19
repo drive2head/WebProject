@@ -405,7 +405,7 @@ class GetInterface extends React.Component {
             <div className="col-md-3"></div>
           </div>
           <div className="row">
-            <button className="btn btn-dark" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}>Сохранить запись</button>
+            <button className="btn btn-magick btn-lg btn3d" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}><span class="glyphicon glyphicon-tag"></span>Сохранить запись</button>
           </div>
         </div>
       </div>
