@@ -82,7 +82,7 @@ function runQuery(queryFunc, multipleRecords=false) {
 		} catch (err) {
 			return { completed: false, output: { error: err, query: queryText } };
 		} finally {
-			session.close();
+			await session.close();
 		};
 	}
 }

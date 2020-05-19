@@ -15,6 +15,8 @@ class WavePlayer extends React.Component {
     this.btnLoad = this.btnLoad.bind(this);
     this.options = [];
     this.state = {selectedOption: {}}
+
+    this._CUSTOM_COLOR = 'rgba(238, 255, 100, 0.25)';
   }
 
   init(f)
@@ -37,7 +39,7 @@ class WavePlayer extends React.Component {
     this.wavesurfer = WaveSurfer.create({
       container: '#waveform',
       waveColor: '#2a9df4',
-      progressColor: 'blue',
+      progressColor: '#c2f4ff',
       backend: 'MediaElement',
       plugins: [
         RegionPlugin.create({
@@ -114,7 +116,7 @@ class WavePlayer extends React.Component {
     let end = document.getElementById('prevEnd');
     let start = document.getElementById('prevStart');
     
-    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 80%, 40%, 0.4)'});
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: this._CUSTOM_COLOR});
     let region = {}
     for (let i in this.wavesurfer.regions.list)
       region = this.wavesurfer.regions.list[i];
@@ -137,7 +139,7 @@ class WavePlayer extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#129fdd'
+      color: '#02d44f'
     };
     region.style(deleteButton, css);
     let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'+this.wavesurfer.regions.list.length-1));
@@ -155,7 +157,7 @@ class WavePlayer extends React.Component {
     let end = a;
     let start = b;
     ////console.log("a, b = ", a, b);
-    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start, end: +end, color: 'hsla(100, 80%, 40%, 0.4)'});
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start, end: +end, color: this._CUSTOM_COLOR});
     let region = {}
     for (let i in this.wavesurfer.regions.list)
       region = this.wavesurfer.regions.list[i];
@@ -179,7 +181,7 @@ class WavePlayer extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#129fdd'
+      color: '#02d44f'
     };
     region.style(deleteButton, css);
     let phonemeNotation = regionEl.appendChild(document.createElement('phonemeNotation'+this.wavesurfer.regions.list.length-1));

@@ -15,7 +15,7 @@ class WavePlayer extends React.Component {
     this.options = [];
     this.state = {selectedOption: {}}
 
-    this._CUSTOM_COLOR = 'rgba(225, 116, 237, 0.4)';
+    this._CUSTOM_COLOR = 'rgba(210, 0, 169, 0.25)';
   }
 
   init(f)
@@ -35,8 +35,8 @@ class WavePlayer extends React.Component {
   {
     this.wavesurfer = wavesurfer.create({
       container: '#waveformletter',
-      waveColor: '#50C878',
-      progressColor: 'orange',
+      waveColor: '#c78824',
+      progressColor: '#50c878',
       backend: 'MediaElement',
       plugins: [
         RegionPlugin.create({
@@ -104,7 +104,7 @@ class WavePlayer extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#129fdd'
+      color: '#00c3f0'
     };
     region.style(deleteButton, css);
 
@@ -148,7 +148,7 @@ class WavePlayer extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#129fdd'
+      color: '#00c3f0'
     };
     region.style(deleteButton, css);
 
