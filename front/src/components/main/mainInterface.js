@@ -11,9 +11,9 @@ class MainInterface extends React.Component {
         {
                 document.title = "Главная";
                 return (
-                        <div className="container">
+                        <div className="container-fluid">
                                 <Header/>
-                                <div class="jumbotron" style={{borderRadius: "25px"}}>
+                                <div className="jumbotron bg-dark" style={{borderRadius: "25px"}}>
                                 <p align="center">
                         <a target="_blank" href="https://docs.google.com/document/d/1SK7MEiPkzkByWT9t2xKzj7N7jvfkW6CWIhIYS50XLsU/edit?usp=sharing"> Инструкция для разметки аудиозаписи </a>
                         </p>

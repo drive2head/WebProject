@@ -360,7 +360,7 @@ class GetInterface extends React.Component {
     const cookies = new Cookies();
     cookies.getAll();
     return (
-      <div className="container">
+      <div className="container-fluid">
         <Header/>
         <div className="jumbotron bg-dark shadow-lg p-3 mb-5" style={{borderRadius: "25px"}}>
           <WavePlayerSent

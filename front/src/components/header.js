@@ -18,35 +18,35 @@ class Header extends React.Component {
 
     render() {  
         return (
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg" style={{borderRadius: "20px"}}>
+            <nav className="navbar navbar-expand-md navbar-dark bg-dark shadow-lg" style={{borderRadius: "20px"}}>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className="nav-link" href="/">Главная страница</a>
+                            <a className="badge nav-link" href="/"><button className="btn btn-default btn-sm btn3d">Главная страница</button></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/list">Просмотр разметок</a>
+                            <a className="badge nav-link" href="/list"><button className="btn btn-default btn-sm btn3d">Просмотр разметок</button></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/post">Добавить разметку</a>
+                            <a className="badge nav-link" href="/post"><button className="btn btn-default btn-sm btn3d">Добавить разметку</button></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/upload">Добавить аудиозапись</a>
+                            <a className="badge nav-link" href="/upload"><button className="btn btn-default btn-sm btn3d">Добавить аудиозапись</button></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/add_dictor">Добавить диктора</a>
+                            <a className="badge nav-link" href="/add_dictor"><button className="btn btn-default btn-sm btn3d">Добавить диктора</button></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/profile">Профиль</a>
+                            <a className="badge nav-link" href="/profile"><button className="btn btn-default btn-sm btn3d">Профиль</button></a>
                         </li>
                     </ul>
                 </div>
                 <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                     <ul className="navbar-nav ml-auto">
-                        <li><button className="btn btn-danger btn-lg btn3d" onClick={this.logOut}>Выйти</button></li>
+                        <li><button className="btn btn-danger btn-sm btn3d" onClick={this.logOut}>Выйти</button></li>
                     </ul>
                 </div>
             </nav>

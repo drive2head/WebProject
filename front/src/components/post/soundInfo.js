@@ -74,7 +74,7 @@ class SoundInfo extends React.Component {
         options={this.languages}
         openMenuOnFocus
         closeMenuOnSelect={true}
-        placeholder=""
+        placeholder="Тут язык..."
         value={this.state.soundLang}
         onChange={
           (selectedOpt) => {
@@ -96,7 +96,7 @@ class SoundInfo extends React.Component {
         options={this.notations}
         openMenuOnFocus
         closeMenuOnSelect={true}
-        placeholder=""
+        placeholder="А тут фонему..."
         value={this.state.soundValue}
         onChange={
           (selectedOpt) => {
@@ -111,18 +111,16 @@ class SoundInfo extends React.Component {
   render() {  
     return (
       <div className="col-md-6">
-        <div className="card flex-md-row mb-4 box-shadow h-md-250">
-          <div className="card-body d-flex flex-column align-items-start">
+        <div className="card bg-dark box-shadow">
             <div id="selectPhoneme" style={{width: '100%'}}>
               {this.renderNotations()}
             </div>
-            <button className="btn btn-info btn-lg btn3d" name="saveSound" onClick={this.props.saveSound}><span class="glyphicon glyphicon-ok"></span>Добавить фонему</button>
-            Язык: <div id="select" style={{width: '100%'}}>
+            <button className="btn btn-primary btn-md btn3d" name="saveSound" onClick={this.props.saveSound}><span class="glyphicon glyphicon-ok"></span>Добавить фонему</button>
+            <div id="select" style={{width: '100%'}}>
               {this.renderSelect()}
             </div>
-            Диалект: <input name="soundDialect" id="soundDialect" onChange={this.props.handleInputChange} value={this.props.state.soundDialect} type="text"/><br/>
+            <br/><input name="soundDialect" placeholder="Ну а тут диалект..." id="soundDialect" onChange={this.props.handleInputChange} value={this.props.state.soundDialect} type="text"/><br/>
             <p> </p>
-          </div>
         </div>
       </div>
     );

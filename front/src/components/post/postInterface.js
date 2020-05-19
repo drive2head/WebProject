@@ -290,9 +290,9 @@ class PostInterface extends React.Component {
   render() {  
     document.title = "Новая разметка";
     return (
-      <div className="container">
+      <div className="container-fluid">
         <Header/>
-        <div className="jumbotron" style={{borderRadius: "25px"}}>
+        <div className="jumbotron bg-dark" style={{borderRadius: "25px"}}>
           <div id="select" style={{width: '100%'}}>
             {this.renderSelect()}
           </div>
@@ -337,7 +337,7 @@ class PostInterface extends React.Component {
             <div className="col-md-3"></div>
           </div>
           <div className="row">
-            <button className="btn btn-dark" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}>Сохранить запись</button>
+            <button className="btn btn-magick btn-lg btn3d" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}>Сохранить запись</button>
           </div>
         </div>
       </div>

@@ -14,9 +14,9 @@ class UploadInterface extends React.Component {
 	render() {  
 		document.title = "Новая аудиозапись";
 		return (
-			<div className="container">
+			<div className="container-fluid">
 				<Header/>
-				<div className="jumbotron" style={{borderRadius: "25px"}}>
+				<div className="jumbotron bg-dark" style={{borderRadius: "25px"}}>
 					<UploadForm/>
 				</div>
 		    </div>

@@ -170,8 +170,10 @@ class WavePlayerSent extends React.Component {
           <br/><div className="row">
             <div className="col-md-3"></div>
             <div className="col-md-6">
-                <input name="sentValue" id="sentValue" onChange={this.props.handleInputChange} type="text"/><br/>
-                <button className="btn btn-info btn-lg btn3d" name="saveSound" onClick={this.btn}>Добавить предложение</button>
+              <div className="card bg-dark box-shadow">
+                <input name="sentValue" id="sentValue" placeholder="Тут предложение..." onChange={this.props.handleInputChange} type="text"/><br/>
+                <button className="btn btn-primary btn-md btn3d" name="saveSound" onClick={this.btn}>Добавить предложение</button>
+              </div>
             </div>
             <div className="col-md-3"></div>
           </div>

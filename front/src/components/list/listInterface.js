@@ -99,12 +99,12 @@ class ListInterface extends React.Component {
 
   render() {  
     document.title = "Мои разметки";
-    const listItems = this.options.map((d) => <li key={d.value}><button id={d.value} onClick={this.handleClick}>{d.value}</button><button id={d.value} onClick={this.deletePlease}>Удалить</button></li>);
+    const listItems = this.options.map((d) => <li key={d.value}><button className="btn btn-info btn-lg btn3d" id={d.value} onClick={this.handleClick}>{d.value}</button><button className="btn btn-danger btn-lg btn3d" id={d.value} onClick={this.deletePlease}>Удалить</button></li>);
     console.log(this.options);
     return (
-      <div className="container">
+      <div className="container-fluid">
         <Header/>
-        <div className="jumbotron" style={{borderRadius: "25px"}}>
+        <div className="jumbotron bg-dark" style={{borderRadius: "25px"}}>
         	{listItems}
         </div>
       </div>

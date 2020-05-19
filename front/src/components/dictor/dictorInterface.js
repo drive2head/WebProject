@@ -40,9 +40,9 @@ class DictorInterface extends React.Component {
 	render() {  
 		document.title = "Новый интерфейс";
 		return (
-			<div className="container">
+			<div className="container-fluid">
 				<Header/>
-				<div className="jumbotron" style={{borderRadius: "25px"}}>
+				<div className="jumbotron bg-dark" style={{borderRadius: "25px"}}>
 					<div className="row">
 						<DictorInfo
 							handleInputChange={this.handleInputChange.bind(this)}
