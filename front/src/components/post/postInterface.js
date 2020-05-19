@@ -325,7 +325,9 @@ class PostInterface extends React.Component {
             deleteRegion={this.deleteRegion.bind(this)}
           />
           <div className="row">
-            <div className="col-md-3"></div>
+            <div className="col-md-3">
+              <img src={require('../bender.gif')} alt="Logo" style={{width: "200px"}} />
+            </div>
             <SoundInfo
               changeNotation={this.changeNotation.bind(this)}
               changeLang={this.changeLang.bind(this)}
@@ -334,7 +336,10 @@ class PostInterface extends React.Component {
               saveLetter={this.saveLetter.bind(this)}
               state={this.state}
             />
-            <div className="col-md-3"></div>
+            <div className="col-md-1"></div>
+            <div className="col-md-2">
+              <img src={require('../pony.gif')} alt="Logo" style={{width: "200px"}} />
+            </div>
           </div>
           <div className="row">
             <button className="btn btn-magick btn-lg btn3d" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}>Сохранить запись</button>
