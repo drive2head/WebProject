@@ -15,7 +15,8 @@ class WavePlayerSent extends React.Component {
     this.options = [];
     this.state = {selectedOption: {}}
 
-    this._CUSTOM_COLOR = 'rgba(210, 0, 169, 0.25)';
+    this._CUSTOM_COLOR = 'rgba(210, 50, 169, 0.43)';
+    this._CUSTOM_COLOR_2 = 'rgba(210, 0, 169, 0.25)';
   }
 
   init(f)
@@ -98,7 +99,7 @@ class WavePlayerSent extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#00c3f0'
+      color: '#e1ff00'
     };
     region.style(deleteButton, css);
 
