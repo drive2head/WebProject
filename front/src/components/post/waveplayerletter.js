@@ -105,7 +105,7 @@ class WavePlayer extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#00c3f0'
+      color: '#e1ff00'
     };
     region.style(deleteButton, css);
 
