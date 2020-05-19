@@ -129,7 +129,7 @@ exports.addSentences = function (username, record_name, sentences) {
 	create (sMarkup)-[:MARKED_ON]->(record)`;
 	let returnSent = `return `;
 	sentences.forEach((sentence, i) => {
-		text += `create (sent${i}: Sentence {value:'${sentence.value}', start:'${sentence.start}', end:'${sentence.end}'})
+		text += `create (sent${i}: Sentence {value:"${sentence.value}", start:'${sentence.start}', end:'${sentence.end}'})
 				create (sent${i})-[:CONTAINED_IN]->(sMarkup)`;
 
 		if (i < sentences.length - 1) {
@@ -149,7 +149,7 @@ exports.addWords = function (username, record_name, words) {
 	create (wMarkup)-[:MARKED_ON]->(record)`;
 	let returnWord = `return `;
 	words.forEach((word, i) => {
-		text += `create (word${i}: Word {value:'${word.value}', start:'${word.start}', end:'${word.end}'})
+		text += `create (word${i}: Word {value:"${word.value}", start:'${word.start}', end:'${word.end}'})
 				create (word${i})-[:CONTAINED_IN]->(wMarkup)`;
 
 		if (i < words.length - 1) {

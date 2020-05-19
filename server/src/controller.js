@@ -168,7 +168,7 @@ app.post('/add_data', (req, res) => {
 		let filename = req.body.username + '_' + req.body.record.split('.').slice(0, -1).join('.') + '_' + now + '.json';
 		fs.writeFile(path + filename, JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
 			result = err == null ? 'Created ' + filename + ' at ' + path : 'File ' + filename + ' was not created';
-		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, result, '/extract_markdowns');
+		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, result, '/add_data');
 		}); 
 
 		if (req.body.phonemes.length) {
@@ -441,19 +441,5 @@ app.post('/profile', (req, res) => {
 // 		else {
 // 			res.send("Person WAS NOT changed!");
 // 		}
-// 	});
-// });
-
-// app.post('/change_phoneme', (req, res) => {
-// 	// let phoneme = entity.Phoneme('a', '0.123', '0.456', 'german');
-// 	let result = SpeechDB.changePhoneme(req.body.phoneme, req.body.id)
-// 	.then(result => {
-// 		log.addLog(req.body.username, 'query.change', 'changePhoneme', result.completed, result.output, '/change_phoneme');
-// 		if (result.completed) {
-// 			res.send("Phoneme was successfully changed!");
-// 		}
-// 		else {
-// 			res.send("Phoneme WAS NOT changed!");
-// 		};
 // 	});
 // });
