@@ -46,7 +46,7 @@ class Header extends React.Component {
                 </div>
                 <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                     <ul className="navbar-nav ml-auto">
-                        <li><button onClick={this.logOut}>Выйти</button></li>
+                        <li><button className="btn btn-danger btn-lg btn3d" onClick={this.logOut}>Выйти</button></li>
                     </ul>
                 </div>
             </nav>
