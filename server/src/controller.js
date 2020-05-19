@@ -89,7 +89,6 @@ app.post('/markups', (req, res) => {
 });
 
 app.post('/add_person', (req, res) => {
-	console.log(req.body);
 	SpeechDB.addPerson(req.body.person)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'addPerson', result.completed, result.output, '/add_person');
@@ -158,8 +157,6 @@ app.post('/add_record', (req, res) => {
 });
 
 app.post('/add_data', (req, res) => {
-		console.log("/add_data");
-
 		var status = 0;
 
 		let date = new Date();
@@ -292,7 +289,7 @@ app.post('/remove_person', (req, res) => {
 		}
 	})
 	.catch(err => {
-		console.log("Error occured:\n", err);
+		log.addLog(req.body.username, 'query.delete', '', false, err, '/delete_person');
 	});
 });
 
