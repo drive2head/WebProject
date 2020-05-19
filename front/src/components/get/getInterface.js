@@ -352,7 +352,7 @@ class GetInterface extends React.Component {
   {
     this.refs.wave.slide();
     this.refs.waveletter.slide();
-    //this.refs.wavesent.slide();
+    this.refs.wavesent.slide();
   }
 
   render() {  

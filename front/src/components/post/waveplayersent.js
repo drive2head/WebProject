@@ -27,8 +27,8 @@ class WavePlayerSent extends React.Component {
   {
     this.wavesurfer = wavesurfer.create({
       container: '#waveformsent',
-      waveColor: 'red',
-      progressColor: 'red',
+      waveColor: 'orange',
+      progressColor: 'orange',
       backend: 'MediaElement',
       plugins: [
         RegionPlugin.create({
