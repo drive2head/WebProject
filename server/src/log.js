@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 
 var logSchema = new mongoose.Schema({
 	date: Date,			// date of log
+	datestring: String, 
 	username: String,	// 
 	type: String,		// Query/Auth
 	logOf: String,		// name of function which returned the result
@@ -24,6 +25,7 @@ var logSchema = new mongoose.Schema({
 */
 async function addLog (username, type, logOf, completed, result = null, logFrom = null) {
 	const date = new Date();
+	let now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' ' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
 	try {
 		var logs_connection = mongoose.createConnection(cfg.logs_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var Log = logs_connection.model('Log', logSchema);
@@ -31,6 +33,7 @@ async function addLog (username, type, logOf, completed, result = null, logFrom 
 		let log = new Log(
 		{
 			date: date, 
+			datestring: now, 
 			username: username, 
 			type: type, 
 			logOf: logOf, 
