@@ -14,6 +14,8 @@ class WavePlayer extends React.Component {
     this.btn = this.btn.bind(this);
     this.options = [];
     this.state = {selectedOption: {}}
+
+    this._CUSTOM_COLOR = 'rgba(225, 116, 237, 0.4)';
   }
 
   init(f)
@@ -33,7 +35,7 @@ class WavePlayer extends React.Component {
   {
     this.wavesurfer = wavesurfer.create({
       container: '#waveformletter',
-      waveColor: 'orange',
+      waveColor: '#50C878',
       progressColor: 'orange',
       backend: 'MediaElement',
       plugins: [
@@ -75,7 +77,7 @@ class WavePlayer extends React.Component {
     let end = document.getElementById('prevEndLetter');
     let start = document.getElementById('prevStartLetter');
     this.props.saveLetter();
-    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: 'hsla(100, 80%, 40%, 0.4)'});
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start.value, end: +end.value, color: this._CUSTOM_COLOR});
     //console.log(this.wavesurfer.regions.list);
     let region = {};
     for (let i in this.wavesurfer.regions.list)
@@ -120,7 +122,7 @@ class WavePlayer extends React.Component {
     let end = a;
     let start = b;
     this.props.saveLetter();
-    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start, end: +end, color: 'hsla(100, 80%, 40%, 0.4)'});
+    this.wavesurfer.addRegion({id: this.wavesurfer.regions.list.length, start: +start, end: +end, color: this._CUSTOM_COLOR});
     //console.log(this.wavesurfer.regions.list);
     let region = {};
     for (let i in this.wavesurfer.regions.list)
