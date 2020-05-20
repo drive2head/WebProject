@@ -300,7 +300,7 @@ class PostInterface extends React.Component {
     return (
       <div className="container-fluid">
         <Header/>
-        <div className="jumbotron bg-dark" style={{borderRadius: "25px"}}>
+        <div className="jumbotron" style={{borderRadius: "25px"}}>
           <div id="select" style={{width: '100%'}}>
             {this.renderSelect()}
           </div>
