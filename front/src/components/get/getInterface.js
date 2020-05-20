@@ -240,7 +240,7 @@ class GetInterface extends React.Component {
     const file = new Blob([JSON.stringify({record: this.state.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
     {type: 'text/plain;charset=utf-8'});
     element.href = URL.createObjectURL(file);
-    element.download = "razmetochka" + this.state.record + ".json";
+    element.download = "razmetochka.json";
     document.body.appendChild(element);
     element.click();
 
