@@ -156,6 +156,163 @@ app.post('/add_record', (req, res) => {
 	})
 });
 
+app.post('/update_data', (req, res) => {
+		var status = 0;
+
+		/* SAVING DATA TO THE FILE */
+		let date = new Date();
+		let now = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + 'T' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
+		let path = cfg.phonemes_dir;
+		let filename = req.body.username + '_' + req.body.record.split('.').slice(0, -1).join('.') + '_' + now + '.json';
+		fs.writeFile(path + filename, JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
+			result = err == null ? 'Created ' + filename + ' at ' + path : 'File ' + filename + ' was not created';
+		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, result, '/add_data');
+		});
+
+		/* DELETING PREVIOUS MARKUPS */
+		deletion_promises = [];
+
+		deletion_promises.push(SpeechDB.deleteMarkup(req.body.username, req.body.record));
+		deletion_promises.push(SpeechDB.deleteWords(req.body.username, req.body.record));
+		deletion_promises.push(SpeechDB.deleteSentences(req.body.username, req.body.record));
+
+		Promise.all(deletion_promises)
+		.then(results => {
+			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', results[0].completed, results[0].output, '/update_data');
+			if (results[0].completed == false) {
+				status |= 1;
+			}
+
+			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteWords', results[1].completed, results[1].output, '/update_data');
+			if (results[1].completed == false) {
+				status |= 1 << 1;
+			}
+
+			log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteSentences', results[2].completed, results[2].output, '/update_data');
+			if (results[2].completed == false) {
+				status |= 1 << 2;
+			}
+
+			if (status) {
+				msg = 'Markups of types was not removed: ';
+				if (status & 1) { msg += 'phonemes '; }
+				if (status & 1 << 1) { msg += 'words '; }
+				if (status & 1 << 2) { msg += 'sentences '; }
+			} else {
+				msg = 'Markups was successfully deleted!';
+			}
+
+			log.addLog(req.body.username, 'query.delete', 'DELETE RESULT', true, msg + '!\nStatus: ' + (status).toString(2), '/update_data');
+
+			/* UPLOADING NEW DATA INSTEAD OF OLD DELETED ONE  */
+			status = 0;
+			promises = [];
+		
+			promises.push(req.body.phonemes.length ? SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes) : null);
+			promises.push(req.body.words.length ? SpeechDB.addWords(req.body.username, req.body.record, req.body.words) : null);
+			promises.push(req.body.sentences.length ? SpeechDB.addSentences(req.body.username, req.body.record, req.body.sentences) : null);
+
+			Promise.all(promises)
+			.then(results => {
+				if (results[0] != null) {
+					log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', results[0].completed, results[0].output, '/update_data');
+					if (results[0].completed == false) {
+						status |= 1;
+					}
+				}
+				if (results[1] != null) {
+					log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', results[1].completed, results[1].output, '/update_data');
+					if (results[1].completed == false) {
+						status |= 1 << 1;
+					}
+				}
+				if (results[2] != null) {
+					log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', results[2].completed, results[2].output, '/update_data');
+					if (results[2].completed == false) {
+						status |= 1 << 2;
+					}
+				}
+
+				// console.log('Status: ' + (status).toString(2));
+
+				log.addLog(req.body.username, 'query.add', 'LOAD RESULT', status == 0, 'Status: ' + (status).toString(2), '/update_data');
+
+				if (status) {
+					msg = 'Data was not uploaded: ';
+					if (status & 1) { msg += 'phonemes '; }
+					if (status & 1 << 1) { msg += 'words '; }
+					if (status & 1 << 2) { msg += 'sentences '; }
+				} else {
+					msg = 'Data was uploaded!';
+				}
+
+				// console.log('Msg:', msg);
+
+				res.send({ status: status == 0, msg: msg });
+			})
+			.catch(err => {
+				log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', false, err, '/update_data');
+				res.send({ status: false, msg: err });
+			});
+		})
+		.catch(err => {
+			log.addLog(req.body.username, 'query.delete', '', false, err, '/update_data');
+			res.send({ status: false, msg: err });
+		});
+
+		// promises = [];
+		
+		// promises.push(req.body.phonemes.length ? SpeechDB.addMarkup(req.body.username, req.body.record, req.body.phonemes) : null);
+		// promises.push(req.body.words.length ? SpeechDB.addWords(req.body.username, req.body.record, req.body.words) : null);
+		// promises.push(req.body.sentences.length ? SpeechDB.addSentences(req.body.username, req.body.record, req.body.sentences) : null);
+
+		// console.log("PROMISES: ", promises);
+
+		// Promise.all(promises)
+		// .then(results => {
+		// 	// console.log("RESULTS:\n", results);
+		// 	if (results[0] != null) {
+		// 		log.addLog(req.body.username, 'query.add', 'SpeechDB.addMarkup', results[0].completed, results[0].output, '/add_data');
+		// 		if (results[0].completed == false) {
+		// 			status |= 1;
+		// 		}
+		// 	}
+		// 	if (results[1] != null) {
+		// 		log.addLog(req.body.username, 'query.add', 'SpeechDB.addWords', results[1].completed, results[1].output, '/add_data');
+		// 		if (results[1].completed == false) {
+		// 			status |= 1 << 1;
+		// 		}
+		// 	}
+		// 	if (results[2] != null) {
+		// 		log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', results[2].completed, results[2].output, '/add_data');
+		// 		if (results[2].completed == false) {
+		// 			status |= 1 << 2;
+		// 		}
+		// 	}
+
+		// 	// console.log('Status: ' + (status).toString(2));
+
+		// 	log.addLog(req.body.username, 'query.add', 'LOAD RESULT', status == 0, 'Status: ' + (status).toString(2), '/add_data');
+
+		// 	if (status) {
+		// 		msg = 'Data was not uploaded: ';
+		// 		if (status & 1) { msg += 'phonemes '; }
+		// 		if (status & 1 << 1) { msg += 'words '; }
+		// 		if (status & 1 << 2) { msg += 'sentences '; }
+		// 	} else {
+		// 		msg = 'Data was uploaded!';
+		// 	}
+
+		// 	// console.log('Msg:', msg);
+
+		// 	res.send({ status: status == 0, msg: msg });
+		// })
+		// .catch(err => {
+		// 	log.addLog(req.body.username, 'query.add', 'SpeechDB.addSentences', false, err, '/add_data');
+		// 	res.send({ status: false, msg: err });
+		// });
+});
+
 app.post('/add_data', (req, res) => {
 		var status = 0;
 
