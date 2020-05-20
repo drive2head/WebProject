@@ -33,7 +33,7 @@ class PersonInterface extends React.Component {
 			alert('Bad data, FILOLUX!');
 		else
 		{
-			if (body.completed) {
+			if (body.status) {
 				let tmp = body.output;
 				let result = [];
 				for (let i of body.output)
