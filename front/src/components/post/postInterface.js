@@ -146,7 +146,7 @@ class PostInterface extends React.Component {
   saveAll()
   {
     const element = document.createElement("a");
-    const file = new Blob([JSON.stringify({record: this.state.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
+    const file = new Blob([JSON.stringify({record: document.getElementById('files').textContent, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
     {type: 'text/plain;charset=utf-8'});
     element.href = URL.createObjectURL(file);
     element.download = "razmetochka.json";

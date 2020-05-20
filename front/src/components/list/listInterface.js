@@ -75,7 +75,7 @@ class ListInterface extends React.Component {
   	const cookies = new Cookies();
     cookies.getAll();
     cookies.set('record', event.target.id, { path: '/' });
-  	console.log("hey", );
+  	console.log("hey");
   	window.location.href = "/get";
   }
 

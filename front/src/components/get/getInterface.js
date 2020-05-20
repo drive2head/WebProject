@@ -229,15 +229,18 @@ class GetInterface extends React.Component {
     cookies.getAll();
     await(axios.post('/remove_data', {
       username: cookies.cookies.username,
-      record: this.state.record
+      record: cookies.cookies.record
     }));
     return true;
   }
 
   saveAll = async () =>
   {
+    const cookies = new Cookies();
+    cookies.getAll();
+    
     const element = document.createElement("a");
-    const file = new Blob([JSON.stringify({record: this.state.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
+    const file = new Blob([JSON.stringify({record: cookies.cookies.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
     {type: 'text/plain;charset=utf-8'});
     element.href = URL.createObjectURL(file);
     element.download = "razmetochka.json";
@@ -245,12 +248,11 @@ class GetInterface extends React.Component {
     element.click();
 
     await(this.removeAll());
-    const cookies = new Cookies();
-    cookies.getAll();
+    
     //console.log(this.state.sents, this.state.letters, this.state.sounds);
     axios.post('/add_data', {
       username: cookies.cookies.username,
-      record: this.state.record,
+      record: cookies.cookies.record,
       phonemes: this.state.sounds,
       words: this.state.letters,
       sentences: this.state.sents
