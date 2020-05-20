@@ -247,7 +247,7 @@ class GetInterface extends React.Component {
       words: this.state.letters,
       sentences: this.state.sents
     });
-    window.alert('Done!');
+    window.alert('Готово (хотя, возможно, все удалилось к чертям)...');
     window.location.href = "/";
   }
 
@@ -394,7 +394,7 @@ class GetInterface extends React.Component {
 
           <div className="row">
             <div className="col-md-3">
-            <img src={require('../bender.gif')} alt="Logo" style={{width: "200px"}} />
+              <img src={require('../bender.gif')} alt="Logo" style={{width: "200px"}} />
             </div>
             <SoundInfo
               value={this.props.soundLang}
@@ -404,10 +404,7 @@ class GetInterface extends React.Component {
               saveSound={this.saveSound.bind(this)}
               state={this.state}
             />
-            <div className="col-md-1"></div>
-            <div className="col-md-2">
-              <img src={require('../pony.gif')} alt="Logo" style={{width: "200px"}} />
-            </div>
+            <div className="col-md-3"></div>
           </div>
           <div className="row">
             <button className="btn btn-magick btn-lg btn3d" id="saveData" style={{border: "none"}, {width:"100%"}} onClick={this.saveAll}><span class="glyphicon glyphicon-tag"></span>Сохранить запись</button>

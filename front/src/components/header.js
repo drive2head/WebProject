@@ -45,6 +45,9 @@ class Header extends React.Component {
                         <li className="nav-item">
                             <a className="badge nav-link" href="/profile"><button className="btn btn-default btn-sm btn3d">Профиль</button></a>
                         </li>
+                        <li className="nav-item">
+                            <a className="badge nav-link" href="https://www.youtube.com/watch?v=I03xFqbxUp8" target="blank"><h4>Как тебе редизайн, baby/boy?</h4></a>
+                        </li>
                     </ul>
                 </div>
                 <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
