@@ -238,7 +238,7 @@ class GetInterface extends React.Component {
   {
     const cookies = new Cookies();
     cookies.getAll();
-    
+
     const element = document.createElement("a");
     const file = new Blob([JSON.stringify({record: cookies.cookies.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
     {type: 'text/plain;charset=utf-8'});
@@ -247,10 +247,10 @@ class GetInterface extends React.Component {
     document.body.appendChild(element);
     element.click();
 
-    await(this.removeAll());
+    //await(this.removeAll());
     
     //console.log(this.state.sents, this.state.letters, this.state.sounds);
-    axios.post('/add_data', {
+    axios.post('/update_data', {
       username: cookies.cookies.username,
       record: cookies.cookies.record,
       phonemes: this.state.sounds,
