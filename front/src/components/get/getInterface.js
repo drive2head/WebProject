@@ -236,10 +236,18 @@ class GetInterface extends React.Component {
 
   saveAll = async () =>
   {
+    const element = document.createElement("a");
+    const file = new Blob([JSON.stringify({record: this.state.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
+    {type: 'text/plain;charset=utf-8'});
+    element.href = URL.createObjectURL(file);
+    element.download = "razmetochka" + this.state.record + ".json";
+    document.body.appendChild(element);
+    element.click();
+
     await(this.removeAll());
     const cookies = new Cookies();
     cookies.getAll();
-    console.log(this.state.sents, this.state.letters, this.state.sounds);
+    //console.log(this.state.sents, this.state.letters, this.state.sounds);
     axios.post('/add_data', {
       username: cookies.cookies.username,
       record: this.state.record,
@@ -247,7 +255,7 @@ class GetInterface extends React.Component {
       words: this.state.letters,
       sentences: this.state.sents
     });
-    window.alert('Готово (хотя, возможно, все удалилось к чертям)...');
+    window.alert('Готово (хотя, возможно, все удалилось к чертям)... И да, не выбрасывай этот файл, если что по нему мы сможем восстановить твою разметочку :3');
     window.location.href = "/";
   }
 
