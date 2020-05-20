@@ -92,7 +92,7 @@ function validateDeleteResult(deleteFunc) {
 		var result = await deleteFunc.apply(this, arguments);
 
 		if (result.output === null) {
-			return { completed: false, output: 'Node was NOT deleted'};
+			return { completed: false, output: 'Nodes were NOT deleted OR there WERE NOT such nodes IN THE GRAPH'};
 		}
 
 		return { completed: true, output: 'Node(s) was succesfully deleted!'};
