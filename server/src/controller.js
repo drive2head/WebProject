@@ -166,7 +166,7 @@ app.post('/update_data', (req, res) => {
 		let filename = req.body.username + '_' + req.body.record.split('.').slice(0, -1).join('.') + '_' + now + '.json';
 		fs.writeFile(path + filename, JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
 			result = err == null ? 'Created ' + filename + ' at ' + path : 'File ' + filename + ' was not created';
-		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, result, '/add_data');
+		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, result, '/update_data');
 		});
 
 		/* DELETING PREVIOUS MARKUPS */
@@ -235,7 +235,7 @@ app.post('/update_data', (req, res) => {
 
 				// console.log('Status: ' + (status).toString(2));
 
-				log.addLog(req.body.username, 'query.add', 'LOAD RESULT', status == 0, 'Status: ' + (status).toString(2), '/update_data');
+				log.addLog(req.body.username, 'query.add', 'UPDATE RESULT FOR "' + req.body.record + '"', status == 0, 'Status: ' + (status).toString(2), '/update_data');
 
 				if (status) {
 					msg = 'Data was not uploaded: ';
@@ -363,7 +363,7 @@ app.post('/add_data', (req, res) => {
 
 			// console.log('Status: ' + (status).toString(2));
 
-			log.addLog(req.body.username, 'query.add', 'LOAD RESULT', status == 0, 'Status: ' + (status).toString(2), '/add_data');
+			log.addLog(req.body.username, 'query.add', 'LOAD RESULT FOR "' + req.body.record + '"', status == 0, 'Status: ' + (status).toString(2), '/add_data');
 
 			if (status) {
 				msg = 'Data was not uploaded: ';
@@ -545,7 +545,7 @@ app.post('/remove_data', (req, res) => {
 			msg = 'Markups was successfully deleted!';
 		}
 
-		log.addLog(req.body.username, 'query.delete', 'DELETE RESULT', true, msg + '!\nStatus: ' + (status).toString(2), '/remove_data');
+		log.addLog(req.body.username, 'query.delete', 'DELETE RESULT FOR "' + req.body.record + '"', true, msg + '!\nStatus: ' + (status).toString(2), '/remove_data');
 
 		res.send({ status: true, msg: msg });
 	})
