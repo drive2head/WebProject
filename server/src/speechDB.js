@@ -48,35 +48,62 @@ function runQuery(queryFunc, multipleRecords=false) {
 		let session = null;
 		try {
 			session = driver.session();
-			const query_result = await session.run(queryText)
-			.then((result) => {
-				var nodes = [];
-				if (multipleRecords) {
-					result.records.forEach((record) => {
-						if (isNode(record.get(0))) {
-							recordNodes = extractNodes(record);
-							recordNodes.forEach((node) => { nodes.push(node); } );
-						} else {
-							nodes.push(record.toObject());
-						}
-					});
-				} else {
-					if (result.records.length === 0) {
-						nodes = null;
+			const result = await session.run(queryText);
+
+			var nodes = [];
+			if (multipleRecords) {
+				result.records.forEach((record) => {
+					if (isNode(record.get(0))) {
+						recordNodes = extractNodes(record);
+						recordNodes.forEach((node) => { nodes.push(node); } );
 					} else {
-						record = result.records[0];
-						if (isNode(record.get(0))) {
-							nodes = extractNodes(record);
-						} else {
-							nodes = record.toObject();
-						}
+						nodes.push(record.toObject());
+					}
+				});
+			} else {
+				if (result.records.length === 0) {
+					nodes = null;
+				} else {
+					record = result.records[0];
+					if (isNode(record.get(0))) {
+						nodes = extractNodes(record);
+					} else {
+						nodes = record.toObject();
 					}
 				}
-				return { completed: true, output: nodes };
-			})
-			.catch((err) => {
-				return { completed: false, output: { error: err, query: queryText } };
-			})
+			}
+			return { completed: true, output: nodes };
+
+			// session = driver.session();
+			// const result = await session.run(queryText)
+			// .then((result) => {
+			// 	var nodes = [];
+			// 	if (multipleRecords) {
+			// 		result.records.forEach((record) => {
+			// 			if (isNode(record.get(0))) {
+			// 				recordNodes = extractNodes(record);
+			// 				recordNodes.forEach((node) => { nodes.push(node); } );
+			// 			} else {
+			// 				nodes.push(record.toObject());
+			// 			}
+			// 		});
+			// 	} else {
+			// 		if (result.records.length === 0) {
+			// 			nodes = null;
+			// 		} else {
+			// 			record = result.records[0];
+			// 			if (isNode(record.get(0))) {
+			// 				nodes = extractNodes(record);
+			// 			} else {
+			// 				nodes = record.toObject();
+			// 			}
+			// 		}
+			// 	}
+			// 	return { completed: true, output: nodes };
+			// })
+			// .catch((err) => {
+			// 	return { completed: false, output: { error: err, query: queryText } };
+			// })
 
 			return query_result;
 		} catch (err) {
