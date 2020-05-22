@@ -7,6 +7,9 @@ let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
 let graphTypes = require('neo4j-driver/lib/v1/graph-types.js')
 
+_WRITE = false;
+_READ = true;
+
 process.on('exit', async () => {
 	await driver.close();
 });
@@ -41,14 +44,26 @@ function extractNodes(record) {
     * @param {bool} multipleRecords флаг на использование нескольких записей в одном запросе.
     * @returns {object} успех или неуспех операции.
 */
-function runQuery(queryFunc, multipleRecords=false) {
+function runQuery(queryFunc, multipleRecords=false, mode=_WRITE) {
 	return async function() {
 		var queryText = queryFunc.apply(this, arguments);
 
 		let session = null;
 		try {
 			session = driver.session();
-			const result = await session.run(queryText);
+
+			_newTransaction = session.writeTransaction;
+			if (mode == _READ) {
+				_newTransaction = session.readTransaction;
+			}
+
+			var result = await _newTransaction(tx => 
+				tx.run(queryText)
+			)
+
+			if (result.records.length === 0) {
+				return { completed: true, output: null };
+			}
 
 			var nodes = [];
 			if (multipleRecords) {
@@ -61,51 +76,14 @@ function runQuery(queryFunc, multipleRecords=false) {
 					}
 				});
 			} else {
-				if (result.records.length === 0) {
-					nodes = null;
+				record = result.records[0];
+				if (isNode(record.get(0))) {
+					nodes = extractNodes(record);
 				} else {
-					record = result.records[0];
-					if (isNode(record.get(0))) {
-						nodes = extractNodes(record);
-					} else {
-						nodes = record.toObject();
-					}
+					nodes = record.toObject();
 				}
 			}
 			return { completed: true, output: nodes };
-
-			// session = driver.session();
-			// const result = await session.run(queryText)
-			// .then((result) => {
-			// 	var nodes = [];
-			// 	if (multipleRecords) {
-			// 		result.records.forEach((record) => {
-			// 			if (isNode(record.get(0))) {
-			// 				recordNodes = extractNodes(record);
-			// 				recordNodes.forEach((node) => { nodes.push(node); } );
-			// 			} else {
-			// 				nodes.push(record.toObject());
-			// 			}
-			// 		});
-			// 	} else {
-			// 		if (result.records.length === 0) {
-			// 			nodes = null;
-			// 		} else {
-			// 			record = result.records[0];
-			// 			if (isNode(record.get(0))) {
-			// 				nodes = extractNodes(record);
-			// 			} else {
-			// 				nodes = record.toObject();
-			// 			}
-			// 		}
-			// 	}
-			// 	return { completed: true, output: nodes };
-			// })
-			// .catch((err) => {
-			// 	return { completed: false, output: { error: err, query: queryText } };
-			// })
-
-			return query_result;
 		} catch (err) {
 			return { completed: false, output: { error: err, query: queryText } };
 		} finally {
@@ -118,11 +96,15 @@ function validateDeleteResult(deleteFunc) {
 	return async function() {
 		var result = await deleteFunc.apply(this, arguments);
 
-		if (result.output === null) {
-			return { completed: false, output: 'Nodes were NOT deleted OR there WERE NOT such nodes IN THE GRAPH'};
+		if (result.completed == false) {
+			return { completed: false, output: 'Nodes were NOT deleted', error: result.output.error, query: result.output.query };
 		}
 
-		return { completed: true, output: 'Node(s) was succesfully deleted!'};
+		if (result.output === null) {
+			return { completed: true, output: 'There WERE NOT such nodes IN THE GRAPH'};
+		}
+
+		return { completed: true, output: 'Node(s) was succesfully deleted!', nodes: result.output };
 	}
 }
 
@@ -130,26 +112,26 @@ changePhoneme = runQuery(query.changePhoneme);
 changePerson = runQuery(query.changePerson);
 addPerson = runQuery(query.addPerson);
 addRecord = runQuery(query.addRecord);
-addMarkup = runQuery(query.addMarkup);
-addSentences = runQuery(query.addSentences);
-addWords = runQuery(query.addWords);
-getMarkup = runQuery(query.getMarkup, true);
-getMarkups = runQuery(query.getMarkups, true);
+addMarkup = runQuery(query.addMarkup, true);
+addSentences = runQuery(query.addSentences, true);
+addWords = runQuery(query.addWords, true);
+getMarkup = runQuery(query.getMarkup, true, _READ);
+getMarkups = runQuery(query.getMarkups, true, _READ);
 deletePerson = validateDeleteResult(runQuery(query.deletePerson));
 deleteRecord = validateDeleteResult(runQuery(query.deleteRecord));
-deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup));
-deleteSentences = validateDeleteResult(runQuery(query.deleteSentences))
-deleteWords = validateDeleteResult(runQuery(query.deleteWords))
-getSentenceMarkup = runQuery(query.getSentenceMarkup, true);
-getSentenceMarkups = runQuery(query.getSentenceMarkups, true);
-getWordMarkup = runQuery(query.getWordMarkup, true);
-getWordMarkups = runQuery(query.getWordMarkups, true);
+deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup, true));
+deleteSentences = validateDeleteResult(runQuery(query.deleteSentences, true))
+deleteWords = validateDeleteResult(runQuery(query.deleteWords, true))
+getSentenceMarkup = runQuery(query.getSentenceMarkup, true, _READ);
+getSentenceMarkups = runQuery(query.getSentenceMarkups, true, _READ);
+getWordMarkup = runQuery(query.getWordMarkup, true, _READ);
+getWordMarkups = runQuery(query.getWordMarkups, true, _READ);
 
-_getAllMarkupID = runQuery(query._getAllMarkupID, true, "_getAllMarkupID");
-_getMarkupInfoByID = runQuery(query._getMarkupInfoByID, false, "_getMarkupInfoByID");
-_getMarkupByID = runQuery(query._getMarkupByID, true, "_getMarkupByID");
-_getSentenceMarkupClean = runQuery(query._getSentenceMarkupClean, true, "_getSentenceMarkupClean");
-_getWordMarkupClean = runQuery(query._getWordMarkupClean, true, "_getWordMarkupClean");
+_getAllMarkupID = runQuery(query._getAllMarkupID, true, _READ);
+_getMarkupInfoByID = runQuery(query._getMarkupInfoByID, _READ);
+_getMarkupByID = runQuery(query._getMarkupByID, true, _READ);
+_getSentenceMarkupClean = runQuery(query._getSentenceMarkupClean, true, _READ);
+_getWordMarkupClean = runQuery(query._getWordMarkupClean, true, _READ);
 
 exports._getAllMarkupID = _getAllMarkupID;
 exports._getMarkupInfoByID = _getMarkupInfoByID;
