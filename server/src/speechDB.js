@@ -48,18 +48,31 @@ function runQuery(queryFunc, multipleRecords=false, mode=_WRITE) {
 	return async function() {
 		var queryText = queryFunc.apply(this, arguments);
 
-		let session = null;
+		const session = driver.session();
 		try {
-			session = driver.session();
 
-			_newTransaction = session.writeTransaction;
-			if (mode == _READ) {
-				_newTransaction = session.readTransaction;
-			}
+			// _newTransaction = session.writeTransaction;
+			// if (mode == _READ) {
+			// 	_newTransaction = session.readTransaction;
+			// }
 
-			var result = await _newTransaction(tx => 
-				tx.run(queryText)
-			)
+			const result = mode == _WRITE ? 
+			await session.writeTransaction(tx => {
+				return tx.run(queryText);
+			}) :
+			await session.readTransaction(tx => {
+				return tx.run(queryText);
+			});
+
+			// const result = await session.readTransaction(tx => {
+				// return tx.run(queryText);
+			// });
+
+
+			console.log(result);
+
+			const records = result.records;
+			console.log(records);
 
 			if (result.records.length === 0) {
 				return { completed: true, output: null };
