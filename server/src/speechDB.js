@@ -36,8 +36,6 @@ function extractNodes(record) {
 		return extendedNode;
 	});
 
-	console.log("RECORD NODES:\n", recordNodes);
-
 	return recordNodes;
 }
 /**
