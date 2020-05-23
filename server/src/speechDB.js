@@ -7,9 +7,6 @@ let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
 let graphTypes = require('neo4j-driver/lib/v1/graph-types.js')
 
-_WRITE = false;
-_READ = true;
-
 process.on('exit', async () => {
 	await driver.close();
 });
@@ -26,16 +23,16 @@ function isNode(object) {
     * @returns {array} узлы.
 */
 function extractNodes(record) {
-	var recordNodes = record._fields.map((node) => {
+	var recordNodes = [];
+	record.forEach((node) => {
 		var extendedNode = { ...node };
 		extendedNode.id = Integer.toString(node.identity);
 		// a node may not have a label if it was deleted (it this case query returns node(s) with only ID)
 		if (node.labels) {
 			extendedNode.label = node.labels[0]; // at this moment each node has 1 label
 		}
-		return extendedNode;
+		recordNodes.push(extendedNode);
 	});
-
 	return recordNodes;
 }
 /**
@@ -44,27 +41,14 @@ function extractNodes(record) {
     * @param {bool} multipleRecords флаг на использование нескольких записей в одном запросе.
     * @returns {object} успех или неуспех операции.
 */
-function runQuery(queryFunc, multipleRecords=false, mode=_WRITE) {
+function runQuery(queryFunc, multipleRecords=false) {
 	return async function() {
 		var queryText = queryFunc.apply(this, arguments);
 
-		const session = driver.session();
+		let session = null;
 		try {
-			const result = mode == _WRITE ? 
-			await session.writeTransaction(tx => {
-				return tx.run(queryText);
-			}) :
-			await session.readTransaction(tx => {
-				return tx.run(queryText);
-			});
-
-			const records = result.records;
-
-			console.log(records);
-
-			if (result.records.length == 0) {
-				return { completed: true, output: [] };
-			}
+			session = driver.session();
+			const result = await session.run(queryText);
 
 			var nodes = [];
 			if (multipleRecords) {
@@ -77,14 +61,51 @@ function runQuery(queryFunc, multipleRecords=false, mode=_WRITE) {
 					}
 				});
 			} else {
-				record = result.records[0];
-				if (isNode(record.get(0))) {
-					nodes = extractNodes(record);
+				if (result.records.length === 0) {
+					nodes = null;
 				} else {
-					nodes = record.toObject();
+					record = result.records[0];
+					if (isNode(record.get(0))) {
+						nodes = extractNodes(record);
+					} else {
+						nodes = record.toObject();
+					}
 				}
 			}
 			return { completed: true, output: nodes };
+
+			// session = driver.session();
+			// const result = await session.run(queryText)
+			// .then((result) => {
+			// 	var nodes = [];
+			// 	if (multipleRecords) {
+			// 		result.records.forEach((record) => {
+			// 			if (isNode(record.get(0))) {
+			// 				recordNodes = extractNodes(record);
+			// 				recordNodes.forEach((node) => { nodes.push(node); } );
+			// 			} else {
+			// 				nodes.push(record.toObject());
+			// 			}
+			// 		});
+			// 	} else {
+			// 		if (result.records.length === 0) {
+			// 			nodes = null;
+			// 		} else {
+			// 			record = result.records[0];
+			// 			if (isNode(record.get(0))) {
+			// 				nodes = extractNodes(record);
+			// 			} else {
+			// 				nodes = record.toObject();
+			// 			}
+			// 		}
+			// 	}
+			// 	return { completed: true, output: nodes };
+			// })
+			// .catch((err) => {
+			// 	return { completed: false, output: { error: err, query: queryText } };
+			// })
+
+			return query_result;
 		} catch (err) {
 			return { completed: false, output: { error: err, query: queryText } };
 		} finally {
@@ -97,15 +118,11 @@ function validateDeleteResult(deleteFunc) {
 	return async function() {
 		var result = await deleteFunc.apply(this, arguments);
 
-		if (result.completed == false) {
-			return { completed: false, output: 'Nodes were NOT deleted', error: result.output.error, query: result.output.query };
+		if (result.output === null) {
+			return { completed: false, output: 'Nodes were NOT deleted OR there WERE NOT such nodes IN THE GRAPH'};
 		}
 
-		if (result.output === []) {
-			return { completed: true, output: 'There WERE NOT such nodes IN THE GRAPH'};
-		}
-
-		return { completed: true, output: 'Node(s) was succesfully deleted!', nodes: result.output };
+		return { completed: true, output: 'Node(s) was succesfully deleted!'};
 	}
 }
 
@@ -113,26 +130,26 @@ changePhoneme = runQuery(query.changePhoneme);
 changePerson = runQuery(query.changePerson);
 addPerson = runQuery(query.addPerson);
 addRecord = runQuery(query.addRecord);
-addMarkup = runQuery(query.addMarkup, true);
-addSentences = runQuery(query.addSentences, true);
-addWords = runQuery(query.addWords, true);
-getMarkup = runQuery(query.getMarkup, true, _READ);
-getMarkups = runQuery(query.getMarkups, true, _READ);
+addMarkup = runQuery(query.addMarkup);
+addSentences = runQuery(query.addSentences);
+addWords = runQuery(query.addWords);
+getMarkup = runQuery(query.getMarkup, true);
+getMarkups = runQuery(query.getMarkups, true);
 deletePerson = validateDeleteResult(runQuery(query.deletePerson));
 deleteRecord = validateDeleteResult(runQuery(query.deleteRecord));
-deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup, true));
-deleteSentences = validateDeleteResult(runQuery(query.deleteSentences, true))
-deleteWords = validateDeleteResult(runQuery(query.deleteWords, true))
-getSentenceMarkup = runQuery(query.getSentenceMarkup, true, _READ);
-getSentenceMarkups = runQuery(query.getSentenceMarkups, true, _READ);
-getWordMarkup = runQuery(query.getWordMarkup, true, _READ);
-getWordMarkups = runQuery(query.getWordMarkups, true, _READ);
+deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup));
+deleteSentences = validateDeleteResult(runQuery(query.deleteSentences))
+deleteWords = validateDeleteResult(runQuery(query.deleteWords))
+getSentenceMarkup = runQuery(query.getSentenceMarkup, true);
+getSentenceMarkups = runQuery(query.getSentenceMarkups, true);
+getWordMarkup = runQuery(query.getWordMarkup, true);
+getWordMarkups = runQuery(query.getWordMarkups, true);
 
-_getAllMarkupID = runQuery(query._getAllMarkupID, true, _READ);
-_getMarkupInfoByID = runQuery(query._getMarkupInfoByID, _READ);
-_getMarkupByID = runQuery(query._getMarkupByID, true, _READ);
-_getSentenceMarkupClean = runQuery(query._getSentenceMarkupClean, true, _READ);
-_getWordMarkupClean = runQuery(query._getWordMarkupClean, true, _READ);
+_getAllMarkupID = runQuery(query._getAllMarkupID, true, "_getAllMarkupID");
+_getMarkupInfoByID = runQuery(query._getMarkupInfoByID, false, "_getMarkupInfoByID");
+_getMarkupByID = runQuery(query._getMarkupByID, true, "_getMarkupByID");
+_getSentenceMarkupClean = runQuery(query._getSentenceMarkupClean, true, "_getSentenceMarkupClean");
+_getWordMarkupClean = runQuery(query._getWordMarkupClean, true, "_getWordMarkupClean");
 
 exports._getAllMarkupID = _getAllMarkupID;
 exports._getMarkupInfoByID = _getMarkupInfoByID;
