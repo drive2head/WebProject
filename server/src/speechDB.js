@@ -26,16 +26,18 @@ function isNode(object) {
     * @returns {array} узлы.
 */
 function extractNodes(record) {
-	var recordNodes = [];
-	record.forEach((node) => {
+	var recordNodes = record._fields.map((node) => {
 		var extendedNode = { ...node };
 		extendedNode.id = Integer.toString(node.identity);
 		// a node may not have a label if it was deleted (it this case query returns node(s) with only ID)
 		if (node.labels) {
 			extendedNode.label = node.labels[0]; // at this moment each node has 1 label
 		}
-		recordNodes.push(extendedNode);
+		return extendedNode;
 	});
+
+	console.log("RECORD NODES:\n", recordNodes);
+
 	return recordNodes;
 }
 /**
@@ -50,12 +52,6 @@ function runQuery(queryFunc, multipleRecords=false, mode=_WRITE) {
 
 		const session = driver.session();
 		try {
-
-			// _newTransaction = session.writeTransaction;
-			// if (mode == _READ) {
-			// 	_newTransaction = session.readTransaction;
-			// }
-
 			const result = mode == _WRITE ? 
 			await session.writeTransaction(tx => {
 				return tx.run(queryText);
@@ -64,18 +60,12 @@ function runQuery(queryFunc, multipleRecords=false, mode=_WRITE) {
 				return tx.run(queryText);
 			});
 
-			// const result = await session.readTransaction(tx => {
-				// return tx.run(queryText);
-			// });
-
-
-			console.log(result);
-
 			const records = result.records;
+
 			console.log(records);
 
-			if (result.records.length === 0) {
-				return { completed: true, output: null };
+			if (result.records.length == 0) {
+				return { completed: true, output: [] };
 			}
 
 			var nodes = [];
@@ -113,7 +103,7 @@ function validateDeleteResult(deleteFunc) {
 			return { completed: false, output: 'Nodes were NOT deleted', error: result.output.error, query: result.output.query };
 		}
 
-		if (result.output === null) {
+		if (result.output === []) {
 			return { completed: true, output: 'There WERE NOT such nodes IN THE GRAPH'};
 		}
 
