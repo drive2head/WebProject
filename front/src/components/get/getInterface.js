@@ -404,7 +404,7 @@ class GetInterface extends React.Component {
 
           <div className="row">
             <div className="col-md-3">
-              <img src={require('../bender.gif')} alt="Logo" style={{width: "200px"}} />
+              
             </div>
             <SoundInfo
               value={this.props.soundLang}
