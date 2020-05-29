@@ -25,9 +25,6 @@ class Header extends React.Component {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className="badge nav-link" href="/"><img src={require('./gipno.gif')} alt="Logo" style={{width: "60px"}} /></a>
-                        </li>
-                        <li className="nav-item">
                             <a className="badge nav-link" href="/"><button className="btn btn-default btn-sm btn3d">Главная страница</button></a>
                         </li>
                         <li className="nav-item">

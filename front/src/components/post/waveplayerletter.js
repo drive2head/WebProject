@@ -50,7 +50,7 @@ class WavePlayer extends React.Component {
         })
       ]
     });
-
+    
     this.wavesurfer.on('region-update-end', (region, event) => {  
       document.getElementById('waveformletter').focus();
       this.props.newTimeIntervalLetter(region.start.toFixed(3), region.end.toFixed(3))
