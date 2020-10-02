@@ -48,5 +48,20 @@ async function updateMarkdown(markdown) {
 	}
 }
 
+async function getMarkdown(username, recordname) {
+	try {
+		var connection = mongoose.createConnection(cfg.markdowns_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var MarkdownModel = connection.model('Markdown', markdownSchema);
+		
+		var markdown = await MarkdownModel().findOne({ username: username, recordname: recordname });
+		return { completed: true, output: markdown };
+	} catch (err) {
+		return { completed: false, output: err.message };
+	} finally {
+		connection.close();
+	}
+}
+
 exports.addMarkdown = addMarkdown;
 exports.updateMarkdown = updateMarkdown;
+exports.getMarkdown = getMarkdown;
