@@ -19,7 +19,7 @@ async function addMarkup(markup) {
 		await doc.save();
 		return { completed: true, output: "Markup was sucessfully added!" };
 	} catch (err) {
-		return { completed: false, output: err.message };
+		return { completed: false, output: err };
 	} finally {
 		connection.close();
 	}
@@ -42,7 +42,7 @@ async function updateMarkup(markup) {
 		}
 		return { completed: true, output: "Markup was sucessfully updated!" };
 	} catch (err) {
-		return { completed: false, output: err.message };
+		return { completed: false, output: err };
 	} finally {
 		connection.close();
 	}
@@ -52,11 +52,11 @@ async function getMarkup(username, recordname) {
 	try {
 		var connection = mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var MarkupModel = connection.model('Markup', markupSchema);
-		
-		var markup = await MarkupModel().findOne({ username: username, recordname: recordname });
+
+		var markup = await MarkupModel.findOne({ username: username });
 		return { completed: true, output: markup };
 	} catch (err) {
-		return { completed: false, output: err.message };
+		return { completed: false, output: err };
 	} finally {
 		connection.close();
 	}
