@@ -100,74 +100,63 @@ exports.addRecord = function (record, person_id) {
 	return notabs(text);
 }
 
-exports.addMarkup = function (username, record_name, phonemes) {
+exports.addMarkup = function (username, record_name) {
 	let text = `\
 	match (record: Record {name: '${record_name}'})
 	create (markup: Markup {username: '${username}'})
-	create (markup)-[:MARKED_ON]->(record)`;
-	let returnPh = `return `;
-	phonemes.forEach((phoneme, i) => {
-		text += `create (ph${i}: Phoneme {notation:"${phoneme.notation}", start:'${phoneme.start}',
-					end:'${phoneme.end}', language:'${phoneme.language}', dialect:'${phoneme.dialect}'})
-				create (ph${i})-[:CONTAINED_IN]->(markup)`;
+	create (markup)-[:MARKED_ON]->(record)
+	return markup`;
 
-		if (i < phonemes.length - 1) {
-			returnPh += `ph${i}, `;
-		} else {
-			returnPh += `ph${i}`;
-		}
-
-	});
-	text += `\n` + returnPh;
 	return notabs(text);
 }
 
-exports.addSentences = function (username, record_name, sentences) {
-	let text = `\
-	match (record: Record {name: '${record_name}'})
-	create (sMarkup: SentenceMarkup {username: '${username}'})
-	create (sMarkup)-[:MARKED_ON]->(record)`;
-	let returnSent = `return `;
-	sentences.forEach((sentence, i) => {
-		text += `create (sent${i}: Sentence {value:"${sentence.value}", start:'${sentence.start}', end:'${sentence.end}'})
-				create (sent${i})-[:CONTAINED_IN]->(sMarkup)`;
+// exports.addSentences = function (username, record_name, sentences) {
+// 	let text = `\
+// 	match (record: Record {name: '${record_name}'})
+// 	create (sMarkup: SentenceMarkup {username: '${username}'})
+// 	create (sMarkup)-[:MARKED_ON]->(record)`;
+// 	let returnSent = `return `;
+// 	sentences.forEach((sentence, i) => {
+// 		text += `create (sent${i}: Sentence {value:"${sentence.value}", start:'${sentence.start}', end:'${sentence.end}'})
+// 				create (sent${i})-[:CONTAINED_IN]->(sMarkup)`;
 
-		if (i < sentences.length - 1) {
-			returnSent += `sent${i}, `;
-		} else {
-			returnSent += `sent${i}`;
-		}
-	});
-	text += `\n` + returnSent;
-	return notabs(text);
-}
+// 		if (i < sentences.length - 1) {
+// 			returnSent += `sent${i}, `;
+// 		} else {
+// 			returnSent += `sent${i}`;
+// 		}
+// 	});
+// 	text += `\n` + returnSent;
 
-exports.addWords = function (username, record_name, words) {
-	let text = `\
-	match (record: Record {name: '${record_name}'})
-	create (wMarkup: WordMarkup {username: '${username}'})
-	create (wMarkup)-[:MARKED_ON]->(record)`;
-	let returnWord = `return `;
-	words.forEach((word, i) => {
-		text += `create (word${i}: Word {value:"${word.value}", start:'${word.start}', end:'${word.end}'})
-				create (word${i})-[:CONTAINED_IN]->(wMarkup)`;
+// 	return notabs(text);
+// }
 
-		if (i < words.length - 1) {
-			returnWord += `word${i}, `;
-		} else {
-			returnWord += `word${i}`;
-		}
-	});
-	text += `\n` + returnWord;
-	return notabs(text);
-};
+// exports.addWords = function (username, record_name, words) {
+// 	let text = `\
+// 	match (record: Record {name: '${record_name}'})
+// 	create (wMarkup: WordMarkup {username: '${username}'})
+// 	create (wMarkup)-[:MARKED_ON]->(record)`;
+// 	let returnWord = `return `;
+// 	words.forEach((word, i) => {
+// 		text += `create (word${i}: Word {value:"${word.value}", start:'${word.start}', end:'${word.end}'})
+// 				create (word${i})-[:CONTAINED_IN]->(wMarkup)`;
+
+// 		if (i < words.length - 1) {
+// 			returnWord += `word${i}, `;
+// 		} else {
+// 			returnWord += `word${i}`;
+// 		}
+// 	});
+// 	text += `\n` + returnWord;
+// 	return notabs(text);
+// };
 
 exports.getMarkups = function (username) {
 	let text = `
 	match (markup:Markup {username: '${username}'})
 	match (rec:Record)
 	match (markup)-[:MARKED_ON]->(rec)
-	return rec
+	return rec.name as name
 	`;
 
 	return notabs(text);
@@ -178,58 +167,57 @@ exports.getMarkup = function (username, record_name) {
 	match (markup:Markup {username: '${username}'})
 	match (rec:Record {name: '${record_name}'})
 	match (markup)-[:MARKED_ON]->(rec)
-	match (ph:Phoneme)-[:CONTAINED_IN]->(markup)
-	return ph
+	return markup.username, rec.name
 	`;
 
 	return notabs(text);
 };
 
-exports.getSentenceMarkups = function (username) {
-	let text = `
-	match (sMarkup:SentenceMarkup {username: '${username}'})
-	match (rec:Record)
-	match (sMarkup)-[:MARKED_ON]->(rec)
-	return rec
-	`;
+// exports.getSentenceMarkups = function (username) {
+// 	let text = `
+// 	match (sMarkup:SentenceMarkup {username: '${username}'})
+// 	match (rec:Record)
+// 	match (sMarkup)-[:MARKED_ON]->(rec)
+// 	return rec
+// 	`;
 
-	return notabs(text);
-};
+// 	return notabs(text);
+// };
 
-exports.getSentenceMarkup = function (username, record_name) {
-	let text = `
-	match (sMarkup:SentenceMarkup {username: '${username}'})
-	match (rec:Record {name: '${record_name}'})
-	match (sMarkup)-[:MARKED_ON]->(rec)
-	match (sent:Sentence)-[:CONTAINED_IN]->(sMarkup)
-	return sent
-	`;
+// exports.getSentenceMarkup = function (username, record_name) {
+// 	let text = `
+// 	match (sMarkup:SentenceMarkup {username: '${username}'})
+// 	match (rec:Record {name: '${record_name}'})
+// 	match (sMarkup)-[:MARKED_ON]->(rec)
+// 	match (sent:Sentence)-[:CONTAINED_IN]->(sMarkup)
+// 	return sent
+// 	`;
 
-	return notabs(text);
-};
+// 	return notabs(text);
+// };
 
-exports.getWordMarkups = function (username) {
-	let text = `
-	match (wMarkup:WordMarkup {username: '${username}'})
-	match (rec:Record)
-	match (wMarkup)-[:MARKED_ON]->(rec)
-	return rec
-	`;
+// exports.getWordMarkups = function (username) {
+// 	let text = `
+// 	match (wMarkup:WordMarkup {username: '${username}'})
+// 	match (rec:Record)
+// 	match (wMarkup)-[:MARKED_ON]->(rec)
+// 	return rec
+// 	`;
 
-	return notabs(text);
-};
+// 	return notabs(text);
+// };
 
-exports.getWordMarkup = function (username, record_name) {
-	let text = `
-	match (wMarkup:WordMarkup {username: '${username}'})
-	match (rec:Record {name: '${record_name}'})
-	match (wMarkup)-[:MARKED_ON]->(rec)
-	match (word:Word)-[:CONTAINED_IN]->(wMarkup)
-	return word
-	`;
+// exports.getWordMarkup = function (username, record_name) {
+// 	let text = `
+// 	match (wMarkup:WordMarkup {username: '${username}'})
+// 	match (rec:Record {name: '${record_name}'})
+// 	match (wMarkup)-[:MARKED_ON]->(rec)
+// 	match (word:Word)-[:CONTAINED_IN]->(wMarkup)
+// 	return word
+// 	`;
 
-	return notabs(text);
-};
+// 	return notabs(text);
+// };
 
 exports.changePerson = function (person, id) {
 	let text = `\
@@ -249,17 +237,17 @@ exports.changePerson = function (person, id) {
 	return notabs(text);
 };
 
-exports.changePhoneme = function (phoneme, id) {
-	let text = `\
-	match (n)\nwhere ID(n) = ${id}
-	set n = {notation:"${phoneme.notation}", start:'${phoneme.start}',
-		end:'${phoneme.end}', language:'${phoneme.language}', 
-		dialect:'${phoneme.dialect}'}
-	return n
-	`;
+// exports.changePhoneme = function (phoneme, id) {
+// 	let text = `\
+// 	match (n)\nwhere ID(n) = ${id}
+// 	set n = {notation:"${phoneme.notation}", start:'${phoneme.start}',
+// 		end:'${phoneme.end}', language:'${phoneme.language}', 
+// 		dialect:'${phoneme.dialect}'}
+// 	return n
+// 	`;
 
-	return notabs(text);
-}
+// 	return notabs(text);
+// }
 
 exports.deletePerson = function (id) {
 	let text = `
@@ -297,35 +285,35 @@ exports.deleteMarkup = function (username, record_name) {
 	return notabs(text);
 }
 
-exports.deleteSentences = function (username, record_name) {
-	let text = `
-	match (sMarkup: SentenceMarkup {username: '${username}'})-[c0:MARKED_ON]->(record: Record {name: '${record_name}'})
-	match (sent:Sentence)-[c1:CONTAINED_IN]->(sMarkup)
-	delete c1, sent
-	delete c0, sMarkup
-	return sMarkup
-	`;
+// exports.deleteSentences = function (username, record_name) {
+// 	let text = `
+// 	match (sMarkup: SentenceMarkup {username: '${username}'})-[c0:MARKED_ON]->(record: Record {name: '${record_name}'})
+// 	match (sent:Sentence)-[c1:CONTAINED_IN]->(sMarkup)
+// 	delete c1, sent
+// 	delete c0, sMarkup
+// 	return sMarkup
+// 	`;
 
-	return notabs(text);
-}
+// 	return notabs(text);
+// }
 
-exports.deleteWords = function (username, record_name) {
-	let text = `
-	match (wMarkup: WordMarkup {username: '${username}'})-[c0:MARKED_ON]->(record: Record {name: '${record_name}'})
-	match (word:Word)-[c1:CONTAINED_IN]->(wMarkup)
-	delete c1, word
-	delete c0, wMarkup
-	return wMarkup
-	`;
+// exports.deleteWords = function (username, record_name) {
+// 	let text = `
+// 	match (wMarkup: WordMarkup {username: '${username}'})-[c0:MARKED_ON]->(record: Record {name: '${record_name}'})
+// 	match (word:Word)-[c1:CONTAINED_IN]->(wMarkup)
+// 	delete c1, word
+// 	delete c0, wMarkup
+// 	return wMarkup
+// 	`;
 
-	return notabs(text);
-}
+// 	return notabs(text);
+// }
 
-exports.deletePhoneme = function (id) {
-	let text =`
-	match (phoneme: Phoneme)
-	where ID(phoneme) = ${id}
-	delete phoneme
-	return phoneme
-	`;
-}
+// exports.deletePhoneme = function (id) {
+// 	let text =`
+// 	match (phoneme: Phoneme)
+// 	where ID(phoneme) = ${id}
+// 	delete phoneme
+// 	return phoneme
+// 	`;
+// }
