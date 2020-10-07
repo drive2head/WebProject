@@ -4,7 +4,7 @@ let query = require("./query.js");
 
 let Integer = require('neo4j-driver/lib/v1/integer.js');
 let neo4j = require('neo4j-driver').v1;
-let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password));
+let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password), { encrypted: 'ENCRYPTION_OFF' });
 let graphTypes = require('neo4j-driver/lib/v1/graph-types.js')
 
 process.on('exit', async () => {
@@ -105,7 +105,7 @@ function runQuery(queryFunc, multipleRecords=false) {
 			// 	return { completed: false, output: { error: err, query: queryText } };
 			// })
 
-			return query_result;
+			// return query_result;
 		} catch (err) {
 			return { completed: false, output: { error: err, query: queryText } };
 		} finally {
@@ -131,19 +131,19 @@ changePerson = runQuery(query.changePerson);
 addPerson = runQuery(query.addPerson);
 addRecord = runQuery(query.addRecord);
 addMarkup = runQuery(query.addMarkup);
-addSentences = runQuery(query.addSentences);
-addWords = runQuery(query.addWords);
+// addSentences = runQuery(query.addSentences);
+// addWords = runQuery(query.addWords);
 getMarkup = runQuery(query.getMarkup, true);
 getMarkups = runQuery(query.getMarkups, true);
 deletePerson = validateDeleteResult(runQuery(query.deletePerson));
 deleteRecord = validateDeleteResult(runQuery(query.deleteRecord));
 deleteMarkup = validateDeleteResult(runQuery(query.deleteMarkup));
-deleteSentences = validateDeleteResult(runQuery(query.deleteSentences))
-deleteWords = validateDeleteResult(runQuery(query.deleteWords))
-getSentenceMarkup = runQuery(query.getSentenceMarkup, true);
-getSentenceMarkups = runQuery(query.getSentenceMarkups, true);
-getWordMarkup = runQuery(query.getWordMarkup, true);
-getWordMarkups = runQuery(query.getWordMarkups, true);
+// deleteSentences = validateDeleteResult(runQuery(query.deleteSentences))
+// deleteWords = validateDeleteResult(runQuery(query.deleteWords))
+// getSentenceMarkup = runQuery(query.getSentenceMarkup, true);
+// getSentenceMarkups = runQuery(query.getSentenceMarkups, true);
+// getWordMarkup = runQuery(query.getWordMarkup, true);
+// getWordMarkups = runQuery(query.getWordMarkups, true);
 
 _getAllMarkupID = runQuery(query._getAllMarkupID, true, "_getAllMarkupID");
 _getMarkupInfoByID = runQuery(query._getMarkupInfoByID, false, "_getMarkupInfoByID");
@@ -162,19 +162,19 @@ exports.changePerson = changePerson;
 exports.addPerson = addPerson;
 exports.addRecord = addRecord;
 exports.addMarkup = addMarkup;
-exports.addSentences = addSentences;
-exports.addWords = addWords;
-exports.getMarkup = getMarkup;
+// exports.addSentences = addSentences;
+// exports.addWords = addWords;
+// exports.getMarkup = getMarkup;
 exports.getMarkups = getMarkups;
-exports.getSentenceMarkup = getSentenceMarkup;
-exports.getSentenceMarkups = getSentenceMarkups;
-exports.getWordMarkup = getWordMarkup;
-exports.getWordMarkups = getWordMarkups;
+// exports.getSentenceMarkup = getSentenceMarkup;
+// exports.getSentenceMarkups = getSentenceMarkups;
+// exports.getWordMarkup = getWordMarkup;
+// exports.getWordMarkups = getWordMarkups;
 exports.deletePerson = deletePerson;
 exports.deleteRecord = deleteRecord;
 exports.deleteMarkup = deleteMarkup;
-exports.deleteSentences = deleteSentences;
-exports.deleteWords = deleteWords;
+// exports.deleteSentences = deleteSentences;
+// exports.deleteWords = deleteWords;
 exports.driver = driver;
 
 exports.extractMarkdowns = extractMarkdowns;
