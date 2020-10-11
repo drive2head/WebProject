@@ -209,6 +209,7 @@ async function extractMarkdowns(func=null) {
 	return Promise.all(promises);
 }
 
+/*
 phonemes = [{ notation: "x", start: 0, end: 0, language: 'ru', dialect: null }, { notation: "y", start: 0, end: 0, language: 'ru', dialect: null }]
 addMarkup("test", "test", phonemes)
 .then(result => {
@@ -217,3 +218,4 @@ addMarkup("test", "test", phonemes)
 .catch(err => {
     console.log("ERROR:\n", err);
 })
+*/
