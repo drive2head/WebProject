@@ -66,7 +66,6 @@ app.post('/markups', (req, res) => {
 	.then(result => {
 		log.addLog(req.body.username, 'access.markups', 'SpeechDB.getMarkups', result.completed, result.output, '/markups');
 		if (result.completed) {
-			console.log('result: ', result);
 			result.output.forEach((markup) => {
 					markups.push(markup.name);
 			})
@@ -74,13 +73,51 @@ app.post('/markups', (req, res) => {
 			_completed = false;
 		}
 
-		console.log("/markups RESULT:\n", result);
-
 		res.send({
 			status: _completed,
 			output: _completed ? markups : result.output
 		});
 	})
+});
+
+app.post('/add_record', (req, res) => {
+	let form = new formidable.IncomingForm();	
+	form.parse(req, function (err, fields, files) {	
+		let personID = fields.text;	
+		let oldpath = files.filetoupload.path;	
+		let newpath = cfg.records_dir + files.filetoupload.name;	
+		let recordName = files.filetoupload.name;	
+		try {	
+			fs.rename(oldpath, newpath, function (err) {	
+				if (err) throw err;	
+			});	
+
+			SpeakersDB.findSpeakerByID(personID)	
+			.then(result => {	
+				const personNodeID = result.nodeID;	
+				return SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID);	
+			})	
+			.then(result => {	
+				log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');	
+				if (result.completed == false) {	
+					res.send({ status: false, msg: result.output });	
+					return;	
+				}	
+				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID);	
+			})	
+			.then(result => {	
+				log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');	
+				if (result.completed) {	
+					res.redirect('/');	
+				} else {	
+					res.send({ status: false, msg: result.output });	
+				}	
+			})	
+			.catch(err => { throw err; })	
+		} catch (err) {	
+			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');	
+		};	
+	})	
 });
 
 app.post('/add_person', (req, res) => {
@@ -153,8 +190,6 @@ app.post('/get_data', (req, res) => {
 	.then(result => {
 		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
 		if (result.completed) {
-			console.log('/get_data: ', req.body.username, req.body.record);
-			console.log(result);
 			res.send(result);
 		}
 		else {
