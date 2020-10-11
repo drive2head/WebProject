@@ -1,0 +1,17 @@
+/* Records directory path */
+exports.records_dir         = <path-to-the-records-dir>;
+exports.phonemes_dir        = <path-to-the-markups-dir>;
+
+/* Neo4j parameters */
+exports.graph_db_uri        = 'bolt://localhost:7687';
+// it's better to use another user instead of 'neo4j' to avoid possible problems with connection via neo4j-driver (for whatever reason)
+exports.graph_db_login      = <login>;
+exports.graph_db_password   = <password>;
+
+/* MongoDB parameters */
+exports.markups_db_uri      = 'mongodb://localhost/speechdb_mongo';
+exports.users_db_uri        = 'mongodb://localhost/speechdb_mongo';
+exports.logs_db_uri         = 'mongodb://localhost/speechdb_mongo';
+exports.info_db_uri         = 'mongodb://localhost/speechdb_mongo';
+exports.records_db_uri      = 'mongodb://localhost/speechdb_mongo';
+exports.speakers_db_uri     = 'mongodb://localhost/speechdb_mongo';
