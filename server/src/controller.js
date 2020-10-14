@@ -45,8 +45,11 @@ app.get('/extract_markdowns', async (req, res) => {
 app.get('/persons', (req, res) => {
 	SpeakersDB.getAllSpeakers()
 	.then(result => {
-		log.addLog(req.body.username, 'access.persons', 'getAllSpeakers', true, result, '/persons');
+		log.addLog(req.body.username, 'access.persons', 'RecordsDB.getAllSpeakers', true, result, '/persons');
 		res.send(result);
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'access.persons', 'RecordsDB.getAllSpeakers', false, err, '/persons');
 	})
 });
 
@@ -55,7 +58,10 @@ app.get('/records', (req, res) => {
 	.then(result => {
 		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
 		res.send(result);
-	});
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', false, err, '/records');
+	})
 });
 
 app.post('/markups', (req, res) => {
@@ -77,6 +83,9 @@ app.post('/markups', (req, res) => {
 			status: _completed,
 			output: _completed ? markups : result.output
 		});
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'access.markups', 'SpeechDB.getMarkups', false, err, '/markups');
 	})
 });
 
