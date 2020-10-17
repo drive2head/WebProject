@@ -44,6 +44,7 @@ class PostInterface extends React.Component {
     };
     this.file='';
     this.options = [];
+    console.log('hey')
     this.getOptions();
     window.addEventListener('keydown', function(e) {
       if(e.keyCode == 32 && e.target == document.body) {
