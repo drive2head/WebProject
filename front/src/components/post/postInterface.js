@@ -44,7 +44,6 @@ class PostInterface extends React.Component {
     };
     this.file='';
     this.options = [];
-    console.log('hey')
     this.getOptions();
     window.addEventListener('keydown', function(e) {
       if(e.keyCode == 32 && e.target == document.body) {
@@ -58,7 +57,7 @@ class PostInterface extends React.Component {
   getOptions = async () =>
   {
     console.log("LOGGZZ: ")
-    var response = await fetch('/records', {
+    var response = await fetch('/rec', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
