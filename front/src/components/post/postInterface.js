@@ -56,6 +56,7 @@ class PostInterface extends React.Component {
   */
   getOptions = async () =>
   {
+    console.log("LOGGZZ: ")
     var response = await fetch('/records', {
       method: 'GET',
       headers: {
@@ -63,6 +64,7 @@ class PostInterface extends React.Component {
       }
     });
     let body = await response.json();
+    console.log("LOGGZZ BODY: ", body)
     for (let i of body)
       this.options.push({value: i.name, label: i.name})
     //console.log(this.options);
