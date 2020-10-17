@@ -53,7 +53,13 @@ app.get('/persons', (req, res) => {
 	})
 });
 
+app.get('/rec', (req, res) => {
+	console.log('/rec called');
+	res.send([{name: 'test'}]);
+});
+
 app.get('/records', (req, res) => {
+	console.log('/records called');
 	RecordsDB.getAllRecords()
 	.then(result => {
 		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
