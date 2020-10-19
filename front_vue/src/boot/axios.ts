@@ -10,4 +10,8 @@ declare module 'vue/types/vue' {
 export default boot(({ Vue }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   Vue.prototype.$axios = axios;
+  // const token = localStorage.getItem('token')
+  // if (token) {
+  //   Vue.prototype.$axios.defaults.headers.common['Authorization'] = token
+  // }
 });

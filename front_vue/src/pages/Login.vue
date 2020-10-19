@@ -1,5 +1,5 @@
 <template>
-  <login-form />
+  <login-form style="margin: 30px" />
 </template>
 
 <script lang="ts">

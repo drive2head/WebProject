@@ -51,16 +51,28 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksData = [
   {
+    title: 'Войти',
+    caption: 'Страница авторизация',
+    icon: 'login',
+    link: '/login'
+  },
+  {
     title: 'Главная',
     caption: 'Главная страница',
     icon: 'star',
     link: '/'
   },
   {
-    title: 'Войти',
-    caption: 'Страница авторизация',
-    icon: 'login',
-    link: '/login'
+    title: 'Дабавить разметку',
+    caption: 'Страница добавления разметки',
+    icon: 'add',
+    link: '/new_markup'
+  },
+  {
+    title: 'Посмотреть разметки',
+    caption: 'Страница просмотра разметок',
+    icon: 'list',
+    link: '/markup'
   },
 ];
 

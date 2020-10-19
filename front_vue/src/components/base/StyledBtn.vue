@@ -24,10 +24,14 @@
   })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
   .q-btn {
     .q-icon {
       font-size: 32px;
     }
+    background: #26A69A;
+    color: white;
   }
+
 </style>
