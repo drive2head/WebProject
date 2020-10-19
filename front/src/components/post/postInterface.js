@@ -145,8 +145,10 @@ class PostInterface extends React.Component {
   /**
     * Функция сохраняет всю разметку (посылает запрос /add_data). Далее, происходит редирект на основную страницу.
   */
-  saveAll()
+  async saveAll()
   {
+    console.log("DBG saveAll");
+
     const element = document.createElement("a");
     const file = new Blob([JSON.stringify({record: document.getElementById('files').textContent, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],
     {type: 'text/plain;charset=utf-8'});
@@ -165,9 +167,12 @@ class PostInterface extends React.Component {
       phonemes: this.state.sounds,
       words: this.state.letters,
       sentences: this.state.sents
-    });
+    })
+    .then(result => {
+      console.log('/update_data result:\n', result);
+    })
     window.alert('Неплохо... А еще можешь? И да, не выбрасывай этот файл, если что по нему мы сможем восстановить твою разметочку :3');
-    window.location.href = "/";
+    // window.location.href = "/";
   }
 
   changeSoundInfoWave(st)

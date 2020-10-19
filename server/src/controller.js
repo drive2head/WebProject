@@ -53,14 +53,14 @@ app.get('/persons', (req, res) => {
 	})
 });
 
-app.get('/records', (req, res) => {
+app.get('/rec', (req, res) => {
 	RecordsDB.getAllRecords()
-	.then(result => {
-		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
+        .then(result => {
+                log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
 		res.send(result);
 	})
 	.catch(err => {
-		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', false, err, '/records');
+		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
 	})
 });
 
@@ -172,17 +172,17 @@ app.post('/update_data', async (req, res) => {
 		const recordname = req.body.record;
 
 		try {
-			var result = await markupsDB.getMarkup(username, recordname);
+			var result = await MarkupsDB.getMarkup(username, recordname);
 			CheckOperationResult(result);
 			const existingMarkup = result.output;
 			/* CHECKING IF MARKUP IS ALREADY EXISTS */
 			if (existingMarkup == null) {
-				result = await markupsDB.addMarkup(req.body);
+				result = await MarkupsDB.addMarkup(req.body);
 				CheckOperationResult(result);
-				result = await speechDB.addMarkup(username, recordname);
+				result = await SpeechDB.addMarkup(username, recordname);
 				CheckOperationResult(result);
 			} else {
-				result = await markupsDB.updateMarkup(req.body);
+				result = await MarkupsDB.updateMarkup(req.body);
 				CheckOperationResult(result);
 			}
 
