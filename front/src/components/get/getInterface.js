@@ -9,7 +9,7 @@ import Cookies from 'universal-cookie';
 
 let entity = require("./../../model.js")
 
-class GetInterface extends React.Component {  
+class GetInterface extends React.Component {
   constructor(props)
   {
     super(props);
@@ -19,7 +19,7 @@ class GetInterface extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.newTimeInterval = this.newTimeInterval.bind(this);
     this.slider = "";
-    this.state = {  
+    this.state = {
       // Sound info
       letterValue: "",
       sentValue: "",
@@ -82,21 +82,21 @@ class GetInterface extends React.Component {
 
       if (body.output != null)
       {
-        if (body.output.length > 0) {
-          document.getElementById('soundDialect').innerText = body.output[0].properties.dialect;
-    		  this.setState({soundDialect: body.output[0].properties.dialect})
-    		  this.setState({soundLang: body.output[0].properties.language})
+        if (body.output.phonemes.length > 0) {
+          document.getElementById('soundDialect').innerText = body.output.phonemes[0].dialect;
+    		  this.setState({soundDialect: body.output.phonemes[0].dialect})
+    		  this.setState({soundLang: body.output.phonemes[0].language})
         }
     		let sd = [];
     		//console.log(body.output);
 
-    		for (let i = 0; i < body.output.length; i++)
+    		for (let i = 0; i < body.output.phonemes.length; i++)
     		{
-    			sd.push(body.output[i].properties);
+    			sd.push(body.output.phonemes[i]);
     			//document.getElementById('prevEnd').innerText = body.output[i].properties.end;
     		  //document.getElementById('prevStart').innerText = body.output[i].properties.start;
     			//document.getElementById('selectPhoneme').innerText = body.output[i].properties.notation;
-    		  this.refs.wave.btnLoad(body.output[i].properties.end, body.output[i].properties.start, body.output[i].properties.notation);
+    		  this.refs.wave.btnLoad(body.output.phonemes[i].end, body.output.phonemes[i].start, body.output.phonemes[i].notation);
     		}
 
     		//document.getElementById('selectPhoneme').innerText = '';
@@ -104,76 +104,33 @@ class GetInterface extends React.Component {
     		this.setState({record: cookies.cookies.record});
       }
   	}
-    this.initWords();
-  }
 
-  initWords = async () => {
-    const cookies = new Cookies();
-    cookies.getAll();
-    let f = {};
-    f.value = cookies.cookies.record;
-    this.refs.waveletter.init(f);
-
-    let response = await fetch('/get_data_words', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        record: cookies.cookies.record,
-        username: cookies.cookies.username,
-      })
-    });
-
-    let body = await response.json();
     if (body == false)
       alert('Bad data!');
     else
     {
       let sd = [];
-      if (body.output != null)
+      if (body.output.words != null)
       {
-        for (let i = 0; i < body.output.length; i++)
+        for (let i = 0; i < body.output.words.length; i++)
         {
-          sd.push(body.output[i].properties);
-          this.refs.waveletter.btnLoad(body.output[i].properties.end, body.output[i].properties.start, body.output[i].properties.value);
+          sd.push(body.output.words[i]);
+          this.refs.waveletter.btnLoad(body.output.words[i].end, body.output.words[i].start, body.output.words[i].value);
         }
       }
       this.setState({letters: sd});
     }
-    this.initSentences();
-  }
-
-  initSentences = async () => {
-    const cookies = new Cookies();
-    cookies.getAll();
-    let f = {};
-    f.value = cookies.cookies.record;
-    this.refs.wavesent.init(f);
-
-    let response = await fetch('/get_data_sentences', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        record: cookies.cookies.record,
-        username: cookies.cookies.username,
-      })
-    });
-
-    let body = await response.json();
     if (body == false)
       alert('Bad data!');
     else
     {
       let sd = [];
-      if (body.output != null)
+      if (body.output.sentences != null)
       {
-        for (let i = 0; i < body.output.length; i++)
+        for (let i = 0; i < body.output.sentences.length; i++)
         {
-          sd.push(body.output[i].properties);
-          this.refs.wavesent.btnLoad(body.output[i].properties.end, body.output[i].properties.start, body.output[i].properties.value);
+          sd.push(body.output.sentences[i]);
+          this.refs.wavesent.btnLoad(body.output.sentences[i].end, body.output.sentences[i].start, body.output.sentences[i].value);
         }
       }
       this.setState({sents: sd});
@@ -242,7 +199,7 @@ class GetInterface extends React.Component {
     cookies.getAll();
 
     const element = document.createElement("a");
-    const file = new Blob([JSON.stringify({record: cookies.cookies.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
+    const file = new Blob([JSON.stringify({record: cookies.cookies.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],
     {type: 'text/plain;charset=utf-8'});
     element.href = URL.createObjectURL(file);
     element.download = "razmetochka.json";
@@ -250,7 +207,7 @@ class GetInterface extends React.Component {
     element.click();
 
     //await(this.removeAll());
-    
+
     //console.log(this.state.sents, this.state.letters, this.state.sounds);
     axios.post('/update_data', {
       username: cookies.cookies.username,
@@ -367,7 +324,7 @@ class GetInterface extends React.Component {
     this.refs.wavesent.slide();
   }
 
-  render() {  
+  render() {
     document.title = "Новая разметка";
     const cookies = new Cookies();
     cookies.getAll();
@@ -406,7 +363,7 @@ class GetInterface extends React.Component {
 
           <div className="row">
             <div className="col-md-3">
-              
+
             </div>
             <SoundInfo
               value={this.props.soundLang}
