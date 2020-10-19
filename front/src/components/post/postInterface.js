@@ -11,7 +11,7 @@ import Select from 'react-select';
 
 let entity = require("./../../model.js")
 
-class PostInterface extends React.Component {  
+class PostInterface extends React.Component {
   constructor(props)
   {
     super(props);
@@ -22,7 +22,7 @@ class PostInterface extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.newTimeInterval = this.newTimeInterval.bind(this);
     this.slider = "";
-    this.state = {  
+    this.state = {
       // Sound info
       letterValue: "",
       sentValue: "",
@@ -148,7 +148,7 @@ class PostInterface extends React.Component {
   saveAll()
   {
     const element = document.createElement("a");
-    const file = new Blob([JSON.stringify({record: document.getElementById('files').textContent, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],    
+    const file = new Blob([JSON.stringify({record: document.getElementById('files').textContent, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],
     {type: 'text/plain;charset=utf-8'});
     element.href = URL.createObjectURL(file);
     element.download = "razmetochka.json";
@@ -297,7 +297,7 @@ class PostInterface extends React.Component {
   */
   newTimeIntervalSent(start, end){this.setState({startTimeSent: start, endTimeSent: end});}
 
-  render() {  
+  render() {
     document.title = "Новая разметка";
     return (
       <div className="container-fluid">
@@ -336,7 +336,7 @@ class PostInterface extends React.Component {
           />
           <div className="row">
             <div className="col-md-3">
-              
+
             </div>
             <SoundInfo
               changeNotation={this.changeNotation.bind(this)}

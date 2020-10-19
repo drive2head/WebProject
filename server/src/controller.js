@@ -35,7 +35,7 @@ app.get('/extract_markdowns', async (req, res) => {
 			log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, 'Created ' + filename + ' at ' + path, '/extract_markdowns');
 			if (err)
 				return;
-		}); 
+		});
 	}
 
 	r = await SpeechDB.extractMarkdowns(write_json_to_file);
@@ -90,43 +90,43 @@ app.post('/markups', (req, res) => {
 });
 
 app.post('/add_record', (req, res) => {
-	let form = new formidable.IncomingForm();	
-	form.parse(req, function (err, fields, files) {	
-		let personID = fields.text;	
-		let oldpath = files.filetoupload.path;	
-		let newpath = cfg.records_dir + files.filetoupload.name;	
-		let recordName = files.filetoupload.name;	
-		try {	
-			fs.rename(oldpath, newpath, function (err) {	
-				if (err) throw err;	
-			});	
+	let form = new formidable.IncomingForm();
+	form.parse(req, function (err, fields, files) {
+		let personID = fields.text;
+		let oldpath = files.filetoupload.path;
+		let newpath = cfg.records_dir + files.filetoupload.name;
+		let recordName = files.filetoupload.name;
+		try {
+			fs.rename(oldpath, newpath, function (err) {
+				if (err) throw err;
+			});
 
-			SpeakersDB.findSpeakerByID(personID)	
-			.then(result => {	
-				const personNodeID = result.nodeID;	
-				return SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID);	
-			})	
-			.then(result => {	
-				log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');	
-				if (result.completed == false) {	
-					res.send({ status: false, msg: result.output });	
-					return;	
-				}	
-				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID);	
-			})	
-			.then(result => {	
-				log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');	
-				if (result.completed) {	
-					res.redirect('/');	
-				} else {	
-					res.send({ status: false, msg: result.output });	
-				}	
-			})	
-			.catch(err => { throw err; })	
-		} catch (err) {	
-			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');	
-		};	
-	})	
+			SpeakersDB.findSpeakerByID(personID)
+			.then(result => {
+				const personNodeID = result.nodeID;
+				return SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID);
+			})
+			.then(result => {
+				log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
+				if (result.completed == false) {
+					res.send({ status: false, msg: result.output });
+					return;
+				}
+				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID);
+			})
+			.then(result => {
+				log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
+				if (result.completed) {
+					res.redirect('/');
+				} else {
+					res.send({ status: false, msg: result.output });
+				}
+			})
+			.catch(err => { throw err; })
+		} catch (err) {
+			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');
+		};
+	})
 });
 
 app.post('/add_person', (req, res) => {
@@ -199,6 +199,7 @@ app.post('/get_data', (req, res) => {
 	.then(result => {
 		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
 		if (result.completed) {
+			console.log(result);
 			res.send(result);
 		}
 		else {
@@ -335,7 +336,7 @@ app.post('/signup', (req, res) => {
 app.post('/profile', (req, res) => {
 	let username = req.body.username,
 		password = req.body.password;
-		
+
 	userAuth.getUser(username)
 	.then(result => {
 		const completed = Boolean(result);
