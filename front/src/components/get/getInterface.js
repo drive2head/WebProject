@@ -78,6 +78,8 @@ class GetInterface extends React.Component {
   		alert('Bad data!');
   	else
   	{
+      console.log("DBG Body:\n", body);
+
       if (body.output != null)
       {
         if (body.output.length > 0) {
