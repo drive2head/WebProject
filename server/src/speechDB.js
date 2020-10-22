@@ -107,6 +107,7 @@ function runQuery(queryFunc, multipleRecords=false) {
 
 			// return query_result;
 		} catch (err) {
+			console.log("Ошибочка вышла!");
 			return { completed: false, output: { error: err, query: queryText } };
 		} finally {
 			await session.close();

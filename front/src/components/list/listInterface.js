@@ -29,10 +29,9 @@ class ListInterface extends React.Component {
     });
 
     let body = await response.json();
-    console.log('BODY: ', body);
     if (body.status) {
       for (let i of body.output)
-        this.options.push({value: i, label: i})
+        this.options.push({value: i.name, label: i.name})
       this.forceUpdate();
     } else {
       alert('Произошла ошибка на сервере при загрузке разметок');
