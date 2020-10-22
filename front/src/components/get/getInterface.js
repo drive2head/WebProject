@@ -61,6 +61,9 @@ class GetInterface extends React.Component {
     let f = {};
     f.value = cookies.cookies.record;
     this.refs.wave.init(f);
+    this.refs.waveletter.init(f);
+    this.refs.wavesent.init(f);
+
 
   	let response = await fetch('/get_data', {
   		method: 'POST',
@@ -74,12 +77,9 @@ class GetInterface extends React.Component {
   	});
 
   	let body = await response.json();
-  	if (body == false)
-  		alert('Bad data!');
-  	else
-  	{
+ 
       console.log("DBG Body:\n", body);
-
+      let sd = [];
       if (body.output != null)
       {
         if (body.output.phonemes.length > 0) {
@@ -87,7 +87,7 @@ class GetInterface extends React.Component {
     		  this.setState({soundDialect: body.output.phonemes[0].dialect})
     		  this.setState({soundLang: body.output.phonemes[0].language})
         }
-    		let sd = [];
+    		sd = []
     		//console.log(body.output);
 
     		for (let i = 0; i < body.output.phonemes.length; i++)
@@ -103,13 +103,11 @@ class GetInterface extends React.Component {
     		this.setState({sounds: sd});
     		this.setState({record: cookies.cookies.record});
       }
-  	}
+  
 
-    if (body == false)
-      alert('Bad data!');
-    else
-    {
-      let sd = [];
+
+      console.log("DBG Body:\n", body);
+      sd = [];
       if (body.output.words != null)
       {
         for (let i = 0; i < body.output.words.length; i++)
@@ -119,12 +117,10 @@ class GetInterface extends React.Component {
         }
       }
       this.setState({letters: sd});
-    }
-    if (body == false)
-      alert('Bad data!');
-    else
-    {
-      let sd = [];
+
+
+      console.log("DBG Body:\n", body);
+      sd = [];
       if (body.output.sentences != null)
       {
         for (let i = 0; i < body.output.sentences.length; i++)
@@ -134,7 +130,7 @@ class GetInterface extends React.Component {
         }
       }
       this.setState({sents: sd});
-    }
+  
   }
 
   saveSound()
