@@ -21,8 +21,9 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
 
 function CheckOperationResult(res) {
-	if (!res.completed)
+	if (!res.completed) {
 		throw res.output;
+	}
 }
 
 app.get('/extract_markdowns', async (req, res) => {
@@ -64,29 +65,20 @@ app.get('/rec', (req, res) => {
 	})
 });
 
-app.post('/markups', (req, res) => {
+app.post('/markups', async (req, res) => {
+	let username = req.body.username;
 	let markups = [];
 	let _completed = true;
 
-	SpeechDB.getMarkups(req.body.username)
-	.then(result => {
-		log.addLog(req.body.username, 'access.markups', 'SpeechDB.getMarkups', result.completed, result.output, '/markups');
-		if (result.completed) {
-			result.output.forEach((markup) => {
-					markups.push(markup.name);
-			})
-		} else {
-			_completed = false;
-		}
-
-		res.send({
-			status: _completed,
-			output: _completed ? markups : result.output
-		});
-	})
-	.catch(err => {
-		log.addLog(req.body.username, 'access.markups', 'SpeechDB.getMarkups', false, err, '/markups');
-	})
+	try {
+		result = await SpeechDB.getMarkups(username);
+		CheckOperationResult(result);
+		log.addLog(username, 'access.markups', '', true, result, '/markups');
+		res.send({ status: true, output: result.output });
+	} catch (err) {
+		log.addLog(username, 'access.markups', '', false, err, '/markups');
+		res.send({ status: false, output: err });
+	}
 });
 
 app.post('/add_record', (req, res) => {
@@ -199,7 +191,6 @@ app.post('/get_data', (req, res) => {
 	.then(result => {
 		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
 		if (result.completed) {
-			console.log(result);
 			res.send(result);
 		}
 		else {

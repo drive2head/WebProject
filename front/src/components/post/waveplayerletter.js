@@ -1,5 +1,5 @@
 import React from 'react';
-import wavesurfer from 'wavesurfer.js';
+import WaveSurfer from 'wavesurfer.js';
 import RegionPlugin from 'wavesurfer.js/dist/plugin/wavesurfer.regions.min.js';
 import Timeline from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import axios from "axios";
@@ -12,6 +12,7 @@ class WavePlayer extends React.Component {
     this.createWavePlayerLetter = this.createWavePlayerLetter.bind(this);
     this.slide = this.slide.bind(this);
     this.btn = this.btn.bind(this);
+    this.btnLoad = this.btnLoad.bind(this);
     this.options = [];
     this.state = {selectedOption: {}}
 
@@ -34,7 +35,7 @@ class WavePlayer extends React.Component {
 
   createWavePlayerLetter(url)
   {
-    this.wavesurfer = wavesurfer.create({
+    this.wavesurfer = WaveSurfer.create({
       container: '#waveformletter',
       waveColor: '#c78824',
       progressColor: '#50c878',
