@@ -7,6 +7,7 @@ const routes: RouteConfig[] = [
     children: [
       { path: '/', component: () => import('pages/Index.vue') },
       { path: '/login', component: () => import('pages/Login.vue') },
+      { path: '/markup', component: () => import('pages/MarkupPage.vue') },
       { path: '*', component: () => import('pages/Error404.vue') },
     ]
   },
