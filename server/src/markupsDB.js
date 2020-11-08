@@ -40,7 +40,8 @@ async function updateMarkup(markup) {
 		if (result.n == 0) {
 			throw new Error('No documents were matched');
 		}
-		return { completed: true, output: "Markup was sucessfully updated!" };
+		return { completed: true, output: markup, message: "На вход пришли эти данные!" };
+		// return { completed: true, output: "Markup was sucessfully updated!" };
 	} catch (err) {
 		return { completed: false, output: err };
 	} finally {
