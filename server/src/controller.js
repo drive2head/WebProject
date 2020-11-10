@@ -65,6 +65,11 @@ app.get('/rec', (req, res) => {
 	})
 });
 
+app.post('/add_log', async (req, res) => {
+	log.addLog(req.body.username, 'FRONT', req.body.logOf, req.body.completed, req.body.result, req.body.logFrom);
+	res.sendStatus(200);
+};
+
 app.post('/markups', async (req, res) => {
 	let username = req.body.username;
 	let markups = [];
@@ -163,6 +168,8 @@ app.post('/update_data', async (req, res) => {
 		const username = req.body.username;
 		const recordname = req.body.record;
 
+		log.addLog(username, 'upload', 'С фронта прилетело это', true, req.body, '/update_data');
+
 		try {
 			var result = await MarkupsDB.getMarkup(username, recordname);
 			CheckOperationResult(result);
@@ -170,8 +177,6 @@ app.post('/update_data', async (req, res) => {
 			/* CHECKING IF MARKUP IS ALREADY EXISTS */
 			if (existingMarkup == null) {
 				result = await MarkupsDB.addMarkup(req.body);
-				CheckOperationResult(result);
-				result = await SpeechDB.addMarkup(username, recordname);
 				CheckOperationResult(result);
 			} else {
 				result = await MarkupsDB.updateMarkup(req.body);
