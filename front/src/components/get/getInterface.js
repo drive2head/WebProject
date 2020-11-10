@@ -77,7 +77,7 @@ class GetInterface extends React.Component {
   	});
 
   	let body = await response.json();
- 
+
       console.log("DBG Body:\n", body);
       let sd = [];
       if (body.output != null)
@@ -103,7 +103,7 @@ class GetInterface extends React.Component {
     		this.setState({sounds: sd});
     		this.setState({record: cookies.cookies.record});
       }
-  
+
 
 
       console.log("DBG Body:\n", body);
@@ -130,7 +130,28 @@ class GetInterface extends React.Component {
         }
       }
       this.setState({sents: sd});
-  
+
+    await axios.post('/add_log', {
+      username: cookies.cookies.username,
+      logOf: 'phonemes',
+      completed: true,
+      result: this.state.sounds,
+      logFrom: 'init'
+    });
+    await axios.post('/add_log', {
+      username: cookies.cookies.username,
+      logOf: 'words',
+      completed: true,
+      result: this.state.letters,
+      logFrom: 'init'
+    });
+    await axios.post('/add_log', {
+      username: cookies.cookies.username,
+      logOf: 'sents',
+      completed: true,
+      result: this.state.sents,
+      logFrom: 'init'
+    });
   }
 
   saveSound()
@@ -194,6 +215,28 @@ class GetInterface extends React.Component {
     const cookies = new Cookies();
     cookies.getAll();
 
+    await axios.post('/add_log', {
+      username: cookies.cookies.username,
+      logOf: 'phonemes',
+      completed: true,
+      result: this.state.sounds,
+      logFrom: 'save'
+    });
+    await axios.post('/add_log', {
+      username: cookies.cookies.username,
+      logOf: 'words',
+      completed: true,
+      result: this.state.letters,
+      logFrom: 'save'
+    });
+    await axios.post('/add_log', {
+      username: cookies.cookies.username,
+      logOf: 'sents',
+      completed: true,
+      result: this.state.sents,
+      logFrom: 'save'
+    });
+
     const element = document.createElement("a");
     const file = new Blob([JSON.stringify({record: cookies.cookies.record, phonemes: this.state.sounds, words: this.state.letters, sentences: this.state.sents})],
     {type: 'text/plain;charset=utf-8'});
@@ -205,7 +248,7 @@ class GetInterface extends React.Component {
     //await(this.removeAll());
 
     //console.log(this.state.sents, this.state.letters, this.state.sounds);
-    axios.post('/update_data', {
+    await axios.post('/update_data', {
       username: cookies.cookies.username,
       record: cookies.cookies.record,
       phonemes: this.state.sounds,
