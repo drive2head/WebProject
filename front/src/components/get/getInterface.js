@@ -71,7 +71,7 @@ class GetInterface extends React.Component {
   			'Content-Type': 'application/json'
   		},
   		body: JSON.stringify({
-  			record: cookies.cookies.record,
+            recordname: cookies.cookies.record,
   			username: cookies.cookies.username,
   		})
   	});
@@ -250,7 +250,7 @@ class GetInterface extends React.Component {
     //console.log(this.state.sents, this.state.letters, this.state.sounds);
     await axios.post('/update_data', {
       username: cookies.cookies.username,
-      record: cookies.cookies.record,
+      recordname: cookies.cookies.record,
       phonemes: this.state.sounds,
       words: this.state.letters,
       sentences: this.state.sents

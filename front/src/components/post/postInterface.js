@@ -163,7 +163,7 @@ class PostInterface extends React.Component {
     console.log(document.getElementById('files').textContent);
     axios.post('/update_data', {
       username: cookies.cookies.username,
-      record: document.getElementById('files').textContent,
+      recordname: document.getElementById('files').textContent,
       phonemes: this.state.sounds,
       words: this.state.letters,
       sentences: this.state.sents
