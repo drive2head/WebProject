@@ -68,7 +68,7 @@ app.get('/rec', (req, res) => {
 app.post('/add_log', async (req, res) => {
 	log.addLog(req.body.username, 'FRONT', req.body.logOf, req.body.completed, req.body.result, req.body.logFrom);
 	res.sendStatus(200);
-};
+});
 
 app.post('/markups', async (req, res) => {
 	let username = req.body.username;
