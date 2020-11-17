@@ -205,7 +205,7 @@ class GetInterface extends React.Component {
     cookies.getAll();
     await(axios.post('/remove_data', {
       username: cookies.cookies.username,
-      record: cookies.cookies.record
+      recordname: cookies.cookies.record
     }));
     return true;
   }
