@@ -21,13 +21,13 @@ jobs:
           image-version: latest
           port: 27018
           
-      - name: Install mongodb-clients
-        id: install_mongodb_clients
-        run: sudo apt install mongodb-clients
+#       - name: Install mongodb-clients
+#         id: install_mongodb_clients
+#         run: sudo apt install mongodb-clients
         
-      - name: Test mongo connection
-        id: test_mongo_connection
-        run: "sudo mongo localhost:27018"
+#       - name: Test mongo connection
+#         id: test_mongo_connection
+#         run: "sudo mongo localhost:27018"
       
       - name: Check out repository code
         uses: actions/checkout@v2
