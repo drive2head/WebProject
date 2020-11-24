@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 if (process.env.STAGE == 'test') {
-	var DB_URI = MONGO_URI;
+	var DB_URI = process.env.MONGO_URI;
 } else {
 	var cfg = require('./cfg');
 	var DB_URI = cfg.users_db_uri;;
