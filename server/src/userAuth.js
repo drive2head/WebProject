@@ -5,6 +5,7 @@ if (process.env.STAGE == 'test') {
 	var cfg = require('./cfg');
 	var DB_URI = cfg.users_db_uri;;
 }
+console.log('\n\nDB_URI:', DB_URI, '\n\n');
 
 
 var userSchema = new mongoose.Schema({
