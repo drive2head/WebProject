@@ -1,7 +1,11 @@
-var cfg = require('./cfg');
 var mongoose = require('mongoose');
-var DB_URI = cfg.users_db_uri;;
-if (process.env.STAGE == 'test') DB_URI = MONGO_URI;
+if (process.env.STAGE == 'test') {
+	var DB_URI = MONGO_URI;
+} else {
+	var cfg = require('./cfg');
+	var DB_URI = cfg.users_db_uri;;
+}
+
 
 var userSchema = new mongoose.Schema({
   username: String,
