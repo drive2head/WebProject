@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "none",
   "main": "index.js",
-  "scripts": 
+  "scripts": {
     "docs": "documentation build './front/src/**' -f html -o docsfront && documentation build './server/src/**' -f html -o docsserver",
     "test": "mocha './utests/tests.js'",
     "client": "cd ./front && npm start",
