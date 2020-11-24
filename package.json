@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "none",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha './utests/tests.js' && documentation build './front/src/**' -f html -o docsfront && documentation build './server/src/**' -f html -o docsserver",
+  "scripts": 
+    "docs": "documentation build './front/src/**' -f html -o docsfront && documentation build './server/src/**' -f html -o docsserver",
+    "test": "mocha './utests/tests.js'",
     "client": "cd ./front && npm start",
     "server": "nodemon ./server/src/index.js",
     "start": "npm-run-all --parallel server client"
