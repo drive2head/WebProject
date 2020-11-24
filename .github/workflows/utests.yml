@@ -19,7 +19,7 @@ jobs:
         uses: DigiPie/mongo-action@v1.0.0
         with:
           image-version: latest
-          port: 27018
+          port: 27017
           
 #       - name: Install mongodb-clients
 #         id: install_mongodb_clients
@@ -39,7 +39,7 @@ jobs:
         run: npm test
         env:
          STAGE: test
-         MONGO_URI: mongodb://localhost:27018/mongo
+         MONGO_URI: mongodb://localhost:27017
 
 #   build:
 #     runs-on: self-hosted
