@@ -65,6 +65,7 @@ async function getUser (username) {
 async function addUser (username, password, name, surname) {
 	try {
 		var users_connection = mongoose.createConnection(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+		console.log(mongoose.connection.readyState);
 		var User = users_connection.model('User', userSchema);
 
 		var userExists = await getUser(username);

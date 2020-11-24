@@ -24,9 +24,9 @@ describe('MongoDB (speakers-DB, userAuth)', function () {
   // userAuth tests
   it('should register user', async () => {
     const result = await userAuth.addUser('TestUsername', 'testpassword', 'Test', 'Testoff');
+    console.log(result);
     expect(result.completed).to.equal(true);
     expect(result.output.username).to.equal('TestUsername');
-    // done();
   })
 
   it('should not register user (username is busy)', async () => {
