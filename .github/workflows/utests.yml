@@ -9,22 +9,37 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs:
-  build:
-
-    runs-on: self-hosted
-
-    strategy:
-      matrix:
-        node-version: [10.x]
-
+jobs: 
+  test:
+    runs-on: ubuntu-latest
+    name: test mongo
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: /var/www/workflowprep.sh
-    - run: npm test
-    - run: /var/www/workflowcomp.sh
+      - name: Build mongo docker
+        id: build_mongo_docker
+        uses: DigiPie/mongo-action@v1.0.0
+        with:
+          image-version: latest
+          port: 27018
+      - name: Run unit-tests
+        run: npm test
+        env:
+          STAGE: test
+          MONGO_URI: mongodb://localhost:27018/mongo
+
+#   build:
+#     runs-on: self-hosted
+
+#     strategy:
+#       matrix:
+#         node-version: [10.x]
+
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - run: npm ci
+#     - run: /var/www/workflowprep.sh
+#     - run: npm test
+#     - run: /var/www/workflowcomp.sh
