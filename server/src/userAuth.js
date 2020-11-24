@@ -5,7 +5,6 @@ if (process.env.STAGE == 'test') {
 	var cfg = require('./cfg');
 	var DB_URI = cfg.users_db_uri;;
 }
-console.log('\n\nDB_URI:', DB_URI, '\n\n');
 
 
 var userSchema = new mongoose.Schema({
@@ -21,8 +20,6 @@ async function verifyUser(username, password) {
 		var User = users_connection.model('User', userSchema);
 
 		var user = await getUser(username);
-		console.log(`username: ${username}, password: ${password}`);
-		console.log(`user: ${user}`)
 		if (user) {
 			if (password === user.password) {
 				return { completed: true, output: `User was succesfully verified` };
