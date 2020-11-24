@@ -1,5 +1,7 @@
 var cfg = require('./cfg');
 var mongoose = require('mongoose');
+var DB_URI = cfg.users_db_uri;;
+if (process.env.STAGE == 'test') DB_URI = MONGO_URI;
 
 var userSchema = new mongoose.Schema({
   username: String,
@@ -10,7 +12,7 @@ var userSchema = new mongoose.Schema({
 
 async function verifyUser(username, password) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var users_connection = mongoose.createConnection(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 		var User = users_connection.model('User', userSchema);
 
 		var user = await getUser(username);
@@ -37,7 +39,7 @@ async function verifyUser(username, password) {
 */
 async function getUser (username) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var users_connection = mongoose.createConnection(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 		var User = users_connection.model('User', userSchema);
 
 		return await User.findOne({ username: username });
@@ -57,7 +59,7 @@ async function getUser (username) {
 */
 async function addUser (username, password, name, surname) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var users_connection = mongoose.createConnection(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 		var User = users_connection.model('User', userSchema);
 
 		var userExists = await getUser(username);
@@ -80,7 +82,7 @@ async function addUser (username, password, name, surname) {
 */
 async function deleteUser (username) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var users_connection = mongoose.createConnection(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 		var User = users_connection.model('User', userSchema);
 
 		var userExists = await getUser(username);
