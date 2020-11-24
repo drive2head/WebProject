@@ -17,6 +17,7 @@
     "chai": "^4.2.0",
     "documentation": "^12.3.0",
     "mocha": "^7.1.2",
+    "mongoose": "^5.10.15",
     "nodemon": "^2.0.4"
   }
 }

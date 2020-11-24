@@ -1,9 +1,9 @@
-import * as mongoose from 'mongoose';
 import {ResultLog, User} from './types';
 import {users_db_uri} from './cfg'
+import {createConnection, Schema} from "mongoose";
 
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     username: String,
     password: String,
     name: String,
@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
 });
 
 function connect() {
-    return mongoose.createConnection(users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    return createConnection(users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 }
 
 export async function verifyUser(username: string, password: string): Promise<ResultLog> {
