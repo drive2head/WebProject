@@ -24,7 +24,6 @@ describe('MongoDB (speakers-DB, userAuth)', function () {
   // userAuth tests
   it('should register user', async () => {
     const result = await userAuth.addUser('TestUsername', 'testpassword', 'Test', 'Testoff');
-    console.log(result);
     expect(result.completed).to.equal(true);
     expect(result.output.username).to.equal('TestUsername');
   })
@@ -32,13 +31,11 @@ describe('MongoDB (speakers-DB, userAuth)', function () {
   it('should not register user (username is busy)', async () => {
     const result = await userAuth.addUser('TestUsername', 'testpassword', 'Test', 'Testoff');
     expect(result.completed).to.equal(false);
-    // done();
   })
 
   it('should delete user', async () => {
     const result = await userAuth.deleteUser('TestUsername');
     expect(result.completed).to.equal(true);
-    // done();
   })
   // speakersDB tests
   // it('should add speaker', async () => {
