@@ -24,8 +24,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
         
-      - name: Check dir
-        run: pwd & ls -l
+#       - name: Check dir
+#         run: pwd & ls -l
+      
+      - name: Go dir
+        run: cd ./authService & ls
       
 #       - name: Install dependencies
 #         run: npm ci
