@@ -7,7 +7,9 @@ const app = express();
 app.use(Morgan('combined'));
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(AuthRouter);
 
 const port = process.env.PORT || 1488;
-app.listen(port, () => console.log(`Port: ${port}`));
-app.use(AuthRouter);
+const server = app.listen(port, () => console.log(`Listening on: ${port}`));
+
+module.exports = server;

@@ -1,14 +1,7 @@
 import {ResultLog, User} from './types';
 import {users_db_uri} from './cfg'
 import {createConnection, Schema} from "mongoose";
-
-
-const userSchema = new Schema({
-    username: String,
-    password: String,
-    name: String,
-    surname: String,
-});
+import {userSchema} from './model'
 
 function connect() {
     return createConnection(users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
