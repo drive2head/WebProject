@@ -20,20 +20,18 @@ jobs:
         with:
           image-version: latest
           port: 27017
-          
-#       - name: Install mongodb-clients
-#         id: install_mongodb_clients
-#         run: sudo apt install mongodb-clients
-        
-#       - name: Test mongo connection
-#         id: test_mongo_connection
-#         run: "sudo mongo localhost:27018"
       
       - name: Check out repository code
         uses: actions/checkout@v2
         
       - name: Install dependencies
         run: npm ci
+        
+      - name: Install dependecies of authService
+        run: cd authService & npm ci
+      
+      - name: Install dependecies of utests
+        run: cd utests & npm ci
         
       - name: Run unit-tests
         run: npm test
