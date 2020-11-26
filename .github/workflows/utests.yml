@@ -1,6 +1,3 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Node.js CI
 
 on:
@@ -14,33 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     name: test mongo
     steps:
-#       - name: Build mongo docker
-#         id: build_mongo_docker
-#         uses: DigiPie/mongo-action@v1.0.0
-#         with:
-#           image-version: latest
-#           port: 27017
+      - name: Build mongo docker
+        id: build_mongo_docker
+        uses: DigiPie/mongo-action@v1.0.0
+        with:
+          image-version: latest
+          port: 27017
       
       - name: Check out repository code
         uses: actions/checkout@v2
         
-      - name: Check dir
-        run: ls ./authService/build
-      
-#       - name: Install dependencies
-#         run: npm ci
+      - name: Install dependencies
+        run: npm ci
         
-#       - name: Install dependecies of authService
-#         run: cd authService & npm ci
+      - name: Install dependecies of authService
+        run: cd authService & npm ci
       
-#       - name: Install dependecies of utests
-#         run: cd utests & npm ci
+      - name: Install dependecies of utests
+        run: cd utests & npm ci
         
-#       - name: Run unit-tests
-#         run: npm test
-#         env:
-#          STAGE: test
-#          MONGO_URI: mongodb://localhost:27017
+      - name: Run unit-tests
+        run: npm test
+        env:
+         STAGE: test
+         MONGO_URI: mongodb://localhost:27017
 
 #   build:
 #     runs-on: self-hosted
