@@ -10,6 +10,7 @@ let formidable = require('formidable');
 let fs = require('fs');
 let cfg = require('./cfg');
 
+const request = require('request');
 const express = require('express');
 const app = express();
 
@@ -305,11 +306,19 @@ app.post('/signin', (req, res) => {
 	let username = req.body.username,
 		password = req.body.password;
 
-	userAuth.verifyUser(username, password)
-	.then(result => {
-		log.addLog(req.body.username, 'access.signin', 'userExist', result.completed, result.output, '/signin');
-		res.send({ status: result.completed, msg: result.output });
-	});
+	// request('http://localhost:1488', function (error, response, body) {
+	// 	console.error('error:', error); // Print the error if one occurred
+	// 	console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+	// 	console.log('body:', body); // Print the HTML for the Google homepage.
+	// });
+
+	request.post('http://localhost:1488/signin', req)
+	//
+	// userAuth.verifyUser(username, password)
+	// .then(result => {
+	// 	log.addLog(req.body.username, 'access.signin', 'userExist', result.completed, result.output, '/signin');
+	// 	res.send({ status: result.completed, msg: result.output });
+	// });
 });
 
 app.post('/signup', (req, res) => {
