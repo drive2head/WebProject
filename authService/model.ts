@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+import * as mongoose from "mongoose";
+import {Schema} from "mongoose";
 
 export const userSchema = new Schema({
     username: String,
