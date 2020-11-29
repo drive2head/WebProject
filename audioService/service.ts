@@ -2,17 +2,12 @@ import * as mongoose from "mongoose";
 import {audio_db_uri} from "./cfg";
 import {createConnection, Document, Schema} from "mongoose";
 import {Record} from "./types";
+import {recordSchema} from "./model";
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 function connect() {
     return createConnection(audio_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 }
-
-const recordSchema = new Schema({
-    name: String,
-    path: String,
-    speakerID: ObjectId
-});
 
 export async function getAllRecords(): Promise<Record[]> {
     const audio_connections = connect()
