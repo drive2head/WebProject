@@ -14,10 +14,10 @@ const recordSchema = new Schema({
     speakerID: ObjectId
 });
 
-export async function getAllRecords(): Promise<Document[]> {
+export async function getAllRecords(): Promise<Record[]> {
     const audio_connections = connect()
     try {
-        const Record = audio_connections.model('Record', recordSchema);
+        const Record = audio_connections.model<Record>('Record', recordSchema);
 
         return await Record.find();
     } finally {
@@ -28,7 +28,7 @@ export async function getAllRecords(): Promise<Document[]> {
 async function findRecordByName (name: string) {
     const audio_connections = connect()
     try {
-        const Record = audio_connections.model('Record', recordSchema);
+        const Record = audio_connections.model<Record>('Record', recordSchema);
         return await Record.findOne({ name: name });
     } finally {
         audio_connections.close();
@@ -38,7 +38,7 @@ async function findRecordByName (name: string) {
 export async function addRecord(name: string, path: string, speakerId: mongoose.Types.ObjectId): Promise<Document | null> {
     const audio_connections = connect()
     try {
-        const Record = audio_connections.model('Record', recordSchema);
+        const Record = audio_connections.model<Record>('Record', recordSchema);
 
         const record = await findRecordByName(name);
         if (record) {
