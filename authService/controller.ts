@@ -26,7 +26,11 @@ export const AuthController: authController = {
 
         addUser(username, password, name, surname)
             .then((result: User | null) => {
-                res.send(result);
+                if (result) {
+                    res.send({status: true, msg: "User was succesfully created"});
+                } else {
+                    res.send({status: false, msg: "User was not created"});
+                }
             })
     },
     profile(req: Request<SignObject>, res: Response) {

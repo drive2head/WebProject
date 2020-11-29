@@ -12,7 +12,7 @@ AuthRouter.post('/signup', (req: Request<SignObject>, res: Response) => {
     AuthController.signUp(req, res)
 });
 
-AuthRouter.get('/profile', (req: Request<SignObject>, res: Response) => {
+AuthRouter.post('/profile', (req: Request<SignObject>, res: Response) => {
     AuthController.profile(req, res)
 });
 

@@ -10,8 +10,7 @@ let formidable = require('formidable');
 let fs = require('fs');
 let cfg = require('./cfg');
 
-const http = require('http');
-const request = require('request');
+const axios = require('axios');
 const express = require('express');
 const app = express();
 
@@ -302,51 +301,38 @@ app.post('/remove_person', (req, res) => {
 // 	});
 // });
 
+function proxyRequest(method, route, url) {
+	async function _proxyRequest(url, req) {
+		const method = req.method;
+		const result = await axios({
+			method: req.method,
+			url: url,
+			data: req.body
+		});
+		return result.data;
+	};
+
+	async function obtainResult(req, res) {
+		_proxyRequest(url, req)
+		.then(result => {
+			console.log(result);
+			res.send(result);
+		})
+		.catch(error => {
+			console.log(error);
+		});
+	};
+
+	if (method == 'POST') {
+		app.post(route, obtainResult);
+	} else if (method == 'GET') {
+		app.get(route, obtainResult);
+	} else {
+		throw Error("Given method was not found");
+	}
+}
+
 /* AUTHENTICATION AND ACCOUNT ACCESS */
-app.post('/signin', (req, res) => {
-	let username = req.body.username,
-		password = req.body.password;
-
-	// request('http://localhost:1488', function (error, response, body) {
-	// 	console.error('error:', error); // Print the error if one occurred
-	// 	console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-	// 	console.log('body:', body); // Print the HTML for the Google homepage.
-	// });
-
-	request.post('http:localhost:1488/signin', req)
-	//
-	// userAuth.verifyUser(username, password)
-	// .then(result => {
-	// 	log.addLog(req.body.username, 'access.signin', 'userExist', result.completed, result.output, '/signin');
-	// 	res.send({ status: result.completed, msg: result.output });
-	// });
-});
-
-app.post('/signup', (req, res) => {
-	let username = req.body.username,
-		password = req.body.password,
-		name = req.body.name,
-		surname = req.body.surname;
-
-	userAuth.addUser(username, password, name, surname)
-	.then(result => {
-		log.addLog(req.body.username, 'access.signup', 'addUser', result.completed, result.output, '/signup');
-		if (result.completed) {
-			res.send({ status: true, msg: 'User was successfully created!' });
-		} else {
-			res.send({ status: false, msg: result.output });
-		}
-	})
-});
-
-app.post('/profile', (req, res) => {
-	let username = req.body.username,
-		password = req.body.password;
-
-	userAuth.getUser(username)
-	.then(result => {
-		const completed = Boolean(result);
-		log.addLog(req.body.username, 'access.profile', 'getUser', completed, result, '/profile');
-		res.send(result);
-	});
-});
+proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin');
+proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup');
+proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile');
