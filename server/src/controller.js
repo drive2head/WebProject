@@ -10,6 +10,7 @@ let formidable = require('formidable');
 let fs = require('fs');
 let cfg = require('./cfg');
 
+const http = require('http');
 const request = require('request');
 const express = require('express');
 const app = express();
@@ -312,7 +313,7 @@ app.post('/signin', (req, res) => {
 	// 	console.log('body:', body); // Print the HTML for the Google homepage.
 	// });
 
-	request.post('http://localhost:1488/signin', req)
+	request.post('http:localhost:1488/signin', req)
 	//
 	// userAuth.verifyUser(username, password)
 	// .then(result => {
