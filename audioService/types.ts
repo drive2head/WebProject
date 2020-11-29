@@ -5,7 +5,14 @@ export interface ResultLog {
     output: string
 }
 
-export interface Record {
+// export interface Record extends mongoose.Document{
+//     name: string
+//     path: string
+//     speakerId: string
+// }
+
+
+export interface Record extends mongoose.Document{
     name: string
     path: string
     speakerID: mongoose.Types.ObjectId
