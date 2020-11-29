@@ -155,7 +155,7 @@ describe("Service test", () => {
   });
 
 
-  describe("authService test", () => {
+  describe("audioService test", () => {
     let connection = null;
     let app = null;
     let Record = null;
@@ -176,9 +176,9 @@ describe("Service test", () => {
       await Record.deleteMany();
     });
 
-    afterEach(async () => {
-      await Record.deleteMany();
-    });
+    // afterEach(async () => {
+    //   await Record.deleteMany();
+    // });
     /**
      * Unit test suite for the GET /records route.
      */
@@ -192,7 +192,7 @@ describe("Service test", () => {
         var r_records_promises = [];
         for (i = 0; i < 5; i++) {
           const record = new Record();
-          record.name = 'record_' + i;
+          record.name = 'record_' + i.toString();
           record.path = '/';
           record.speakerId = new mongoose.Types.ObjectId();
           r_records_promises.push(record.save());
@@ -206,12 +206,19 @@ describe("Service test", () => {
             .end((err, res) => {
               const records = res.body;
               expect(records).to.be.a('array');
+              chai.assert.equal(records.length, r_records.length);
               for (i = 0; i < records.length; i++) {
-                const record = records[i];
-                const r_record = r_records[i];
-                const r_name = r_record.name;
-                const r_path = r_record.path;
-                const r_speakerId = r_record.speakerId.toString();
+                let record = records[i];
+                let r_record = null;
+                for (j = 0; j < r_records.length; j++) {
+                  if (record.name == r_records[j].name) {
+                    r_record = r_records[j];
+                    break;
+                  }
+                }
+                let r_name = r_record.name;
+                let r_path = r_record.path;
+                let r_speakerId = r_record.speakerId.toString();
                 chai.assert.equal(record.speakerId, r_speakerId);
                 chai.assert.equal(record.name, r_name);
                 chai.assert.equal(record.path, r_path);
