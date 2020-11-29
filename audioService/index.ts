@@ -8,6 +8,6 @@ app.use(Morgan('combined'));
 app.use(express.urlencoded());
 app.use(express.json());
 
-const port = process.env.PORT || 1488;
+const port = process.env.PORT || 1337;
 app.listen(port, () => console.log(`Port: ${port}`));
 app.use(AudioRouter);

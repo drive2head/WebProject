@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import {audio_db_uri} from "./cfg";
 import {createConnection, Document, Schema} from "mongoose";
+import {Record} from "./types";
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 function connect() {
@@ -14,12 +15,41 @@ const recordSchema = new Schema({
 });
 
 export async function getAllRecords(): Promise<Document[]> {
-    const users_connection = connect()
+    const audio_connections = connect()
     try {
-        const Record = users_connection.model('Record', recordSchema);
+        const Record = audio_connections.model('Record', recordSchema);
 
         return await Record.find();
     } finally {
-        users_connection.close();
+        audio_connections.close();
+    }
+}
+
+async function findRecordByName (name: string) {
+    const audio_connections = connect()
+    try {
+        const Record = audio_connections.model('Record', recordSchema);
+        return await Record.findOne({ name: name });
+    } finally {
+        audio_connections.close();
+    }
+}
+
+export async function addRecord(name: string, path: string, speakerId: mongoose.Types.ObjectId): Promise<Document | null> {
+    const audio_connections = connect()
+    try {
+        const Record = audio_connections.model('Record', recordSchema);
+
+        const record = await findRecordByName(name);
+        if (record) {
+            return null;
+        }
+        let newRecord = new Record({ name: name, path: path, speakerID: speakerId });
+        newRecord = await newRecord.save();
+        return newRecord;
+    } catch (err) {
+        return null
+    } finally {
+        audio_connections.close();
     }
 }
