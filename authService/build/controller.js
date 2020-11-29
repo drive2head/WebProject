@@ -14,7 +14,12 @@ exports.AuthController = {
         const username = req.body.username, password = req.body.password, name = req.body.name, surname = req.body.surname;
         service_1.addUser(username, password, name, surname)
             .then((result) => {
-            res.send(result);
+            if (result) {
+                res.send({ status: true, msg: "User was succesfully created" });
+            }
+            else {
+                res.send({ status: false, msg: "User was not created" });
+            }
         });
     },
     profile(req, res) {

@@ -7,4 +7,3 @@ export const userSchema = new Schema({
     name: String,
     surname: String,
 });
-export const User = mongoose.model("users", userSchema);
