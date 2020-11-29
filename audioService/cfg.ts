@@ -1,2 +1,2 @@
 /* MongoDB parameters */
-export const audio_db_uri    = 'mongodb://localhost/audio';
+export const audio_db_uri    = 'mongodb://localhost/records';

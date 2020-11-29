@@ -7,7 +7,10 @@ const app = express();
 app.use(Morgan('combined'));
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(AudioRouter);
 
 const port = process.env.PORT || 1337;
-app.listen(port, () => console.log(`Port: ${port}`));
-app.use(AudioRouter);
+const server = app.listen(port, () => console.log(`Port: ${port}`));
+
+module.exports = server;
+

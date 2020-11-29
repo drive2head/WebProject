@@ -10,7 +10,7 @@ function connect() {
 }
 
 export async function getAllRecords(): Promise<Record[]> {
-    const audio_connections = connect()
+    const audio_connections = connect();
     try {
         const Record = audio_connections.model<Record>('Record', recordSchema);
 
@@ -39,7 +39,7 @@ export async function addRecord(name: string, path: string, speakerId: mongoose.
         if (record) {
             return null;
         }
-        let newRecord = new Record({ name: name, path: path, speakerID: speakerId });
+        let newRecord = new Record({ name: name, path: path, speakerId: speakerId });
         newRecord = await newRecord.save();
         return newRecord;
     } catch (err) {
