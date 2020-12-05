@@ -40,7 +40,7 @@ async function updateMarkup(markup) {
 		if (result.n == 0) {
 			throw new Error('No documents were matched');
 		}
-		return { completed: true, output: markup, message: "На вход пришли эти данные!" };
+		return { completed: true, output: markup, msg: 'It is the initial data' };
 		// return { completed: true, output: "Markup was sucessfully updated!" };
 	} catch (err) {
 		return { completed: false, output: err };
@@ -53,9 +53,39 @@ async function getMarkup(username, recordname) {
 	try {
 		var connection = mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var MarkupModel = connection.model('Markup', markupSchema);
+		var markup = await MarkupModel.findOne({ username: username, recordname: recordname });
+		if (markup == null) {
+			return { completed: true, output: markup, msg: 'Markup was not found' };
+		} else {
+			return { completed: true, output: markup };
+		}
+	} catch (err) {
+		return { completed: false, output: err };
+	} finally {
+		connection.close();
+	}
+}
 
-		var markup = await MarkupModel.findOne({ username: username });
-		return { completed: true, output: markup };
+async function getMarkups(username) {
+	try {
+		var connection = mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var MarkupModel = connection.model('Markup', markupSchema);
+		var markups = await MarkupModel.aggregate([
+			{ $match: { username: username } },	
+			{ $project: { "name": "$recordname", _id: 0 } }	
+			], (err, result) => {
+				if (err) {
+					throw err;
+				} else {
+					return result;
+				}
+			});
+
+		if (markups.length == 0) {
+			return { completed: true, output: markups, msg: 'Markups was not found' };
+		} else {
+			return { completed: true, output: markups };
+		}
 	} catch (err) {
 		return { completed: false, output: err };
 	} finally {
@@ -66,3 +96,4 @@ async function getMarkup(username, recordname) {
 exports.addMarkup = addMarkup;
 exports.updateMarkup = updateMarkup;
 exports.getMarkup = getMarkup;
+exports.getMarkups = getMarkups;

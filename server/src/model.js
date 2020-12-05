@@ -1,16 +1,4 @@
 /**
-    * Функция добавляет объект "аудиозапись".
-    * @param {string} recname название записи.
-    * @param {list} tags дефекты речи.
-    * @returns {object} объект "аудиозапись".
-*/
-exports.Record = function (recname, tags) {
-	return {
-		recname: recname,
-		tags: tags
-	}
-}
-/**
     * Функция возвращает объект "диктор".
     * @param {string} fullname имя диктора.
     * @param {int} age возраст диктора.

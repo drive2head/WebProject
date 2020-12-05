@@ -77,7 +77,7 @@ app.post('/markups', async (req, res) => {
 	let _completed = true;
 
 	try {
-		result = await SpeechDB.getMarkups(username);
+		result = await MarkupsDB.getMarkups(username);
 		CheckOperationResult(result);
 		log.addLog(username, 'access.markups', '', true, result, '/markups');
 		res.send({ status: true, output: result.output });
@@ -160,14 +160,14 @@ app.post('/update_data', async (req, res) => {
 		let date = new Date();
 		let now = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + 'T' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
 		let path = cfg.phonemes_dir;
-		let filename = req.body.username + '_' + req.body.record.split('.').slice(0, -1).join('.') + '_' + now + '.json';
-		fs.writeFile(path + filename, JSON.stringify({record: req.body.record, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
+		let filename = req.body.username + '_' + req.body.recordname.split('.').slice(0, -1).join('.') + '_' + now + '.json';
+		fs.writeFile(path + filename, JSON.stringify({recordname: req.body.recordname, phonemes: req.body.phonemes, words: req.body.words, sentences: req.body.sentences}, null, 2), function(err) {
 			result = err == null ? 'Created ' + filename + ' at ' + path : 'File ' + filename + ' was not created';
 		    log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, result, '/update_data');
 		});
 
 		const username = req.body.username;
-		const recordname = req.body.record;
+		const recordname = req.body.recordname;
 
 		log.addLog(username, 'upload', 'С фронта прилетело это', true, req.body, '/update_data');
 
@@ -192,17 +192,15 @@ app.post('/update_data', async (req, res) => {
 		}
 });
 
-app.post('/get_data', (req, res) => {
-	MarkupsDB.getMarkup(req.body.username, req.body.record)
-	.then(result => {
-		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
-		if (result.completed) {
-			res.send(result);
-		}
-		else {
-			res.send("Data WAS NOT loaded!");
-		}
-	});
+app.post('/get_data', async (req, res) => {
+	let result = await MarkupsDB.getMarkup(req.body.username, req.body.recordname);
+	log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
+	if (result.completed) {
+		res.send(result);
+	}
+	else {
+		res.send("Data WAS NOT loaded!");
+	}
 });
 
 app.post('/remove_person', (req, res) => {
@@ -315,7 +313,6 @@ function proxyRequest(method, route, url) {
 	async function obtainResult(req, res) {
 		_proxyRequest(url, req)
 		.then(result => {
-			console.log(result);
 			res.send(result);
 		})
 		.catch(error => {
