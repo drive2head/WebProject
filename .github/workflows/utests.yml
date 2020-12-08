@@ -46,4 +46,4 @@ jobs:
 
     steps:
     - name: Deploy app
-    - run: cd /var/www/ ; update_app.sh
+      run: cd /var/www/ ; update_app.sh
