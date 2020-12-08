@@ -5,7 +5,7 @@ import Timeline from 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min.js';
 import axios from "axios";
 import Select from 'react-select';
 
-class WavePlayer extends React.Component {  
+class WavePlayer extends React.Component {
   constructor(props)
   {
     super(props);
@@ -16,8 +16,8 @@ class WavePlayer extends React.Component {
     this.options = [];
     this.state = {selectedOption: {}}
 
-    this._CUSTOM_COLOR = 'rgba(210, 50, 169, 0.43)';
-    this._CUSTOM_COLOR_2 = 'rgba(210, 0, 169, 0.25)';
+    this._CUSTOM_COLOR = 'rgba(38, 70, 83, 1)';
+    this._CUSTOM_COLOR_2 = 'rgba(38, 70, 83, 1)';
   }
 
   init(f)
@@ -37,8 +37,8 @@ class WavePlayer extends React.Component {
   {
     this.wavesurfer = WaveSurfer.create({
       container: '#waveformletter',
-      waveColor: '#c78824',
-      progressColor: '#50c878',
+      waveColor: '#F4A261',
+      progressColor: '#F4A261',
       backend: 'MediaElement',
       plugins: [
         RegionPlugin.create({
@@ -51,8 +51,8 @@ class WavePlayer extends React.Component {
         })
       ]
     });
-    
-    this.wavesurfer.on('region-update-end', (region, event) => {  
+
+    this.wavesurfer.on('region-update-end', (region, event) => {
       document.getElementById('waveformletter').focus();
       this.props.newTimeIntervalLetter(region.start.toFixed(3), region.end.toFixed(3))
     });
@@ -71,7 +71,7 @@ class WavePlayer extends React.Component {
       region.play();
     });
     this.wavesurfer.load(url);
-    
+
   }
 
   btn()
@@ -88,7 +88,7 @@ class WavePlayer extends React.Component {
     }
 
     region.attributes.label = 'Letter';
-    region.phoneme = true;  
+    region.phoneme = true;
     region.drag = false;
 
     let regionEl = region.element;
@@ -106,7 +106,7 @@ class WavePlayer extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#e1ff00'
+      color: '#E76F51'
     };
     region.style(deleteButton, css);
 
@@ -133,7 +133,7 @@ class WavePlayer extends React.Component {
     }
 
     region.attributes.label = 'Letter';
-    region.phoneme = true;  
+    region.phoneme = true;
     region.drag = false;
     let regionEl = region.element;
     let deleteButton = regionEl.appendChild(document.createElement('deleteButton'));
@@ -150,7 +150,7 @@ class WavePlayer extends React.Component {
       zIndex: 10,
       cursor: 'pointer',
       cursor: 'hand',
-      color: '#00c3f0'
+      color: '#E76F51'
     };
     region.style(deleteButton, css);
 
@@ -171,7 +171,7 @@ class WavePlayer extends React.Component {
     this.wavesurfer.zoom(zoomLevel);
   }
 
-  render() {  
+  render() {
     return (
         <div className="col-md-12 px-0">
           <div id="waveformletter"></div>
