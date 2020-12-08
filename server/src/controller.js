@@ -313,10 +313,12 @@ function proxyRequest(method, route, url) {
 	async function obtainResult(req, res) {
 		_proxyRequest(url, req)
 		.then(result => {
+			log.addLog(req.body.username, 'proxyRequest', '', result.status, result, req.route.path);
 			res.send(result);
 		})
 		.catch(error => {
 			console.log(error);
+			log.addLog(req.body.username, 'proxyRequest', '', false, err, req.headers.referer);
 		});
 	};
 
