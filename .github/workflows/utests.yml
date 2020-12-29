@@ -37,6 +37,7 @@ jobs:
          MONGO_URI: mongodb://localhost:27017
 
 #   build:
+#     needs: [test]
 #     runs-on: self-hosted
 
 #     strategy:
@@ -44,12 +45,5 @@ jobs:
 #         node-version: [10.x]
 
 #     steps:
-#     - uses: actions/checkout@v2
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v1
-#       with:
-#         node-version: ${{ matrix.node-version }}
-#     - run: npm ci
-#     - run: /var/www/workflowprep.sh
-#     - run: npm test
-#     - run: /var/www/workflowcomp.sh
+#     - name: Deploy app
+#       run: cd /var/www/ ; ./create_app_copy.sh ; ./update_app.sh
