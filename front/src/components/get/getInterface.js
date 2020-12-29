@@ -163,7 +163,7 @@ class GetInterface extends React.Component {
       this.state.endTime,
       this.state.soundLang,
       this.state.soundDialect,
-        this.state.stress
+        this.state.soundStress.value
     );
     let newSounds = this.state.sounds;
     newSounds.push(object);

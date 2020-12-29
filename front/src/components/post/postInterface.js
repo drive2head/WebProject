@@ -104,7 +104,7 @@ class PostInterface extends React.Component {
       this.state.endTime,
       this.state.soundLang,
       this.state.soundDialect,
-        this.state.stress
+      this.state.soundStress.value
     );
     let newSounds = this.state.sounds;
     newSounds.push(object);
@@ -276,7 +276,7 @@ class PostInterface extends React.Component {
   */
   changeLang(l) {this.setState({soundLang: l})}
 
-  changeStress(l) {this.setState({soundStress: l})}
+  changeStress(l) {this.setState({ soundStress: l})}
   /**
     * Функция изменяет значение фонемы.
     * @param {string} l значение фонемы.
