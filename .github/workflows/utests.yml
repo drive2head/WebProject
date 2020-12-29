@@ -36,14 +36,14 @@ jobs:
          STAGE: test
          MONGO_URI: mongodb://localhost:27017
 
-  build:
-    needs: [test]
-    runs-on: self-hosted
+#   build:
+#     needs: [test]
+#     runs-on: self-hosted
 
-    strategy:
-      matrix:
-        node-version: [10.x]
+#     strategy:
+#       matrix:
+#         node-version: [10.x]
 
-    steps:
-    - name: Deploy app
-      run: cd /var/www/ ; ./create_app_copy.sh ; ./update_app.sh
+#     steps:
+#     - name: Deploy app
+#       run: cd /var/www/ ; ./create_app_copy.sh ; ./update_app.sh
