@@ -4,7 +4,7 @@ let RecordsDB = require("./recordsDB.js");
 let SpeakersDB = require("./speakersDB.js");
 let MarkupsDB = require("./markupsDB.js");
 
-let userAuth = require("./userAuth.js");
+// let userAuth = require("./userAuth.js");
 let log = require("./log.js");
 let formidable = require('formidable');
 let fs = require('fs');
@@ -13,10 +13,15 @@ let cfg = require('./cfg');
 const axios = require('axios');
 const express = require('express');
 const app = express();
+var bodyParser = require('body-parser');
 
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.static('files'))
+
+app.use(bodyParser({limit: '50mb'}));
+// app.use(bodyParser.json({limit: '50mb', extended: true}));
+// app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit:50000}));
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Port: ${port}`));
@@ -57,11 +62,12 @@ app.get('/persons', (req, res) => {
 
 app.get('/rec', (req, res) => {
 	RecordsDB.getAllRecords()
-        .then(result => {
-                log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
+    .then(result => {
+        log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
 		res.send(result);
 	})
 	.catch(err => {
+		console.log("err:", err);
 		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
 	})
 });
@@ -299,7 +305,7 @@ app.post('/remove_person', (req, res) => {
 // 	});
 // });
 
-function proxyRequest(method, route, url) {
+function proxyRequest(method, route, url, serviceName="") {
 	async function _proxyRequest(url, req) {
 		const method = req.method;
 		const result = await axios({
@@ -317,8 +323,10 @@ function proxyRequest(method, route, url) {
 			res.send(result);
 		})
 		.catch(error => {
-			console.log(error);
 			log.addLog(req.body.username, 'proxyRequest', '', false, error, req.headers.referer);
+			if (error.code == 'ECONNREFUSED') {
+				res.status(503).send({service: serviceName, message: "Service is unavailable"});
+			}
 		});
 	};
 
@@ -332,6 +340,6 @@ function proxyRequest(method, route, url) {
 }
 
 /* AUTHENTICATION AND ACCOUNT ACCESS */
-proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin');
-proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup');
-proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile');
+proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
+proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
+proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
