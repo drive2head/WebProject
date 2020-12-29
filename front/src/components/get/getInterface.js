@@ -31,7 +31,7 @@ class GetInterface extends React.Component {
       startTimeSent: 0,
       soundValue: "",
       soundLang: "",
-      soundStress: "",
+      soundStress: {value: 'Нет', label: 'Нет'},
       soundDialect: "",
       selectedOptions: [],
       sounds: [],
@@ -171,6 +171,7 @@ class GetInterface extends React.Component {
     let list = this.state.soundsList;
     list.push({id: list.length, label: this.state.soundValue});
     this.setState({soundsList: list});
+    this.setState({soundStress: {value: 'Нет', label: 'Нет'}});
     //console.log(object);
     this.refs.wave.btn();
     //this.refs.waveletter.btn();

@@ -34,7 +34,7 @@ class PostInterface extends React.Component {
       startTimeSent: 0,
       soundValue: "",
       soundLang: "",
-      soundStress: "",
+      soundStress: {value: 'Нет', label: 'Нет'},
       soundDialect: "",
       selectedOptions: [],
       sounds: [],
@@ -111,6 +111,7 @@ class PostInterface extends React.Component {
     this.setState({sounds: newSounds});
     let list = this.state.soundsList;
     list.push({id: list.length, label: this.state.soundValue});
+    this.setState({soundStress: {value: "Нет", label: "Нет"}})
     this.setState({soundsList: list});
     console.log(object);
     this.refs.wave.btn();

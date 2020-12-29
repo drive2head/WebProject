@@ -98,7 +98,7 @@ class SoundInfo extends React.Component {
         openMenuOnFocus
         closeMenuOnSelect={true}
         placeholder="Ударение..."
-        value={this.state.soundStress}
+        value={this.props.state.soundStress}
         onChange={
         (selectedOpt) => {
         this.setState({soundStress: selectedOpt});
