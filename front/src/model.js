@@ -20,7 +20,7 @@ exports.Person = function (fullname, age, sex, native_lang, city, country, disor
 		}
 	};
 
-exports.Phoneme = function(notation, start, end, language, dialect=null) {
+exports.Phoneme = function(notation, start, end, language, dialect=null, stress="Нет") {
 		/*
 			Здесь должна быть проверка значений на ошибки
 		*/
@@ -29,7 +29,8 @@ exports.Phoneme = function(notation, start, end, language, dialect=null) {
 			start: start,
 			end: end,
 			language: language,
-			dialect: dialect
+			dialect: dialect,
+			stress: stress
 		}
 	};
 

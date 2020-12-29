@@ -16,8 +16,8 @@ class WavePlayerSent extends React.Component {
     this.options = [];
     this.state = {selectedOption: {}}
 
-    this._CUSTOM_COLOR = 'rgba(233, 196, 106, 1)';
-    this._CUSTOM_COLOR_2 = 'rgba(233, 196, 106, 1)';
+    this._CUSTOM_COLOR = 'rgba(23, 63, 95, 1)';
+    this._CUSTOM_COLOR_2 = 'rgba(23, 63, 95, 1)';
   }
 
   init(f)

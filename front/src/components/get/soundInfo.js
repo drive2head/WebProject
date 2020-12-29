@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 
-class SoundInfo extends React.Component {  
+class SoundInfo extends React.Component {
   constructor(props)
   {
     super(props);
@@ -87,6 +87,28 @@ class SoundInfo extends React.Component {
     );
   }
 
+    renderStressSelect()
+    {
+        return (
+            <Select
+        autoFocus={false}
+        id="stress"
+        name="Ударение"
+        options={[{value: 'Нет', label: 'Нет'}, {value: 'Основное', label: "Основное"}, {value: 'Вторичное', label: "Вторичное"}]}
+        openMenuOnFocus
+        closeMenuOnSelect={true}
+        placeholder="Ударение..."
+        value={this.state.soundLang}
+        onChange={
+        (selectedOpt) => {
+        this.setState({soundStress: selectedOpt});
+        this.props.changeStress(selectedOpt);
+    }
+    }
+        />
+    );
+    }
+
   renderNotations()
   {
     return (
@@ -109,7 +131,7 @@ class SoundInfo extends React.Component {
     );
   }
 
-  render() {  
+  render() {
     return (
       <div className="col-md-6">
         <div className="card flex-md-row mb-4 box-shadow h-md-250">
@@ -119,9 +141,15 @@ class SoundInfo extends React.Component {
               {this.renderSelect()}
             </div>
             Диалект: <input name="soundDialect" id="soundDialect" onChange={this.props.handleInputChange} value={this.props.state.soundDialect} type="text"/><br/>
-            Значение: <div id="selectPhoneme" style={{width: '100%'}}>
-              {this.renderNotations()}
             </div>
+              <div style={{display: 'flex'}}>
+                Значение:<div id="selectPhoneme" style={{width: '80%'}}>
+                      {this.renderNotations()}
+                  </div>
+                      <div id="selectPhoneme" style={{width: '20%'}}>
+                      {this.renderStressSelect()}
+                  </div>
+              </div>
             <p> </p>
             <button className="btn btn-success btn-lg btn3d">" name="saveSound" onClick={this.props.saveSound}><span class="glyphicon glyphicon-ok"></span>Добавить фонему</button>
           </div>

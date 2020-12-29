@@ -34,6 +34,7 @@ class PostInterface extends React.Component {
       startTimeSent: 0,
       soundValue: "",
       soundLang: "",
+      soundStress: "",
       soundDialect: "",
       selectedOptions: [],
       sounds: [],
@@ -103,6 +104,7 @@ class PostInterface extends React.Component {
       this.state.endTime,
       this.state.soundLang,
       this.state.soundDialect,
+        this.state.stress
     );
     let newSounds = this.state.sounds;
     newSounds.push(object);
@@ -273,6 +275,8 @@ class PostInterface extends React.Component {
     * @param {string} l язык диктора.
   */
   changeLang(l) {this.setState({soundLang: l})}
+
+  changeStress(l) {this.setState({soundStress: l})}
   /**
     * Функция изменяет значение фонемы.
     * @param {string} l значение фонемы.
@@ -346,6 +350,7 @@ class PostInterface extends React.Component {
             <SoundInfo
               changeNotation={this.changeNotation.bind(this)}
               changeLang={this.changeLang.bind(this)}
+              changeStress={this.changeStress.bind(this)}
               handleInputChange={this.handleInputChange.bind(this)}
               saveSound={this.saveSound.bind(this)}
               saveLetter={this.saveLetter.bind(this)}

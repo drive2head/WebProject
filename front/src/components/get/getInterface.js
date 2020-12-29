@@ -31,6 +31,7 @@ class GetInterface extends React.Component {
       startTimeSent: 0,
       soundValue: "",
       soundLang: "",
+      soundStress: "",
       soundDialect: "",
       selectedOptions: [],
       sounds: [],
@@ -162,6 +163,7 @@ class GetInterface extends React.Component {
       this.state.endTime,
       this.state.soundLang,
       this.state.soundDialect,
+        this.state.stress
     );
     let newSounds = this.state.sounds;
     newSounds.push(object);
@@ -321,6 +323,8 @@ class GetInterface extends React.Component {
   }
 
   changeLang(l) {this.setState({soundLang: l})}
+  changeStress(l) {this.setState({soundStress: l})}
+
   changeNotation(l) {
   	this.setState({soundValue: l})
 	//document.getElementById('selPhoneme').innerText = l;
@@ -408,6 +412,7 @@ class GetInterface extends React.Component {
               value={this.props.soundLang}
               changeNotation={this.changeNotation.bind(this)}
               changeLang={this.changeLang.bind(this)}
+              changeStress={this.changeStress.bind(this)}
               handleInputChange={this.handleInputChange.bind(this)}
               saveSound={this.saveSound.bind(this)}
               state={this.state}
