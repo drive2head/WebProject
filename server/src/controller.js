@@ -318,7 +318,7 @@ function proxyRequest(method, route, url) {
 		})
 		.catch(error => {
 			console.log(error);
-			log.addLog(req.body.username, 'proxyRequest', '', false, err, req.headers.referer);
+			log.addLog(req.body.username, 'proxyRequest', '', false, error, req.headers.referer);
 		});
 	};
 

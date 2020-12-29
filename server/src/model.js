@@ -32,7 +32,7 @@ exports.Person = function (fullname, age, sex, native_lang, city, country, disor
 	* @param {string} dialect диалект фонемы.
     * @returns {object} объект "фонема".
 */
-exports.Phoneme = function(notation, start, end, language, dialect=null) {
+exports.Phoneme = function(notation, start, end, language, stress=0, dialect=null) {
 		/*
 			Здесь должна быть проверка значений на ошибки
 		*/
@@ -41,7 +41,8 @@ exports.Phoneme = function(notation, start, end, language, dialect=null) {
 			start: start,
 			end: end,
 			language: language,
-			dialect: dialect
+			dialect: dialect,
+			stress: stress
 		}
 	};
 /**
