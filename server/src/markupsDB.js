@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var markupSchema = new mongoose.Schema({
 	username: String,
 	recordname: String,
-	phonemes: [{ _id: Number, start: Number, end: Number, language: String, dialect: String, notation: String }],
+	phonemes: [{ _id: Number, start: Number, end: Number, language: String, dialect: String, notation: String, stress: Number }],
 	words: [{ _id: Number, start: Number, end: Number, value: String}],
 	sentences: [{ _id: Number, start: Number, end: Number, value: String}]
 });
