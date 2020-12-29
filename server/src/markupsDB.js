@@ -5,29 +5,32 @@ var mongoose = require('mongoose');
 var markupSchema = new mongoose.Schema({
 	username: String,
 	recordname: String,
-	phonemes: [{ _id: Number, start: Number, end: Number, language: String, dialect: String, notation: String, stress: Number }],
+	phonemes: [{ _id: Number, start: Number, end: Number, language: String, dialect: String, notation: String, stress: String }],
 	words: [{ _id: Number, start: Number, end: Number, value: String}],
 	sentences: [{ _id: Number, start: Number, end: Number, value: String}]
 });
 
 async function addMarkup(markup) {
 	try {
-		var connection = mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var connection = await mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var MarkupModel = connection.model('Markup', markupSchema);
 
 		var doc = new MarkupModel(markup);
 		await doc.save();
 		return { completed: true, output: "Markup was sucessfully added!" };
 	} catch (err) {
-		return { completed: false, output: err };
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 }
 
 async function updateMarkup(markup) {
 	try {
-		var connection = mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var connection = await mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var MarkupModel = connection.model('Markup', markupSchema);
 
 		var result = await MarkupModel.updateOne(
@@ -43,15 +46,18 @@ async function updateMarkup(markup) {
 		return { completed: true, output: markup, msg: 'It is the initial data' };
 		// return { completed: true, output: "Markup was sucessfully updated!" };
 	} catch (err) {
-		return { completed: false, output: err };
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 }
 
 async function getMarkup(username, recordname) {
 	try {
-		var connection = mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var connection = await mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var MarkupModel = connection.model('Markup', markupSchema);
 		var markup = await MarkupModel.findOne({ username: username, recordname: recordname });
 		if (markup == null) {
@@ -60,36 +66,48 @@ async function getMarkup(username, recordname) {
 			return { completed: true, output: markup };
 		}
 	} catch (err) {
-		return { completed: false, output: err };
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 }
 
 async function getMarkups(username) {
 	try {
-		var connection = mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		console.log("getMarkups!")
+		var connection = await mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var MarkupModel = connection.model('Markup', markupSchema);
 		var markups = await MarkupModel.aggregate([
 			{ $match: { username: username } },	
 			{ $project: { "name": "$recordname", _id: 0 } }	
 			], (err, result) => {
 				if (err) {
+					console.log("err 88!")
 					throw err;
 				} else {
+					console.log("res 91!")
 					return result;
 				}
 			});
 
 		if (markups.length == 0) {
+			console.log("res 97!")
 			return { completed: true, output: markups, msg: 'Markups was not found' };
 		} else {
+			console.log("res 100!")
 			return { completed: true, output: markups };
 		}
 	} catch (err) {
-		return { completed: false, output: err };
+		console.log("err 104!")
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 }
 
