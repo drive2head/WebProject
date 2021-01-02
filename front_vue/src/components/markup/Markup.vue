@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>Виджет:</div>
-    <audio-visualizer src="''" />
+    <audio-visualizer src="http://speechdb.ru/audio/test.mp3" />
   </div>
 </template>
 
