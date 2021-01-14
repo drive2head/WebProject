@@ -333,11 +333,11 @@ function proxyRequest(method, route, url, serviceName="") {
 		_proxyRequest(url, req, res)
 		.then(result => {
 			log.addLog(req.body.username, 'proxyRequest', '', result.status, result, req.route.path);
-			console.log(result)
-			res.send(result);
+			console.log("RES: ", result)
+			res.send(result.data);
 		})
 		.catch(error => {
-			console.log("ERROR: ", error)
+			console.log("ERROR: ", error.response)
 			log.addLog(req.body.username, 'proxyRequest', '', false, error, req.headers.referer);
 			res.status(error.response.status).json(error.response.data);
 		});
