@@ -12,7 +12,6 @@ export const AuthController: authController = {
     signIn(req: Request<SignObject>, res: Response) {
         const username = req.body.username,
             password = req.body.password;
-        console.log(username)
         verifyUser(username, password)
             .then((result: ResultLog) => {
                 res.status(result.completed ? 200 : 401).send({status: result.completed, msg: result.output});
