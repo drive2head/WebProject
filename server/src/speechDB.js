@@ -107,8 +107,11 @@ function runQuery(queryFunc, multipleRecords=false) {
 
 			// return query_result;
 		} catch (err) {
-			console.log("Ошибочка вышла!");
-			return { completed: false, output: { error: err, query: queryText } };
+			var msg = null;
+			if (err.message.includes('ECONNREFUSED')) msg = 'ECONNREFUSED';
+			err.service = 'Neo4j'
+			return { completed: false, output: err, query: queryText, msg: msg };
+
 		} finally {
 			await session.close();
 		};
@@ -120,7 +123,9 @@ function validateDeleteResult(deleteFunc) {
 		var result = await deleteFunc.apply(this, arguments);
 
 		if (result.output === null) {
-			return { completed: false, output: 'Nodes were NOT deleted OR there WERE NOT such nodes IN THE GRAPH'};
+			rr = Error(`Nodes were NOT deleted OR there WERE NOT such nodes IN THE GRAPH`);
+			err.service = 'Neo4j';
+			return { completed: false, output: err, msg: 'Nodes were NOT deleted OR there WERE NOT such nodes IN THE GRAPH'};
 		}
 
 		return { completed: true, output: 'Node(s) was succesfully deleted!'};

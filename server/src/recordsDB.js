@@ -14,12 +14,18 @@ var recordSchema = new mongoose.Schema({
 */
 async function getAllRecords() {
 	try {
-		var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Record = users_connection.model('Record', recordSchema);
+		var connection = await mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Record = connection.model('Record', recordSchema);
 
 		return await Record.find();
+	} catch (err) {
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 
@@ -30,12 +36,18 @@ async function getAllRecords() {
 */
 async function findRecordByName (name) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Record = users_connection.model('Record', recordSchema);
+		var connection = await mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Record = connection.model('Record', recordSchema);
 		
 		return await Record.findOne({ name: name });
+	} catch (err) {
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 /**
@@ -47,20 +59,26 @@ async function findRecordByName (name) {
 */
 async function addRecord(name, path, speakerID) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Record = users_connection.model('Record', recordSchema);
+		var connection = await mongoose.createConnection(cfg.records_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Record = connection.model('Record', recordSchema);
 
 		var record = await findRecordByName(name);
 		if (record) {
-			return { completed: false, output: `This record name is already in use` };
+			err = Error(`This record name is already in use`);
+			err.service = 'Mongo';
+			return { completed: false, output: err, msg: `This record name is already in use` };
 		}
 		var newRecord = new Record({ name: name, path: path, speakerID: speakerID });
 		newRecord = await newRecord.save();
 		return { completed: true, output: newRecord };
 	} catch (err) {
-		return { completed: false, output: err };
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 

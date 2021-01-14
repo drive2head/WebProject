@@ -13,12 +13,18 @@ var speakerSchema = new mongoose.Schema({
 */
 async function getAllSpeakers() {
 	try {
-		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Speaker = users_connection.model('Speaker', speakerSchema);
+		var connection = await mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = connection.model('Speaker', speakerSchema);
 		
 		return await Speaker.aggregate().project({name: 1});
+	} catch (err) {
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 /**
@@ -28,12 +34,18 @@ async function getAllSpeakers() {
 */
 async function findSpeakerByName (name) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Speaker = users_connection.model('Speaker', speakerSchema);
+		var connection = await mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = connection.model('Speaker', speakerSchema);
 		
 		return await Speaker.findOne({ name: name });
+	} catch (err) {
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 
@@ -44,12 +56,18 @@ async function findSpeakerByName (name) {
 */
 async function findSpeakerByID (speakerID) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Speaker = users_connection.model('Speaker', speakerSchema);
+		var connection = await mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = connection.model('Speaker', speakerSchema);
 		
 		return await Speaker.findOne({ _id: speakerID });
+	} catch (err) {
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 
@@ -60,12 +78,18 @@ async function findSpeakerByID (speakerID) {
 */
 async function deleteSpeakerByID (speakerID) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Speaker = users_connection.model('Speaker', speakerSchema);
+		var connection = await mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = connection.model('Speaker', speakerSchema);
 		
 		return await Speaker.deleteOne({ _id: speakerID});
+	} catch (err) {
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 
@@ -77,20 +101,26 @@ async function deleteSpeakerByID (speakerID) {
 */
 async function addSpeaker(name, nodeID) {
 	try {
-		var users_connection = mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
-		var Speaker = users_connection.model('Speaker', speakerSchema);
+		var connection = await mongoose.createConnection(cfg.speakers_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+		var Speaker = connection.model('Speaker', speakerSchema);
 
 		var speaker = await findSpeakerByName(name);
 		if (speaker) {
-			return { completed: false, output: `This speaker name is already in use` };
+			err = Error(`This speaker name is already in use`);
+			err.service = 'Mongo';
+			return { completed: false, output: err, msg: `This speaker name is already in use` };
 		}
 		var newSpeaker = new Speaker({ name: name, nodeID: nodeID });
 		newSpeaker = await newSpeaker.save();
 		return { completed: true, output: newSpeaker };
 	} catch (err) {
-		return { completed: false, output: err };
+		var msg = null;
+		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
+		return { completed: false, output: err, msg: msg };
 	} finally {
-		users_connection.close();
+		if (connection !== undefined)
+			connection.close();
 	}
 };
 

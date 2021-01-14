@@ -21,6 +21,7 @@ async function addMarkup(markup) {
 	} catch (err) {
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)
@@ -48,6 +49,7 @@ async function updateMarkup(markup) {
 	} catch (err) {
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)
@@ -68,6 +70,7 @@ async function getMarkup(username, recordname) {
 	} catch (err) {
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)
@@ -77,7 +80,6 @@ async function getMarkup(username, recordname) {
 
 async function getMarkups(username) {
 	try {
-		console.log("getMarkups!")
 		var connection = await mongoose.createConnection(cfg.markups_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
 		var MarkupModel = connection.model('Markup', markupSchema);
 		var markups = await MarkupModel.aggregate([
@@ -85,25 +87,21 @@ async function getMarkups(username) {
 			{ $project: { "name": "$recordname", _id: 0 } }	
 			], (err, result) => {
 				if (err) {
-					console.log("err 88!")
 					throw err;
 				} else {
-					console.log("res 91!")
 					return result;
 				}
 			});
 
 		if (markups.length == 0) {
-			console.log("res 97!")
 			return { completed: true, output: markups, msg: 'Markups was not found' };
 		} else {
-			console.log("res 100!")
 			return { completed: true, output: markups };
 		}
 	} catch (err) {
-		console.log("err 104!")
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)
