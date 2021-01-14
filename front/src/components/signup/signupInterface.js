@@ -3,7 +3,7 @@ import SignupForm from './signupForm.js';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Cookies from 'universal-cookie';
 
-class SignupInterface extends React.Component {  
+class SignupInterface extends React.Component {
   constructor(props)
   {
     super(props);
@@ -42,9 +42,9 @@ class SignupInterface extends React.Component {
 
     var body = await response.json();
 
-    alert(body.msg);
+    alert(body);
     if (body.status == true) {
-      window.location.href = "/signin";   
+      window.location.href = "/signin";
     }
   }
   /**
@@ -52,20 +52,20 @@ class SignupInterface extends React.Component {
   */
   back () { window.location.href = "/signin" }
 
-  render() {  
+  render() {
     document.title = "Регистрация";
-    return (  
-      <div className='popup'>  
+    return (
+      <div className='popup'>
         <div className='popup_inner'>
           <SignupForm
             handleInputChange={this.handleInputChange.bind(this)}
             signUp={this.signUp.bind(this)}
             back={this.back.bind(this)}
           />
-        </div>  
-      </div>  
-    );  
-  }  
-} 
+        </div>
+      </div>
+    );
+  }
+}
 
 export default SignupInterface;

@@ -3,7 +3,7 @@ import LoginForm from './loginForm.js';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Cookies from 'universal-cookie';
 
-class LoginInterface extends React.Component {  
+class LoginInterface extends React.Component {
   constructor(props)
   {
     super(props);
@@ -31,6 +31,7 @@ class LoginInterface extends React.Component {
     * Функция производит авторизацию пользователя. В случае успешной авторизации редиректит на главную страницу.
   */
   signIn = async () => {
+    // console.log("signIn")
     var response = await fetch('/signin', {
       method: 'POST',
       headers: {
@@ -41,10 +42,10 @@ class LoginInterface extends React.Component {
         password: this.state.password,
       })
     });
+    // console.log("signIn res")
 
-    console.log("HEY");
     var body = await response.json();
-    console.log(body);
+
     if (body.status == false) {
       alert(body.msg);
     } else
@@ -55,23 +56,23 @@ class LoginInterface extends React.Component {
       //cookies.set('role', body.role, { path: '/' });
       window.location.href = "/";
     }
-      
+
   }
 
-  render() {  
+  render() {
     document.title = "Вход";
-    return (  
-      <div className='popup'>  
+    return (
+      <div className='popup'>
         <div className='popup_inner'>
           <LoginForm
             handleInputChange={this.handleInputChange.bind(this)}
             signIn={this.signIn.bind(this)}
             signUp={this.signUp}
           />
-        </div>  
-      </div>  
-    );  
-  }  
-} 
+        </div>
+      </div>
+    );
+  }
+}
 
 export default LoginInterface;

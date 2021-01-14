@@ -13,8 +13,10 @@ let cfg = require('./cfg');
 const axios = require('axios');
 const express = require('express');
 const app = express();
+const Morgan = require('morgan');
 var bodyParser = require('body-parser');
 
+app.use(Morgan('combined'));
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.static('files'))
@@ -306,27 +308,30 @@ app.post('/remove_person', (req, res) => {
 // });
 
 function proxyRequest(method, route, url, serviceName="") {
-	async function _proxyRequest(url, req) {
-		const method = req.method;
+
+	async function _proxyRequest(url, req, res) {
+
 		const result = await axios({
 			method: req.method,
 			url: url,
 			data: req.body
 		});
-		return result.data;
+		return result;
+
 	};
 
 	async function obtainResult(req, res) {
-		_proxyRequest(url, req)
+
+		_proxyRequest(url, req, res)
 		.then(result => {
 			log.addLog(req.body.username, 'proxyRequest', '', result.status, result, req.route.path);
+			console.log(result)
 			res.send(result);
 		})
 		.catch(error => {
+			console.log("ERROR: ", error)
 			log.addLog(req.body.username, 'proxyRequest', '', false, error, req.headers.referer);
-			if (error.code == 'ECONNREFUSED') {
-				res.status(503).send({service: serviceName, message: "Service is unavailable"});
-			}
+			res.status(error.response.status).json(error.response.data);
 		});
 	};
 
@@ -343,3 +348,7 @@ function proxyRequest(method, route, url, serviceName="") {
 proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
 proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
 proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
+
+app.use('/', (req, res) => {
+	res.status(404).send('<h1>404 Error</h1>')
+})

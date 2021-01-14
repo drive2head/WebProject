@@ -12,11 +12,11 @@ export const AuthController: authController = {
     signIn(req: Request<SignObject>, res: Response) {
         const username = req.body.username,
             password = req.body.password;
-
+        console.log(username)
         verifyUser(username, password)
             .then((result: ResultLog) => {
-                res.send({status: result.completed, msg: result.output});
-            });
+                res.status(result.completed ? 200 : 401).send({status: result.completed, msg: result.output});
+            }).catch(err => res.status(500).json(err));
     },
     signUp(req: Request<User>, res: Response) {
         const username = req.body.username,
@@ -29,15 +29,15 @@ export const AuthController: authController = {
                 if (result) {
                     res.send({status: true, msg: "User was succesfully created"});
                 } else {
-                    res.send({status: false, msg: "User was not created"});
+                    res.status(409).send({status: false, msg: "User was not created"});
                 }
-            })
+            }).catch(err => res.status(500).json(err));
     },
     profile(req: Request<SignObject>, res: Response) {
         const username = req.body.username;
         getUser(username)
             .then((result: User | null) => {
                 res.send(result);
-            });
+            }).catch(err => res.status(500).json(err));
     }
 };
