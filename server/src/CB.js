@@ -3,29 +3,33 @@ const OPENED = 1;
 const HALFOPENED = 2;
 let path = require("path");
 
-module.exports = {
+class CB {
     /* Внутренние значения, которые меняются ТОЛЬКО самим CB */
-    _state: CLOSED,
-    _failure_counter: 0,
-    _success_counter: 0,
-    _timer: null,
+    _state = CLOSED
+    _failure_counter = 0
+    _success_counter = 0
+    _timer = null
 
     /* Дефолтные значения, которые юзер может менять */
-    timeout: 2000,         // время ожидания выполнения запроса
-    failure_threshold: 5,  // количество ошибок, после которого сервер меняет состояние
-    success_threshold: 5,  // количество запросов, которые должны пройти успешно, для возвращения в CLOSED
-    time_threshold: 60000, // время, в течении которого подсчитывается количество ошибок
-    waiting_time: 60000,   // время ожидания (между переходом из OPENED в HALFOPENED)
+    timeout = 2000         // время ожидания выполнения запроса
+    failure_threshold = 5  // количество ошибок, после которого сервер меняет состояние
+    success_threshold = 5  // количество запросов, которые должны пройти успешно, для возвращения в CLOSED
+    time_threshold = 60000 // время, в течении которого подсчитывается количество ошибок
+    waiting_time = 60000   // время ожидания (между переходом из OPENED в HALFOPENED)
 
-    init(serverAddr) {
+    constructor(serverAddr) {
+        console.log(this)
         this._serverAddr = serverAddr;
         if (this._timer != null)
             clearInterval(this._timer);
         // Устанавливаем планировщик, которые каждые $time_threshold мс сбрасывает счетчик ошибок
-        this._timer = setInterval(() => { _failure_counter = 0; }, this.time_threshold);
-    },
+        this._timer = setInterval(() => { this._failure_counter = 0; }, this.time_threshold);
+    }
 
-    async fetch(req, res) {
+    fetch = async (req, res) => {
+
+        console.log(this._state)
+
         async function _sendRequest (req) {
             return await axios({
                 method: req.method,
@@ -35,13 +39,12 @@ module.exports = {
         };
 
         function _sendError (res) {
-            res.status(503).send({ service: this._serviceName, message: "Service is unavailiable" });
+            res.status(503).send({ service: _serviceName, message: "Service is unavailiable" });
         }
 
         function _sendResult (res, result) {
             res.status(200).send(result); // TODO: проверить, нужно ли отправлять весь result
         }
-
 
         switch (this._state) {
             case CLOSED:
@@ -51,7 +54,7 @@ module.exports = {
                 })
                 .catch(error => {
                     this._failure_counter += 1;
-                    if (this._failure_counter >= failure_threshold) {
+                    if (this._failure_counter >= this.failure_threshold) {
                         open();
                     }
                     _sendError(res);
@@ -77,20 +80,22 @@ module.exports = {
             default:
                 console.log("Wrong value was given in CASE statement!");
         };
-    },
+    }
 
-    open() {
+    open = () => {
         this._state = OPENED;
         setTimeout(halfopen, this.waiting_time);
-    },
+    }
 
-    halfopen() {
+    halfopen = () => {
         this._success_counter = 0;
         this._state = HALFOPENED;
-    },
+    }
 
-    close() {
+    close = () => {
         this._failure_counter = 0;
         this._state = CLOSED;
     }
 };
+
+module.exports = CB

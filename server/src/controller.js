@@ -358,8 +358,8 @@ function proxyRequest(method, route, url, serviceName="") {
 // proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
 
 const CB = require("./CB.js");
-CB.init(cfg.auth_service_uri);
-app.post('/signin', CB.fetch);
+const cb = new CB(cfg.auth_service_uri);
+app.post('/signin', cb.fetch);
 
 app.use('/', (req, res) => {
 	res.status(404).send('<h1>404 Error</h1>')
