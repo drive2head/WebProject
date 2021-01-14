@@ -18,8 +18,9 @@ class CB {
     waiting_time = 60000   // время ожидания (между переходом из OPENED в HALFOPENED)
 
     constructor(serverAddr) {
-        console.log(this)
         this._serverAddr = serverAddr;
+        console.log(this)
+
         if (this._timer != null)
             clearInterval(this._timer);
         // Устанавливаем планировщик, которые каждые $time_threshold мс сбрасывает счетчик ошибок
@@ -30,10 +31,10 @@ class CB {
 
         console.log(this._state)
 
-        async function _sendRequest (req) {
+        this._sendRequest = async (req) => {
             return await axios({
                 method: req.method,
-                url: path.join(this.serverAddr, req.url),
+                url: path.join(this._serverAddr, req.url),
                 data: req.body
             });
         };
