@@ -17,7 +17,7 @@ export const CB = {
     time_threshold: 60000, // время, в течении которого подсчитывается количество ошибок
     waiting_time: 60000,   // время ожидания (между переходом из OPENED в HALFOPENED)
 
-    init_CB(serverAddr) {
+    init(serverAddr) {
         this._serverAddr = serverAddr;
         if (this._timer != null)
             clearInterval(this._timer);
@@ -26,7 +26,7 @@ export const CB = {
     },
 
     async fetch(req, res) {
-        _sendRequest = async (req) => {
+        async function _sendRequest (req) {
             return await axios({
                 method: req.method,
                 url: path.join(this.serverAddr, req.url),
@@ -34,11 +34,11 @@ export const CB = {
             });
         };
 
-        _sendError = (res) => {
+        function _sendError (res) {
             res.status(503).send({ service: this._serviceName, message: "Service is unavailiable" });
         }
 
-        _sendResult = (res, result) => {
+        function _sendResult (res, result) {
             res.status(200).send(result); // TODO: проверить, нужно ли отправлять весь result
         }
 

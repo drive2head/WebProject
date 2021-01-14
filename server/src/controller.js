@@ -353,9 +353,13 @@ function proxyRequest(method, route, url, serviceName="") {
 }
 
 /* AUTHENTICATION AND ACCOUNT ACCESS */
-proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
-proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
-proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
+// proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
+// proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
+// proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
+
+const CB = require("./CB.js");
+CB.init(cfg.auth_service_uri);
+app.post('/signin', CB.fetch);
 
 app.use('/', (req, res) => {
 	res.status(404).send('<h1>404 Error</h1>')
