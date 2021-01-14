@@ -42,10 +42,15 @@ class SignupInterface extends React.Component {
 
     var body = await response.json();
 
-    alert(body);
-    if (body.status == true) {
-      window.location.href = "/signin";
+    if (response.status === 200) {
+      // alert(JSON.stringify(body));
+      if (body.status == true) {
+        window.location.href = "/signin";
+      }
+    } else {
+      alert(`Error ${response.status}`)
     }
+
   }
   /**
     * Функция производит редирект на страницу регистрации.
