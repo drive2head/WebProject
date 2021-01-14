@@ -21,6 +21,7 @@ async function addMarkup(markup) {
 	} catch (err) {
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)
@@ -48,6 +49,7 @@ async function updateMarkup(markup) {
 	} catch (err) {
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)
@@ -68,6 +70,7 @@ async function getMarkup(username, recordname) {
 	} catch (err) {
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)
@@ -98,6 +101,7 @@ async function getMarkups(username) {
 	} catch (err) {
 		var msg = null;
 		if (err.reason.name == 'MongoNetworkError') msg = 'ECONNREFUSED';
+		err.service = 'Mongo';
 		return { completed: false, output: err, msg: msg };
 	} finally {
 		if (connection !== undefined)

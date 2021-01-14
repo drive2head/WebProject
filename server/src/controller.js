@@ -28,6 +28,12 @@ app.listen(port, () => console.log(`Port: ${port}`));
 
 function CheckOperationResult(res) {
 	if (!res.completed) {
+		var result_error = res.output;
+		if (res.msg == 'ECONNREFUSED') {
+			console.log({ service: result_error.service, message: "Connection refused", error: result_error });
+		} else {
+			console.log({ service: result_error.service, error: result_error });
+		}
 		throw res.output;
 	}
 }
@@ -57,6 +63,9 @@ app.get('/persons', (req, res) => {
 	})
 	.catch(err => {
 		log.addLog(req.body.username, 'access.persons', 'RecordsDB.getAllSpeakers', false, err, '/persons');
+		err.msg == 'ECONNREFUSED' ?
+			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+			res.status(500).send({ service: err.service, error: err });
 	})
 });
 
@@ -67,8 +76,10 @@ app.get('/rec', (req, res) => {
 		res.send(result);
 	})
 	.catch(err => {
-		console.log("err:", err);
 		log.addLog(req.body.username, 'access.records', 'RecordsDB.getAllRecords', true, result, '/records');
+		err.msg == 'ECONNREFUSED' ?
+			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+			res.status(500).send({ service: err.service, error: err });
 	})
 });
 
@@ -86,10 +97,12 @@ app.post('/markups', async (req, res) => {
 		result = await MarkupsDB.getMarkups(username);
 		CheckOperationResult(result);
 		log.addLog(username, 'access.markups', '', true, result, '/markups');
-		res.send({ status: true, output: result.output });
+		res.status(200).send({ status: true, output: result.output });
 	} catch (err) {
 		log.addLog(username, 'access.markups', '', false, err, '/markups');
-		res.send({ status: false, output: err });
+		err.msg == 'ECONNREFUSED' ?
+			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+			res.status(500).send({ service: err.service, error: err });
 	}
 });
 
@@ -102,7 +115,7 @@ app.post('/add_record', (req, res) => {
 		let recordName = files.filetoupload.name;
 		try {
 			fs.rename(oldpath, newpath, function (err) {
-				if (err) throw err;
+				if (err) throw err; // TODO
 			});
 
 			SpeakersDB.findSpeakerByID(personID)
@@ -112,10 +125,7 @@ app.post('/add_record', (req, res) => {
 			})
 			.then(result => {
 				log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
-				if (result.completed == false) {
-					res.send({ status: false, msg: result.output });
-					return;
-				}
+				CheckOperationResult(result);
 				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID);
 			})
 			.then(result => {
@@ -123,12 +133,15 @@ app.post('/add_record', (req, res) => {
 				if (result.completed) {
 					res.redirect('/');
 				} else {
-					res.send({ status: false, msg: result.output });
+					throw result.output;
 				}
 			})
 			.catch(err => { throw err; })
 		} catch (err) {
 			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');
+			err.msg == 'ECONNREFUSED' ?
+				res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+				res.status(500).send({ service: err.service, error: err });
 		};
 	})
 });
@@ -137,27 +150,24 @@ app.post('/add_person', (req, res) => {
 	SpeechDB.addPerson(req.body.person)
 	.then(result => {
 		log.addLog(req.body.username, 'query.add', 'SpeechDB.addPerson', result.completed, result.output, '/add_person');
-		if (result.completed == false) {
-			res.send({ status: false, msg: 'Person was not added' });
-			return;
-		}
+		CheckOperationResult(result);
 
 		const nodeID = result.output[0].id;
 		SpeakersDB.addSpeaker(req.body.pseudonym, nodeID)
 		.then(result => {
 			log.addLog(req.body.username, 'query.add', 'SpeakersDB.addSpeaker', result.completed, result.output, '/add_person');
-			if (result.completed == false) {
-				res.send({ status: false, msg: 'Person was not added' });
-				return;
-			}
+			CheckOperationResult(result);
 			res.send({ status: true, msg: 'Person was added' });
 		})
 		.catch(err => {
-			log.addLog(req.body.username, 'query.add', '', false, err, '/add_person');
+			throw err;
 		})
 	})
 	.catch(err => {
 		log.addLog(req.body.username, 'query.add', '', false, err, '/add_person');
+		err.msg == 'ECONNREFUSED' ?
+			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+			res.status(500).send({ service: err.service, error: err });
 	})
 });
 
@@ -194,18 +204,23 @@ app.post('/update_data', async (req, res) => {
 			res.send({ status: true, msg: 'Data was upadated' });
 		} catch (err) {
 			log.addLog(username, 'upload', '', false, err, '/update_data');
-			res.send({ status: false, msg: 'Data was not upadated: ' + err.message });
+			err.msg == 'ECONNREFUSED' ?
+				res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+				res.status(500).send({ service: err.service, error: err });
 		}
 });
 
 app.post('/get_data', async (req, res) => {
-	let result = await MarkupsDB.getMarkup(req.body.username, req.body.recordname);
-	log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
-	if (result.completed) {
+	try {
+		let result = await MarkupsDB.getMarkup(req.body.username, req.body.recordname);
+		log.addLog(req.body.username, 'access.markup', 'getMarkup', result.completed, result.output, '/get_data');
+		CheckOperationResult(result);
 		res.send(result);
-	}
-	else {
-		res.send("Data WAS NOT loaded!");
+	} catch (err) {
+		log.addLog(req.body.username, 'access.markup', 'getMarkup', false, result.output, '/get_data');
+		err.msg == 'ECONNREFUSED' ?
+			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+			res.status(500).send({ service: err.service, error: err });
 	}
 });
 
@@ -216,31 +231,24 @@ app.post('/remove_person', (req, res) => {
 	SpeakersDB.findSpeakerByName(req.body.name)
 	.then(result => {
 		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.findSpeakerByName', result.completed, result.output, '/delete_person');
-		if (!result) {
-			res.send({ status: false, msg: 'Person was not found' });
-			return;
-		}
+		CheckOperationResult(result);
 		return SpeechDB.deletePerson(personNodeID)
 	})
 	.then(result => {
 		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deletePerson', result.completed, result.output, '/delete_person');
-		if (!result.completed) {
-			res.send({ status: false, msg: result.output });
-			return;
-		}
-
+		CheckOperationResult(result);
 		return SpeakersDB.deleteSpeakerByID(id)
 	})
 	.then(result => {
 		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.deleteSpeakerByID', result.completed, result.output, '/delete_person');
-		if (!result.completed) {
-			res.send({ status: false, msg: result.output });
-		} else {
-			res.send({ status: true, msg: 'Person was successfully deleted!'})
-		}
+		CheckOperationResult(result);
+		res.send({ status: true, msg: 'Person was successfully deleted!'})
 	})
 	.catch(err => {
 		log.addLog(req.body.username, 'query.delete', '', false, err, '/delete_person');
+		err.msg == 'ECONNREFUSED' ?
+			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+			res.status(500).send({ service: err.service, error: err });
 	});
 });
 
@@ -294,7 +302,7 @@ app.post('/remove_person', (req, res) => {
 // 	SpeechDB.deleteMarkup(req.body.username, req.body.record)
 // 	.then(result => {
 // 		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deleteMarkup', result.completed, result.output, '/remove_markup');
-// 		if (result.completed == false) {
+// 		if (!result.completed) {
 // 			res.send({ status: false, msg: result.output });
 // 			return;
 // 		}
@@ -322,10 +330,10 @@ function proxyRequest(method, route, url, serviceName="") {
 			log.addLog(req.body.username, 'proxyRequest', '', result.status, result, req.route.path);
 			res.send(result);
 		})
-		.catch(error => {
-			log.addLog(req.body.username, 'proxyRequest', '', false, error, req.headers.referer);
-			if (error.code == 'ECONNREFUSED') {
-				res.status(503).send({service: serviceName, message: "Service is unavailable"});
+		.catch(err => {
+			log.addLog(req.body.username, 'proxyRequest', '', false, err, req.headers.referer);
+			if (err.code == 'ECONNREFUSED') {
+				res.status(503).send({service: serviceName, message: "Service is unavailable", error: err});
 			}
 		});
 	};
