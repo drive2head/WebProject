@@ -1,7 +1,8 @@
 const CLOSED = 0;
 const OPENED = 1;
 const HALFOPENED = 2;
-let path = require("path");
+const axios = require('axios');
+const path = require("path");
 
 class CB {
     /* Внутренние значения, которые меняются ТОЛЬКО самим CB */
@@ -9,6 +10,7 @@ class CB {
     _failure_counter = 0
     _success_counter = 0
     _timer = null
+    _serverAddr = "CircuitBraker"
 
     /* Дефолтные значения, которые юзер может менять */
     timeout = 2000         // время ожидания выполнения запроса
@@ -26,55 +28,59 @@ class CB {
         this._timer = setInterval(() => { this._failure_counter = 0; }, this.time_threshold);
     }
 
+    _sendRequest = async (req) => {
+        console.log("this:", this);
+        return await axios({
+            method: req.method,
+            url: path.join(this._serverAddr, req.url),
+            data: req.body
+        });
+    };
+
+    _sendError = (res) => {
+        res.status(503).send({ service: "CircuitBraker", message: "Service is unavailiable" });
+    };
+
+    _sendResult = (res, result) => {
+        res.status(200).send(result); // TODO: проверить, нужно ли отправлять весь result
+    };
+
     fetch = async (req, res) => {
-
-        console.log(this._state)
-
-        async function _sendRequest (req) {
-            return await axios({
-                method: req.method,
-                url: path.join(this.serverAddr, req.url),
-                data: req.body
-            });
-        };
-
-        function _sendError (res) {
-            res.status(503).send({ service: _serviceName, message: "Service is unavailiable" });
-        }
-
-        function _sendResult (res, result) {
-            res.status(200).send(result); // TODO: проверить, нужно ли отправлять весь result
-        }
-
+        console.log("this._state:", this._state);
+        console.log("this._serverAddr:", this._serverAddr);
         switch (this._state) {
             case CLOSED:
-                _sendRequest(req)
+                this._sendRequest(req)
                 .then(result => {
-                    _sendResult(res, result);
+                    console.log("RESULT:\n", result);
+                    this._sendResult(res, result);
                 })
                 .catch(error => {
+                    console.log("ERROR:\n", error);
                     this._failure_counter += 1;
                     if (this._failure_counter >= this.failure_threshold) {
-                        open();
+                        this.open();
                     }
-                    _sendError(res);
+                    // this._sendError(res);
                 });
                 break;
             case OPENED:
-                _sendError(res);
+                this._sendError(res);
                 break;
             case HALFOPENED:
-                _sendRequest(req)
+                this._sendRequest(req)
                 .then(result => {
+                    console.log("RESULT:\n", result);
                     this._success_counter += 1;
                     if (this._success_counter >= success_threshold) {
-                        close();
+                        this.close();
                     }
-                    _sendResult(res, result);
+                    this._sendResult(res, result);
                 })
                 .catch(error => {
-                    open();
-                    _sendError(res);
+                    console.log("ERROR:\n", error);
+                    this.open();
+                    this._sendError(res);
                 })
                 break;
             default:
@@ -84,7 +90,7 @@ class CB {
 
     open = () => {
         this._state = OPENED;
-        setTimeout(halfopen, this.waiting_time);
+        setTimeout(this.halfopen, this.waiting_time);
     }
 
     halfopen = () => {
