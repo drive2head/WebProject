@@ -1,9 +1,9 @@
 const CLOSED = 0;
 const OPENED = 1;
 const HALFOPENED = 2;
-var path = require("path");
+let path = require("path");
 
-export const CB = {
+module.exports = {
     /* Внутренние значения, которые меняются ТОЛЬКО самим CB */
     _state: CLOSED,
     _failure_counter: 0,
@@ -22,7 +22,7 @@ export const CB = {
         if (this._timer != null)
             clearInterval(this._timer);
         // Устанавливаем планировщик, которые каждые $time_threshold мс сбрасывает счетчик ошибок
-        this._timer = setInterval(() => { _failure_counter = 0; }, time_threshold);
+        this._timer = setInterval(() => { _failure_counter = 0; }, this.time_threshold);
     },
 
     async fetch(req, res) {
