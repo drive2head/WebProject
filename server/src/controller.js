@@ -123,6 +123,55 @@ app.post('/add_record', (req, res) => {
 			SpeakersDB.findSpeakerByID(personID)
 			.then(result => {
 				const personNodeID = result.nodeID;
+
+				const url = cfg.graph_service_uri + '/add_person';
+				return axios({
+					method: req.method,
+					url: url,
+					data: req.body
+				})
+			})
+			.then(response => {
+				const result = response.data;
+				log.addLog(req.body.username, 'upload.file', 'SpeechDB.addRecord', result.completed, result.output, '/add_record');
+				CheckOperationResult(result);
+				return RecordsDB.addRecord(files.filetoupload.name, newpath, personID);
+			})
+			.then(result => {
+				log.addLog(req.body.username, 'upload.file', 'RecordsDB.addRecord', result.completed, result.output, '/add_record');
+				if (result.completed) {
+					res.redirect('/');
+				} else {
+					throw result.output;
+				}
+			})
+			.catch(err => { throw err; })
+		} catch (err) {
+			log.addLog(req.body.username, 'upload.file', '', false, err, '/add_record');
+			err.msg == 'ECONNREFUSED' ?
+				res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+				res.status(500).send({ service: err.service, error: err });
+		};
+	})
+});
+
+/*
+-- Версия без сервиса
+app.post('/add_record', (req, res) => {
+	let form = new formidable.IncomingForm();
+	form.parse(req, function (err, fields, files) {
+		let personID = fields.text;
+		let oldpath = files.filetoupload.path;
+		let newpath = cfg.records_dir + files.filetoupload.name;
+		let recordName = files.filetoupload.name;
+		try {
+			fs.rename(oldpath, newpath, function (err) {
+				if (err) throw err; // TODO
+			});
+
+			SpeakersDB.findSpeakerByID(personID)
+			.then(result => {
+				const personNodeID = result.nodeID;
 				return SpeechDB.addRecord({recname: recordName, tags: null}, personNodeID);
 			})
 			.then(result => {
@@ -147,24 +196,20 @@ app.post('/add_record', (req, res) => {
 		};
 	})
 });
+*/
 
 app.post('/add_person', async (req, res) => {
 	const url = cfg.graph_service_uri + '/add_person';
-	console.log("req.body:\n", req.body, req.method, url);
 
-	const result = await axios({
+	axios({
 		method: req.method,
 		url: url,
 		data: req.body
-	});
-	console.log("result:\n", result);
-	res.send({status: true});
-
-	SpeechDB.addPerson(req.body.person)
-	.then(result => {
-		log.addLog(req.body.username, 'query.add', 'SpeechDB.addPerson', result.completed, result.output, '/add_person');
+	})
+	.then(response => {
+		const result = response.data;
+		log.addLog(req.body.username, 'query.add', 'SpeechDB.addPerson', result.completed, result, '/add_person');
 		CheckOperationResult(result);
-
 		const nodeID = result.output[0].id;
 		SpeakersDB.addSpeaker(req.body.pseudonym, nodeID)
 		.then(result => {
@@ -177,6 +222,7 @@ app.post('/add_person', async (req, res) => {
 		})
 	})
 	.catch(err => {
+		console.log("ERROR:\n", err)
 		log.addLog(req.body.username, 'query.add', '', false, err, '/add_person');
 		err.msg == 'ECONNREFUSED' ?
 			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
@@ -392,13 +438,13 @@ function proxyRequest(method, route, url, serviceName="") {
 }
 
 /* AUTHENTICATION AND ACCOUNT ACCESS */
-proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
+// proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
 proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
 proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
 
-// const CB = require("./CB.js");
-// const cb = new CB(cfg.auth_service_uri);
-// app.post('/signin', cb.fetch);
+const CB = require("./CB.js");
+const cb = new CB(cfg.graph_service_uri);
+app.post('/signin', cb.fetch);
 
 app.use('/', (req, res) => {
 	res.status(404).send('<h1>404 Error</h1>')

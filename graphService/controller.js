@@ -38,8 +38,7 @@ module.exports = GraphController = {
     	SpeechDB.addPerson(req.body.person)
 		.then(result => {
 			CheckOperationResult(result);
-			const nodeID = result.output[0].id;
-			res.send({ status: true, personId: nodeID, msg: 'Person was added' });
+			res.send(result);
 		})
 		.catch(err => {
 			var response = { service: err.service, error: err };
