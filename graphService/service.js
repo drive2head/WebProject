@@ -40,8 +40,8 @@ function extractNodes(record) {
  * @param {bool} multipleRecords флаг на использование нескольких записей в одном запросе.
  * @returns {object} успех или неуспех операции.
  */
-function runQuery(queryFunc, multipleRecords = false, smth = '') {
-    return async function(...arguments: any[]) {
+function runQuery(queryFunc, multipleRecords = false) {
+    return async function() {
         var queryText = queryFunc.apply(this, arguments);
 
         let session = null;
