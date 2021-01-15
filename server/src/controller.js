@@ -40,22 +40,22 @@ function CheckOperationResult(res) {
 	}
 }
 
-app.get('/extract_markdowns', async (req, res) => {
-	function write_json_to_file(jsonObj) {
-		let date = new Date();
-		let now = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + 'T' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
-		let path = cfg.phonemes_dir;
-		let filename = jsonObj['username'] + '_' + jsonObj['recordName'].split('.').slice(0, -1).join('.') + '_' + now + '.json';
-		fs.writeFile(path + filename, JSON.stringify(jsonObj, null, 2), function(err) {
-			log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, 'Created ' + filename + ' at ' + path, '/extract_markdowns');
-			if (err)
-				return;
-		});
-	}
+// app.get('/extract_markdowns', async (req, res) => {
+// 	function write_json_to_file(jsonObj) {
+// 		let date = new Date();
+// 		let now = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + 'T' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
+// 		let path = cfg.phonemes_dir;
+// 		let filename = jsonObj['username'] + '_' + jsonObj['recordName'].split('.').slice(0, -1).join('.') + '_' + now + '.json';
+// 		fs.writeFile(path + filename, JSON.stringify(jsonObj, null, 2), function(err) {
+// 			log.addLog('ADMIN', 'access.data', 'extractMarkdowns -> write_json_to_file', err == null, 'Created ' + filename + ' at ' + path, '/extract_markdowns');
+// 			if (err)
+// 				return;
+// 		});
+// 	}
 
-	r = await SpeechDB.extractMarkdowns(write_json_to_file);
-	res.send(r);
-});
+// 	r = await SpeechDB.extractMarkdowns(write_json_to_file);
+// 	res.send(r);
+// });
 
 app.get('/persons', (req, res) => {
 	SpeakersDB.getAllSpeakers()
@@ -148,6 +148,43 @@ app.post('/add_record', (req, res) => {
 	})
 });
 
+app.post('/add_person', async (req, res) => {
+	console.log("req.body:\n", req.body);
+	const url = cfg.graph_service_uri + '/add_person';
+	const result = await axios({
+		method: req.method,
+		url: url,
+		data: req.body
+	});
+	console.log("result:\n", result);
+	res.send({status: true});
+
+	SpeechDB.addPerson(req.body.person)
+	.then(result => {
+		log.addLog(req.body.username, 'query.add', 'SpeechDB.addPerson', result.completed, result.output, '/add_person');
+		CheckOperationResult(result);
+
+		const nodeID = result.output[0].id;
+		SpeakersDB.addSpeaker(req.body.pseudonym, nodeID)
+		.then(result => {
+			log.addLog(req.body.username, 'query.add', 'SpeakersDB.addSpeaker', result.completed, result.output, '/add_person');
+			CheckOperationResult(result);
+			res.send({ status: true, msg: 'Person was added' });
+		})
+		.catch(err => {
+			throw err;
+		})
+	})
+	.catch(err => {
+		log.addLog(req.body.username, 'query.add', '', false, err, '/add_person');
+		err.msg == 'ECONNREFUSED' ?
+			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+			res.status(500).send({ service: err.service, error: err });
+	})
+});
+
+/*
+-- Версия без сервиса
 app.post('/add_person', (req, res) => {
 	SpeechDB.addPerson(req.body.person)
 	.then(result => {
@@ -172,6 +209,7 @@ app.post('/add_person', (req, res) => {
 			res.status(500).send({ service: err.service, error: err });
 	})
 });
+*/
 
 app.post('/update_data', async (req, res) => {
 		/* SAVING DATA TO THE FILE */
@@ -226,33 +264,33 @@ app.post('/get_data', async (req, res) => {
 	}
 });
 
-app.post('/remove_person', (req, res) => {
-	const personNodeID = result.nodeID;
-	const id = result._id;
+// app.post('/remove_person', (req, res) => {
+// 	const personNodeID = result.nodeID;
+// 	const id = result._id;
 
-	SpeakersDB.findSpeakerByName(req.body.name)
-	.then(result => {
-		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.findSpeakerByName', result.completed, result.output, '/delete_person');
-		CheckOperationResult(result);
-		return SpeechDB.deletePerson(personNodeID)
-	})
-	.then(result => {
-		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deletePerson', result.completed, result.output, '/delete_person');
-		CheckOperationResult(result);
-		return SpeakersDB.deleteSpeakerByID(id)
-	})
-	.then(result => {
-		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.deleteSpeakerByID', result.completed, result.output, '/delete_person');
-		CheckOperationResult(result);
-		res.send({ status: true, msg: 'Person was successfully deleted!'})
-	})
-	.catch(err => {
-		log.addLog(req.body.username, 'query.delete', '', false, err, '/delete_person');
-		err.msg == 'ECONNREFUSED' ?
-			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
-			res.status(500).send({ service: err.service, error: err });
-	});
-});
+// 	SpeakersDB.findSpeakerByName(req.body.name)
+// 	.then(result => {
+// 		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.findSpeakerByName', result.completed, result.output, '/delete_person');
+// 		CheckOperationResult(result);
+// 		return SpeechDB.deletePerson(personNodeID)
+// 	})
+// 	.then(result => {
+// 		log.addLog(req.body.username, 'query.delete', 'SpeechDB.deletePerson', result.completed, result.output, '/delete_person');
+// 		CheckOperationResult(result);
+// 		return SpeakersDB.deleteSpeakerByID(id)
+// 	})
+// 	.then(result => {
+// 		log.addLog(req.body.username, 'query.delete', 'SpeakersDB.deleteSpeakerByID', result.completed, result.output, '/delete_person');
+// 		CheckOperationResult(result);
+// 		res.send({ status: true, msg: 'Person was successfully deleted!'})
+// 	})
+// 	.catch(err => {
+// 		log.addLog(req.body.username, 'query.delete', '', false, err, '/delete_person');
+// 		err.msg == 'ECONNREFUSED' ?
+// 			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
+// 			res.status(500).send({ service: err.service, error: err });
+// 	});
+// });
 
 // app.post('/remove_data', (req, res) => {
 // 	var status = 0;
@@ -353,13 +391,13 @@ function proxyRequest(method, route, url, serviceName="") {
 }
 
 /* AUTHENTICATION AND ACCOUNT ACCESS */
-// proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
-// proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
-// proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
+proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
+proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
+proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
 
-const CB = require("./CB.js");
-const cb = new CB(cfg.auth_service_uri);
-app.post('/signin', cb.fetch);
+// const CB = require("./CB.js");
+// const cb = new CB(cfg.auth_service_uri);
+// app.post('/signin', cb.fetch);
 
 app.use('/', (req, res) => {
 	res.status(404).send('<h1>404 Error</h1>')

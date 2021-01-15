@@ -33,6 +33,8 @@ module.exports = GraphController = {
     },
 
     addPerson(req, res) {
+    	console.log("REQ.BODY:\n", req.body);
+
     	SpeechDB.addPerson(req.body.person)
 		.then(result => {
 			CheckOperationResult(result);
