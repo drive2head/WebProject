@@ -1,4 +1,4 @@
-let SpeechDB = require("./service.js");
+let SpeechDB = require("../server/src/speechDB.js");
 
 function CheckOperationResult(res) {
 	if (!res.completed) {
