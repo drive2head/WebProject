@@ -149,8 +149,9 @@ app.post('/add_record', (req, res) => {
 });
 
 app.post('/add_person', async (req, res) => {
-	console.log("req.body:\n", req.body);
 	const url = cfg.graph_service_uri + '/add_person';
+	console.log("req.body:\n", req.body, req.method, url);
+
 	const result = await axios({
 		method: req.method,
 		url: url,
