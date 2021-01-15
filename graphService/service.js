@@ -1,10 +1,6 @@
-// let cfg = require('../server/src/cfg');
-// let entity = require("../server/src/model.js");
-// let query = require("../server/src/query.js");
-
-import * as cfg from '../server/src/cfg';
-import * as entity from '../server/src/model.js';
-import * as query from '../server/src/query.js';
+let cfg = require('../server/src/cfg');
+let entity = require("../server/src/model.js");
+let query = require("../server/src/query.js");
 let Integer = require('neo4j-driver/lib/v1/integer.js');
 let neo4j = require('neo4j-driver').v1;
 let driver = neo4j.driver(cfg.graph_db_uri, neo4j.auth.basic(cfg.graph_db_login, cfg.graph_db_password), { encrypted: 'ENCRYPTION_OFF' });

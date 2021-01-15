@@ -1,5 +1,5 @@
-import express from 'express';
-import GraphRouter from "./router";
+const express = require('express');
+const GraphRouter = require('./router');
 
 const app = express();
 const port = 7777;
