@@ -1,10 +1,15 @@
 import {ResultLog, User} from './types';
-import {users_db_uri} from './cfg'
 import {createConnection, Schema} from "mongoose";
 import {userSchema} from './model'
+import * as bcrypt from 'bcrypt'
+import * as dotenv from 'dotenv';
+import mongoose from "mongoose"
+
+dotenv.config({ path: __dirname+'/.env' });
+mongoose.connect(process.env.DB_PATH as string);
 
 function connect() {
-    return createConnection(users_db_uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    return createConnection(process.env.DB_PATH as string, {useNewUrlParser: true, useUnifiedTopology: true});
 }
 
 export async function verifyUser(username: string, password: string): Promise<ResultLog> {
