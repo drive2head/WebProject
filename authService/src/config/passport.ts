@@ -1,19 +1,17 @@
-import mongoose from 'mongoose'
 import passport from 'passport'
-import LocalStrategy from 'passport-local'
-import {IUser, UserModel} from "../model";
+import {UserModel} from "../model";
+import dotenv from '../helpers/dotenv-conf'
+import JwtStrategy from 'passport-jwt'
+dotenv()
 
 export function usePassport() {
-        passport.use(new LocalStrategy.Strategy({
-            usernameField: 'user[username]',
-            passwordField: 'user[password]',
-        }, (username: string, password: string, done: any) => {
-            UserModel.findOne({username})
-                .then((user: mongoose.Document | null) => {
-                    if (!user || !(user as IUser).validatePassword(password)) {
-                        return done(null, false, {errors: {'username or password': 'is invalid'}});
-                    }
-                    return done(null, user);
-                }).catch(done);
-        }));
-    }
+    passport.use(new JwtStrategy.Strategy(
+        {jwtFromRequest: JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_SECRET},
+        (jwt_payload, done) => {
+            UserModel.findOne({id: jwt_payload.sub}, (err, user) => {
+                if (err) return done(err, false)
+                if (user) return done(null, user)
+                else return done(null, false)
+            })
+    }))
+}

@@ -1,16 +1,16 @@
 import {Controller, Get, Middleware, Post} from "@overnightjs/core";
-import {NextFunction, Request, Response} from "express";
+import {Request, Response} from "express";
 import {IUser, UserModel} from "./model";
 import auth from "./config/auth";
 import passport from "passport";
 import mongoose from "mongoose";
 import StatusCodes from 'http-status-codes';
+import {loginValidation} from "./config/validation";
 
 @Controller('auth')
 export class AuthController {
 
     @Post('signup')
-    @Middleware(auth.optional)
     private signUp(req: Request, res: Response) {
         const { body: { user } } = req;
         if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
@@ -23,29 +23,23 @@ export class AuthController {
     }
 
     @Post('signin')
-    @Middleware(auth.optional)
-    private signIn(req: Request, res: Response, next: NextFunction) {
+    @Middleware(loginValidation)
+    private signIn(req: Request, res: Response) {
         const { body: { user } } = req;
         if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
 
-        return passport.authenticate('local', { session: false }, (err, passportUser) => {
-            if(passportUser) {
-                const user = passportUser;
-                user.token = passportUser.generateJWT();
-                return res.json({ user: user.toAuthJSON() });
+        UserModel.findOne({username: user.username}, (err, userFromDB) => {
+            if (err) return res.status(StatusCodes.BAD_REQUEST).json(err)
+            if (userFromDB) {
+                if (userFromDB.validatePassword(user.password)) return res.json({user: userFromDB.toAuthJSON()})
+                else return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
-
-            if(err) {
-                return next(err);
-            }
-
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
-
-        })(req, res, next);
+            else return res.sendStatus(StatusCodes.BAD_REQUEST)
+        })
     }
 
     @Get('users')
-    @Middleware(auth.required)
+    @Middleware(passport.authenticate('jwt', {session: false}))
     private getUsers(req: Request, res: Response) {
         // const userRole = req.query.role as string || '';
         return UserModel.find()
@@ -56,7 +50,7 @@ export class AuthController {
     }
 
     @Get('user/:id')
-    @Middleware(auth.required)
+    @Middleware(passport.authenticate('jwt', {session: false}))
     private getUser(req: Request, res: Response) {
         return UserModel.findById(req.params.id)
             .then((user: mongoose.Document | IUser | null) => {

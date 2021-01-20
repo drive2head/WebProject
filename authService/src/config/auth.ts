@@ -1,7 +1,6 @@
 import jwt from "express-jwt";
 import {Request} from "express";
 import env from '../helpers/dotenv-conf'
-import {Logger} from "@overnightjs/logger";
 env()
 
 const getTokenFromHeaders = (req: Request) => {
