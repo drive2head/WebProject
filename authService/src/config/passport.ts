@@ -6,7 +6,7 @@ dotenv()
 
 export function usePassport() {
     passport.use(new JwtStrategy.Strategy(
-        {jwtFromRequest: JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_SECRET},
+        {jwtFromRequest: JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_PRIVATE},
         (jwt_payload, done) => {
             UserModel.findOne({id: jwt_payload.sub}, (err, user) => {
                 if (err) return done(err, false)

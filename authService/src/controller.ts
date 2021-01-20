@@ -11,6 +11,7 @@ import {loginValidation} from "./config/validation";
 export class AuthController {
 
     @Post('signup')
+    @Middleware(loginValidation)
     private signUp(req: Request, res: Response) {
         const { body: { user } } = req;
         if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
@@ -40,6 +41,7 @@ export class AuthController {
 
     @Get('users')
     @Middleware(passport.authenticate('jwt', {session: false}))
+    // @Middleware(oauth2orize.token()))
     private getUsers(req: Request, res: Response) {
         // const userRole = req.query.role as string || '';
         return UserModel.find()

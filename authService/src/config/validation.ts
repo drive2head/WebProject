@@ -1,11 +1,11 @@
 import {check} from 'express-validator'
 
 export const loginValidation = [
-    check('email')
+    check('username')
         .exists()
-        .withMessage('Email is empty')
+        .withMessage('Username is empty')
         .isEmail()
-        .withMessage('Email is wrong format'),
+        .withMessage('Username is wrong format'),
     check('password')
         .exists()
         .withMessage('Passport is empty')

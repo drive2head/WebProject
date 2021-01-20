@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import env from './helpers/dotenv-conf'
+import fs from 'fs'
 env()
 
 mongoose.connect(process.env.DB_PATH as string, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true } );
@@ -57,15 +58,19 @@ NewUser.methods.validatePassword = function(password: string) {
 };
 
 NewUser.methods.generateJWT = function() {
-    const today = new Date();
-    const expirationDate = new Date(today);
-    expirationDate.setDate(Number(today.getDate() + process.env.JWT_TOKEN_LIFE!));
+    const expirationDate = new Date();
+    expirationDate.setMilliseconds(expirationDate.getMilliseconds() + +process.env.JWT_TOKEN_LIFE!);
 
+    // const privateKEY  = fs.readFileSync('./private.key', 'utf8');
+    const publicKEY  = fs.readFileSync('./public.key', 'utf8');
+    console.log(publicKEY)
+
+    console.log(new Date(), expirationDate)
     return jwt.sign({
         username: this.username,
         id: this._id,
         exp: parseInt((expirationDate.getTime() / 1000).toString(), 10),
-    }, process.env.JWT_SECRET!);
+    }, publicKEY, { algorithm: 'RS256' });
 }
 
 NewUser.methods.toAuthJSON = function() {
@@ -143,15 +148,4 @@ const RefreshToken = new Schema({
 
 const RefreshTokenModel = mongoose.model('RefreshToken', RefreshToken);
 
-export {UserModel};
-// module.exports.ClientModel = ClientModel;
-// module.exports.AccessTokenModel = AccessTokenModel;
-// module.exports.RefreshTokenModel = RefreshTokenModel;
-
-
-export const userSchema = new Schema({
-    username: String,
-    password: String,
-    name: String,
-    surname: String,
-});
+export {UserModel, ClientModel, AccessTokenModel, RefreshTokenModel};
