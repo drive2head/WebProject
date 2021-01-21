@@ -24,8 +24,6 @@ class CB {
 
     constructor(serverAddr) {
         this._serverAddr = serverAddr;
-        console.log(this)
-
         if (this._timer != null)
             clearInterval(this._timer);
         // Устанавливаем планировщик, которые каждые $time_threshold мс сбрасывает счетчик ошибок
