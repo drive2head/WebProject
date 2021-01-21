@@ -1,16 +1,19 @@
 import passport from 'passport'
-import {UserModel} from "../model";
+import {ClientModel, UserModel} from "../model";
 import dotenv from '../helpers/dotenv-conf'
 import JwtStrategy from 'passport-jwt'
+import fs from "fs";
+import path from "path";
 dotenv()
+const publicKEY  = fs.readFileSync(path.join(__dirname,'../public.key'));
 
 export function usePassport() {
     passport.use(new JwtStrategy.Strategy(
-        {jwtFromRequest: JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_PRIVATE},
+        {jwtFromRequest: JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: publicKEY},
         (jwt_payload, done) => {
-            UserModel.findOne({id: jwt_payload.sub}, (err, user) => {
+            ClientModel.findOne({id: jwt_payload.sub}, (err, client) => {
                 if (err) return done(err, false)
-                if (user) return done(null, user)
+                if (client) return done(null, client)
                 else return done(null, false)
             })
     }))

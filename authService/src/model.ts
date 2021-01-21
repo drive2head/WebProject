@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import env from './helpers/dotenv-conf'
 import fs from 'fs'
+import path from "path";
 env()
 
 mongoose.connect(process.env.DB_PATH as string, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true } );
@@ -22,7 +23,20 @@ interface IUser extends mongoose.Document{
     toAuthJSON(): any
 }
 
-export { IUser }
+interface IClient extends mongoose.Document{
+    name: string
+    generateJWT(): any
+    toAuthJSON(): any
+}
+
+interface IAccessToken extends mongoose.Document{
+    userId: string
+    clientId: string
+    token: string
+    created: string
+}
+
+export { IUser, IClient, IAccessToken }
 
 const NewUser = new Schema({
     username: {
@@ -61,16 +75,13 @@ NewUser.methods.generateJWT = function() {
     const expirationDate = new Date();
     expirationDate.setMilliseconds(expirationDate.getMilliseconds() + +process.env.JWT_TOKEN_LIFE!);
 
-    // const privateKEY  = fs.readFileSync('./private.key', 'utf8');
-    const publicKEY  = fs.readFileSync('./public.key', 'utf8');
-    console.log(publicKEY)
+    const privateKEY  = fs.readFileSync(path.join(__dirname,'private.key'));
 
-    console.log(new Date(), expirationDate)
     return jwt.sign({
         username: this.username,
         id: this._id,
         exp: parseInt((expirationDate.getTime() / 1000).toString(), 10),
-    }, publicKEY, { algorithm: 'RS256' });
+    }, privateKEY, { algorithm: 'RS256' });
 }
 
 NewUser.methods.toAuthJSON = function() {
@@ -89,18 +100,30 @@ const Client = new Schema({
         unique: true,
         required: true
     },
-    clientId: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    clientSecret: {
-        type: String,
-        required: true
-    }
 });
 
-const ClientModel = mongoose.model('Client', Client);
+Client.methods.generateJWT = function() {
+    const expirationDate = new Date();
+    expirationDate.setMilliseconds(expirationDate.getMilliseconds() + +process.env.JWT_TOKEN_LIFE!);
+
+    const privateKEY  = fs.readFileSync(path.join(__dirname,'private.key'));
+
+    return jwt.sign({
+        name: this.name,
+        id: this._id,
+        exp: parseInt((expirationDate.getTime() / 1000).toString(), 10),
+    }, privateKEY, { algorithm: 'RS256' });
+}
+
+Client.methods.toAuthJSON = function() {
+    return {
+        _id: this._id,
+        username: this.username,
+        token: this.generateJWT(),
+    };
+};
+
+const ClientModel = mongoose.model<IClient>('Client', Client);
 
 // AccessToken
 const AccessToken = new Schema({
@@ -123,7 +146,7 @@ const AccessToken = new Schema({
     }
 });
 
-const AccessTokenModel = mongoose.model('AccessToken', AccessToken);
+const AccessTokenModel = mongoose.model<IAccessToken>('AccessToken', AccessToken);
 
 // RefreshToken
 const RefreshToken = new Schema({

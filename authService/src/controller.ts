@@ -1,11 +1,14 @@
 import {Controller, Get, Middleware, Post} from "@overnightjs/core";
 import {Request, Response} from "express";
-import {IUser, UserModel} from "./model";
+import {AccessTokenModel, ClientModel, RefreshTokenModel, IClient, IUser, UserModel} from "./model";
 import auth from "./config/auth";
 import passport from "passport";
 import mongoose from "mongoose";
 import StatusCodes from 'http-status-codes';
+import crypto from 'crypto'
 import {loginValidation} from "./config/validation";
+import {exchange} from "oauth2orize";
+import refreshToken = exchange.refreshToken;
 
 @Controller('auth')
 export class AuthController {
@@ -32,7 +35,47 @@ export class AuthController {
         UserModel.findOne({username: user.username}, (err, userFromDB) => {
             if (err) return res.status(StatusCodes.BAD_REQUEST).json(err)
             if (userFromDB) {
-                if (userFromDB.validatePassword(user.password)) return res.json({user: userFromDB.toAuthJSON()})
+                // if (userFromDB.validatePassword(user.password)) return res.json({user: userFromDB.toAuthJSON()})
+                // else return res.sendStatus(StatusCodes.BAD_REQUEST)
+
+            }
+            else return res.sendStatus(StatusCodes.BAD_REQUEST)
+        })
+    }
+
+    @Post('oauth')
+    @Middleware(loginValidation)
+    private oauth(req: Request, res: Response) {
+        const { body: { user } } = req;
+        const { body: { client }} = req
+
+        if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
+        if (!client.name) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
+
+        UserModel.findOne({username: user.username}, (err, userFromDB) => {
+            if (err) return res.status(StatusCodes.BAD_REQUEST).json(err)
+            if (userFromDB) {
+                if (userFromDB.validatePassword(user.password)) {
+                    ClientModel.findOne({name: client.name}, (err, clientFromDB) => {
+                        if (err) return res.sendStatus(StatusCodes.BAD_REQUEST)
+                        if (clientFromDB) {
+                            AccessTokenModel.findOne({ clientId: clientFromDB.id }, (err, token) => {
+                                if (token) res.json({token: token.token})
+                            })
+                        }
+                        else {
+                            new ClientModel({name: client.name}).save().then((newClient: IClient | null) => {
+                                if (!newClient) return res.sendStatus(StatusCodes.BAD_REQUEST)
+                                const tokenValue = newClient.generateJWT()
+                                const refreshTokenValue = crypto.randomBytes(32).toString('base64');
+                                const accessToken = new AccessTokenModel({ token: tokenValue, clientId: newClient.id, userId: userFromDB.id })
+                                const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: newClient.id, userId: userFromDB.id });
+                                refreshToken.save();
+                                accessToken.save().then(token => res.json({token: token.token}))
+                            })
+                        }
+                    })
+                }
                 else return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
             else return res.sendStatus(StatusCodes.BAD_REQUEST)
