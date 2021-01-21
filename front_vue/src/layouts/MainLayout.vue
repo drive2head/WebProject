@@ -21,7 +21,6 @@
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
       content-class="bg-grey-1"
     >
@@ -54,7 +53,7 @@ const linksData = [
     title: 'Войти',
     caption: 'Страница авторизация',
     icon: 'login',
-    link: '/login'
+    link: '/signin'
   },
   {
     title: 'Главная',
@@ -66,7 +65,7 @@ const linksData = [
     title: 'Дабавить разметку',
     caption: 'Страница добавления разметки',
     icon: 'add',
-    link: '/new_markup'
+    link: '/markup'
   },
   {
     title: 'Посмотреть разметки',

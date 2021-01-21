@@ -1,4 +1,4 @@
-import { route } from 'quasar/wrappers';
+import {route, store} from 'quasar/wrappers';
 import VueRouter from 'vue-router';
 import { Store } from 'vuex';
 import { StateInterface } from '../store';
@@ -22,6 +22,15 @@ export default route<Store<StateInterface>>(function ({ Vue }) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   });
+
+  Router.beforeEach((to, from, next) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (to.matched.some(record => record.meta.auth)) {
+      next({path: '/signin'})
+    } else {
+      next()
+    }
+  })
 
   return Router;
 })
