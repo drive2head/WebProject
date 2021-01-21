@@ -10,13 +10,15 @@ import {loginValidation} from "./config/validation";
 import {exchange} from "oauth2orize";
 import refreshToken = exchange.refreshToken;
 
-@Controller('auth')
+@Controller('')
 export class AuthController {
 
     @Post('signup')
     @Middleware(loginValidation)
     private signUp(req: Request, res: Response) {
-        const { body: { user } } = req;
+        // const { body: { user } } = req;
+        const { body: { username, password } } = req;
+        const user = {username, password}
         if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
 
         const newUser = new UserModel(user) as IUser;
@@ -29,7 +31,10 @@ export class AuthController {
     @Post('signin')
     // @Middleware(loginValidation)
     private signIn(req: Request, res: Response) {
-        const { body: { user } } = req;
+        // const { body: { user } } = req;
+        const { body: { username, password } } = req;
+        const user = {username, password}
+
         if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
 
         UserModel.findOne({username: user.username}, (err, userFromDB) => {
