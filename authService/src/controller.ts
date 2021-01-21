@@ -57,15 +57,18 @@ export class AuthController {
                     if (err) return res.sendStatus(StatusCodes.UNAUTHORIZED)
                     if (client) {
                         const userId = token.userId
-                        RefreshTokenModel.deleteOne({clientId: token.clientId})
-                        AccessTokenModel.deleteOne({clientId: token.clientId})
-                        const tokenValue = client.generateJWT()
-                        const refreshTokenValue = crypto.randomBytes(32).toString('base64');
-                        const accessToken = new AccessTokenModel({ token: tokenValue, clientId: client.id, userId: userId })
-                        const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: client.id, userId: userId });
-                        refreshToken.save().then(refresh => {
-                            accessToken.save().then(token => res.json({token: token.token, refreshToken: refresh.token, client: userId}))
-                        });
+                        return RefreshTokenModel.deleteOne({token: token.token}, () => {
+                            return AccessTokenModel.deleteOne({userId: token.userId}, () => {
+                                const tokenValue = client.generateJWT()
+                                const refreshTokenValue = crypto.randomBytes(32).toString('base64');
+                                const accessToken = new AccessTokenModel({ token: tokenValue, clientId: client.id, userId: userId })
+                                const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: client.id, userId: userId });
+                                return refreshToken.save().then(refresh => {
+                                    return accessToken.save().then(token => res.json({token: token.token, refreshToken: refresh.token, client: userId}))
+                                });
+                            })
+                        })
+
                     }
                     return res.sendStatus(StatusCodes.BAD_REQUEST)
                 })
@@ -117,6 +120,21 @@ export class AuthController {
             }
             else return res.sendStatus(StatusCodes.BAD_REQUEST)
         })
+    }
+
+    @Get('refresh-tokens')
+    private async getAllRefreshTokens(req: Request, res: Response) {
+        return res.send(await RefreshTokenModel.find())
+    }
+
+    @Get('access-tokens')
+    private async getAllAccessTokens(req: Request, res: Response) {
+        return res.send(await AccessTokenModel.find())
+    }
+
+    @Get('clients')
+    private async getAllClients(req: Request, res: Response) {
+        return res.send(await ClientModel.find())
     }
 
     @Get('users')
