@@ -37,7 +37,7 @@ export class AuthController {
     private signIn(req: Request, res: Response) {
         // const { body: { user } } = req;
         const { body: { username, password } } = req;
-        const user = {username, password}
+        const user = {username, password};
 
         if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
 
@@ -104,8 +104,9 @@ export class AuthController {
                                             return AccessTokenModel.deleteOne({userId: clientFromDB.id}, () => {
                                                 const tokenValue = clientFromDB.generateJWT()
                                                 const refreshTokenValue = crypto.randomBytes(32).toString('base64');
-                                                const accessToken = new AccessTokenModel({ token: tokenValue, clientId: clientFromDB.id, userId: clientFromDB.id })
-                                                const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: clientFromDB.id, userId: clientFromDB.id });
+                                                // const accessToken = new AccessTokenModel({ token: tokenValue, clientId: clientFromDB.id, userId: clientFromDB.id })
+                                                const accessToken = new AccessTokenModel({ token: tokenValue, clientId: clientFromDB.id, userId: userFromDB.id })
+                                                const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: clientFromDB.id, userId: userFromDB.id });
                                                 return refreshToken.save().then(refresh => {
                                                     return accessToken.save().then(token => res.json({token: token.token, refreshToken: refresh.token, client: clientFromDB}))
                                                 });
@@ -176,22 +177,46 @@ export class AuthController {
 
     @Post('profile')
     @Middleware(passport.authenticate('jwt', {session: false}))
-    private getProfile(req: Request, res: Response) {
+    private async getProfile(req: Request, res: Response) {
         interface JWTJSON {
           name: string;
           id: string;
           exp: number;
           iat: number;
         }
-        console.log("HELLO!");
+
+        interface TheUser {
+            _id: string;
+            username: string;
+            hashedPassword: string;
+            salt: string;
+            role: string;
+        }
+
         const publicKEY  = fs.readFileSync(path.join(__dirname,'public.key'));
-        const token = req.body.headers["Authorization"];
+        // console.log("REQ:", req);
+        // const token = req.headers["Authorization"] as string;
+        var token = req.headers.authorization as string;
+        var token = token.split(' ')[1];
+        // console.log(`req.headers["Authorization"]: ${req.headers["Authorization"]}`);
+        // console.log(`\x1b[35mreq.headers.authorization\n: ${req.headers.authorization}`);
         const jsonParsed = jwt.verify(token, publicKEY) as JWTJSON;
-        const userId = jsonParsed.id;
+        // console.log("JSON PARSED:\n", jsonParsed);
+        const clientId = jsonParsed.id;
+
+        const accessToken = await AccessTokenModel.findOne({ clientId: clientId });
+        if (accessToken == null) {
+            console.log("FATALITY!");
+            return res.sendStatus(StatusCodes.BAD_REQUEST);
+        }
+        const userId = accessToken.userId;
+        // console.log(`\x1b[35muserId: ${userId}`);
         return UserModel.findById(userId)
             .then((user: mongoose.Document | IUser | null) => {
                 if(!user) { return res.sendStatus(StatusCodes.BAD_REQUEST) }
-                return res.json({ user: user });
+                // return res.json({ user: user });
+                const theUser = user as TheUser;
+                return res.json({ name: theUser.username, surname: theUser.role, username: theUser.username, password: theUser.hashedPassword })
             }).catch(err => res.status(StatusCodes.SERVICE_UNAVAILABLE).json(err));
     }
 }

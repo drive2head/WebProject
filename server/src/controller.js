@@ -30,13 +30,13 @@ app.listen(port, () => console.log(`Port: ${port}`));
 
 /* УДАЛИТЬ НАХРЕН ПОТОМ */
 const jwt = require('jsonwebtoken');
-// var storage = {};
-var storage = {
-	"testService": {
-		token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdFNlcnZpY2UiLCJpZCI6IjYwMDk4ZmQ2MDJhZDk0MzIyNGU4ZTFiOCIsImV4cCI6MTYxMTIzOTM4OCwiaWF0IjoxNjExMjM5MzgyfQ.PM54uQO6zCdvJK88f_rfR4lsF-icTUBBv-jdjd_F6t59zNDRcR4HRcLwpaNGIQlgpiL17cncwMe-_Z-0ivon4sDlw7kzdLK6E_JiyWteuwuWu5jKKZFc2IqP8Ym7A8gYs_3iTzHsqzR6TY5Y5lrraT5K7R1iDjkCPraI22kE18w",
-		refreshToken: "hVmtY6cOMVvsyYfsHrTmm3IVO2cUwmSlpatoid39ndM="
-	}
-}
+var storage = {};
+// var storage = {
+	// "testService": {
+		// token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdFNlcnZpY2UiLCJpZCI6IjYwMDk4ZmQ2MDJhZDk0MzIyNGU4ZTFiOCIsImV4cCI6MTYxMTIzOTM4OCwiaWF0IjoxNjExMjM5MzgyfQ.PM54uQO6zCdvJK88f_rfR4lsF-icTUBBv-jdjd_F6t59zNDRcR4HRcLwpaNGIQlgpiL17cncwMe-_Z-0ivon4sDlw7kzdLK6E_JiyWteuwuWu5jKKZFc2IqP8Ym7A8gYs_3iTzHsqzR6TY5Y5lrraT5K7R1iDjkCPraI22kE18w",
+		// refreshToken: "fMPZG1EI/FpkA/sDm+64uSufP+bORjjxkFZiP8oMUXI="
+	// }
+// }
 const publicKEY  = fs.readFileSync(__dirname + '/public.key');
 
 var _username = "test@test.test";
@@ -312,14 +312,14 @@ function proxyRequest(method, route, url, serviceName="", useToken = false) {
 
 	async function _proxyRequest(url, req, res) {
 		// console.log("req.body: ", req.body);
-		console.log("req:", req);
+		// console.log("req:", req);
 		const request = { method: req.method, url: url, data: req.body };
 		if (useToken) {
 			await getToken(serviceName);
 			const token = await getToken(serviceName);
-			// request.headers = { "Authorization": "Bearer " + token }
-			request.headers = { "Authorization": token }
-			console.log("headers: ", request.headers);
+			request.headers = { "Authorization": "Bearer " + token }
+			// request.headers = { "Authorization": token }
+			// console.log("headers: ", request.headers);
 		}
 		return await axios(request);
 	};
@@ -351,7 +351,7 @@ function proxyRequest(method, route, url, serviceName="", useToken = false) {
 /* AUTHENTICATION AND ACCOUNT ACCESS */
 proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
 proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
-proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService", true);
+proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "testService", true);
 
 /*
 const CB = require("./CB.js");

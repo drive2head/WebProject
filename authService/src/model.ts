@@ -68,6 +68,9 @@ NewUser.methods.setPassword = function(password: string) {
 };
 
 NewUser.methods.validatePassword = function(password: string) {
+    console.log("bcrypt.compareSync args:");
+    console.log(password);
+    console.log(this.hashedPassword);
     return bcrypt.compareSync(password, this.hashedPassword);
 };
 

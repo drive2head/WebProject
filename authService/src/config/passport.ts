@@ -11,7 +11,7 @@ export function usePassport() {
     passport.use(new JwtStrategy.Strategy(
         {jwtFromRequest: JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: publicKEY},
         (jwt_payload, done) => {
-            ClientModel.findOne({_id: jwt_payload.sub}, (err, client) => {
+            ClientModel.findOne({_id: jwt_payload.id}, (err, client) => {
                 if (err) return done(err, false)
                 if (client) return done(null, client)
                 else return done(null, false)
