@@ -96,8 +96,19 @@ export class AuthController {
                             RefreshTokenModel.findOne({ clientId: clientFromDB.id }, (err, refresh) => {
                                 if (refresh) {
                                     AccessTokenModel.findOne({ clientId: clientFromDB.id }, (err, token) => {
-                                        if (token) res.json({token: token.token, refreshToken: refresh.token, client: clientFromDB})
-                                        else res.sendStatus(StatusCodes.BAD_REQUEST)
+                                        return RefreshTokenModel.deleteOne({userId: clientFromDB.id}, () => {
+                                            return AccessTokenModel.deleteOne({userId: clientFromDB.id}, () => {
+                                                const tokenValue = client.generateJWT()
+                                                const refreshTokenValue = crypto.randomBytes(32).toString('base64');
+                                                const accessToken = new AccessTokenModel({ token: tokenValue, clientId: client.id, userId: clientFromDB.id })
+                                                const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: client.id, userId: clientFromDB.id });
+                                                return refreshToken.save().then(refresh => {
+                                                    return accessToken.save().then(token => res.json({token: token.token, refreshToken: refresh.token, client: clientFromDB}))
+                                                });
+                                            })
+                                        })
+                                        // if (token) res.json({token: token.token, refreshToken: refresh.token, client: clientFromDB})
+                                        // else res.sendStatus(StatusCodes.BAD_REQUEST)
                                     })
                                 } else res.sendStatus(StatusCodes.BAD_REQUEST)
                             })
