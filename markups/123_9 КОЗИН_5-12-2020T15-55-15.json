@@ -1,0 +1,38 @@
+{
+  "recordname": "9 КОЗИН.wav",
+  "phonemes": [
+    {
+      "notation": "э",
+      "start": "157.840",
+      "end": "192.193",
+      "language": "",
+      "dialect": ""
+    },
+    {
+      "notation": "о",
+      "start": "227.011",
+      "end": "252.543",
+      "language": "",
+      "dialect": ""
+    }
+  ],
+  "words": [
+    {
+      "value": "123",
+      "start": "178.266",
+      "end": "213.084"
+    },
+    {
+      "value": "456",
+      "start": "253.936",
+      "end": "293.860"
+    }
+  ],
+  "sentences": [
+    {
+      "value": "123",
+      "start": "106.310",
+      "end": "142.056"
+    }
+  ]
+}

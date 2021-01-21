@@ -1,0 +1,30 @@
+{
+  "record": "Аудиозапись (17).mp3",
+  "phonemes": [
+    {
+      "notation": "а",
+      "start": 101.484,
+      "end": 106.36,
+      "language": "",
+      "dialect": ""
+    }
+  ],
+  "words": [],
+  "sentences": [
+    {
+      "value": "s1",
+      "start": 93.56,
+      "end": 115.502
+    },
+    {
+      "value": "s2",
+      "start": 127.388,
+      "end": 145.673
+    },
+    {
+      "value": "s3",
+      "start": "158.996",
+      "end": "177.438"
+    }
+  ]
+}

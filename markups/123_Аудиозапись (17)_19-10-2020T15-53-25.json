@@ -1,0 +1,50 @@
+{
+  "record": "Аудиозапись (17).mp3",
+  "phonemes": [
+    {
+      "notation": "а",
+      "start": "52.723",
+      "end": "71.618",
+      "language": "русский",
+      "dialect": "инопланетный"
+    },
+    {
+      "notation": "о",
+      "start": "80.760",
+      "end": "95.998",
+      "language": "русский",
+      "dialect": "инопланетный"
+    },
+    {
+      "notation": "у",
+      "start": "105.141",
+      "end": "122.207",
+      "language": "русский",
+      "dialect": "инопланетный"
+    }
+  ],
+  "words": [
+    {
+      "value": "word_1",
+      "start": "78.627",
+      "end": "100.569"
+    },
+    {
+      "value": "word_2",
+      "start": "109.102",
+      "end": "145.064"
+    }
+  ],
+  "sentences": [
+    {
+      "value": "sentence_1",
+      "start": "53.027",
+      "end": "103.312"
+    },
+    {
+      "value": "sentence_2",
+      "start": "128.302",
+      "end": "176.453"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "record": "Аудиозапись (17).mp3",
+  "phonemes": [
+    {
+      "notation": "а",
+      "start": "66.741",
+      "end": "81.065",
+      "language": "",
+      "dialect": ""
+    },
+    {
+      "notation": "о",
+      "start": "103.007",
+      "end": "113.369",
+      "language": "",
+      "dialect": ""
+    }
+  ],
+  "words": [
+    {
+      "value": "w1",
+      "start": "98.131",
+      "end": "101.788"
+    },
+    {
+      "value": "w2",
+      "start": "108.798",
+      "end": "112.455"
+    }
+  ],
+  "sentences": [
+    {
+      "value": "s1",
+      "start": "71.922",
+      "end": "89.903"
+    },
+    {
+      "value": "s2",
+      "start": "112.150",
+      "end": "127.083"
+    }
+  ]
+}

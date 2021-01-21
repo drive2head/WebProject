@@ -6,9 +6,13 @@ import passport from "passport";
 import mongoose from "mongoose";
 import StatusCodes from 'http-status-codes';
 import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 import {loginValidation} from "./config/validation";
 import {exchange} from "oauth2orize";
 import refreshToken = exchange.refreshToken;
+
+import fs from 'fs';
+import path from "path";
 
 @Controller('')
 export class AuthController {
@@ -164,6 +168,27 @@ export class AuthController {
     @Middleware(passport.authenticate('jwt', {session: false}))
     private getUser(req: Request, res: Response) {
         return UserModel.findById(req.params.id)
+            .then((user: mongoose.Document | IUser | null) => {
+                if(!user) { return res.sendStatus(StatusCodes.BAD_REQUEST) }
+                return res.json({ user: user });
+            }).catch(err => res.status(StatusCodes.SERVICE_UNAVAILABLE).json(err));
+    }
+
+    @Post('profile')
+    @Middleware(passport.authenticate('jwt', {session: false}))
+    private getProfile(req: Request, res: Response) {
+        interface JWTJSON {
+          name: string;
+          id: string;
+          exp: number;
+          iat: number;
+        }
+        console.log("HELLO!");
+        const publicKEY  = fs.readFileSync(path.join(__dirname,'public.key'));
+        const token = req.body.headers["Authorization"];
+        const jsonParsed = jwt.verify(token, publicKEY) as JWTJSON;
+        const userId = jsonParsed.id;
+        return UserModel.findById(userId)
             .then((user: mongoose.Document | IUser | null) => {
                 if(!user) { return res.sendStatus(StatusCodes.BAD_REQUEST) }
                 return res.json({ user: user });

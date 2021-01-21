@@ -1,0 +1,21 @@
+{
+  "recordname": "Аудиозапись (17).mp3",
+  "phonemes": [
+    {
+      "notation": "а",
+      "start": "109.758",
+      "end": "115.827",
+      "language": "",
+      "dialect": "",
+      "stress": "Нет"
+    }
+  ],
+  "words": [],
+  "sentences": [
+    {
+      "value": "123",
+      "start": "62.213",
+      "end": "87.503"
+    }
+  ]
+}
