@@ -47,15 +47,16 @@ class LoginInterface extends React.Component {
     var body = await response.json();
 
     if (response.status === 200) {
-      if (!body.status) {
-        alert(body.msg);
-      } else {
+      // if (!body.status) {
+      //   alert(body.msg);
+      // } else {
         const cookies = new Cookies();
         cookies.set('username', this.state.username, { path: '/' });
         cookies.set('password', this.state.password, { path: '/' });
+        cookies.set('token', body.token, { path: '/' });
         //cookies.set('role', body.role, { path: '/' });
         window.location.href = "/";
-      }
+      // }
     } else {
       alert(`Error ${response.status}`)
     }
