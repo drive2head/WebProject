@@ -104,8 +104,8 @@ export class AuthController {
                                             return AccessTokenModel.deleteOne({userId: clientFromDB.id}, () => {
                                                 const tokenValue = clientFromDB.generateJWT()
                                                 const refreshTokenValue = crypto.randomBytes(32).toString('base64');
-                                                const accessToken = new AccessTokenModel({ token: tokenValue, clientId: client.id, userId: clientFromDB.id })
-                                                const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: client.id, userId: clientFromDB.id });
+                                                const accessToken = new AccessTokenModel({ token: tokenValue, clientId: clientFromDB.id, userId: clientFromDB.id })
+                                                const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: clientFromDB.id, userId: clientFromDB.id });
                                                 return refreshToken.save().then(refresh => {
                                                     return accessToken.save().then(token => res.json({token: token.token, refreshToken: refresh.token, client: clientFromDB}))
                                                 });
