@@ -102,7 +102,7 @@ export class AuthController {
                                     AccessTokenModel.findOne({ clientId: clientFromDB.id }, (err, token) => {
                                         return RefreshTokenModel.deleteOne({userId: clientFromDB.id}, () => {
                                             return AccessTokenModel.deleteOne({userId: clientFromDB.id}, () => {
-                                                const tokenValue = client.generateJWT()
+                                                const tokenValue = clientFromDB.generateJWT()
                                                 const refreshTokenValue = crypto.randomBytes(32).toString('base64');
                                                 const accessToken = new AccessTokenModel({ token: tokenValue, clientId: client.id, userId: clientFromDB.id })
                                                 const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: client.id, userId: clientFromDB.id });
