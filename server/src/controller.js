@@ -1,14 +1,17 @@
 // let entity = require("./entity.js"); /* only for debug */
+let cfg = require('./cfg');
 let SpeechDB = require("./speechDB.js");
 let RecordsDB = require("./recordsDB.js");
 let SpeakersDB = require("./speakersDB.js");
 let MarkupsDB = require("./markupsDB.js");
 
+const CB = require("./CB.js");
+const CB_SpeechDB = new CB(cfg.graph_service_uri);
+
 // let userAuth = require("./userAuth.js");
 let log = require("./log.js");
 let formidable = require('formidable');
 let fs = require('fs');
-let cfg = require('./cfg');
 
 const axios = require('axios');
 const express = require('express');
@@ -124,12 +127,9 @@ app.post('/add_record', (req, res) => {
 			.then(result => {
 				const personNodeID = result.nodeID;
 
-				const url = cfg.graph_service_uri + '/add_person';
-				return axios({
-					method: req.method,
-					url: url,
-					data: req.body
-				})
+				// const url = cfg.graph_service_uri + '/add_person';
+				// return axios({ method: req.method, url: url, data: req.body })
+				return CB_SpeechDB.fetch(req)
 			})
 			.then(response => {
 				const result = response.data;
@@ -199,15 +199,12 @@ app.post('/add_record', (req, res) => {
 */
 
 app.post('/add_person', async (req, res) => {
-	const url = cfg.graph_service_uri + '/add_person';
-	axios({
-		method: req.method,
-		url: url,
-		data: req.body
-	})
+	// const url = cfg.graph_service_uri + '/add_person';
+	// axios({ method: req.method, url: url, data: req.body })
+	CB_SpeechDB.fetch(req)
 	.then(response => {
 		const result = response.data;
-		log.addLog(req.body.username, 'query.add', 'SpeechDB.addPerson', result.completed, result, '/add_person');
+		log.addLog(req.body.username, 'query.add', 'CB_SpeechDB /addPerson', result.completed, result, '/add_person');
 		CheckOperationResult(result);
 		const nodeID = result.output[0].id;
 		SpeakersDB.addSpeaker(req.body.pseudonym, nodeID)
@@ -221,7 +218,6 @@ app.post('/add_person', async (req, res) => {
 		})
 	})
 	.catch(err => {
-		console.log("ERROR:\n", err)
 		log.addLog(req.body.username, 'query.add', '', false, err, '/add_person');
 		err.msg == 'ECONNREFUSED' ?
 			res.status(500).send({ service: err.service, message: "Connection refused", error: err }) :
@@ -417,11 +413,11 @@ function proxyRequest(method, route, url, serviceName="") {
 		_proxyRequest(url, req, res)
 		.then(result => {
 			log.addLog(req.body.username, 'proxyRequest', '', result.status, result, req.route.path);
-			console.log("RES: ", result)
+			console.log("RES: ", result);
 			res.send(result.data);
 		})
 		.catch(error => {
-			console.log("ERROR: ", error.response)
+			console.log("ERROR: ", error.response);
 			log.addLog(req.body.username, 'proxyRequest', '', false, error, req.headers.referer);
 			res.status(error.response.status).json(error.response.data);
 		});
@@ -437,13 +433,16 @@ function proxyRequest(method, route, url, serviceName="") {
 }
 
 /* AUTHENTICATION AND ACCOUNT ACCESS */
-// proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
+proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
 proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
 proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
 
+/*
 const CB = require("./CB.js");
+// const cb = new CB(cfg.auth_service_uri);
 const cb = new CB(cfg.graph_service_uri);
-app.post('/signin', cb.fetch);
+// app.post('/signin', cb.fetch);
+*/
 
 app.use('/', (req, res) => {
 	res.status(404).send('<h1>404 Error</h1>')
