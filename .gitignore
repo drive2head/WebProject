@@ -4,3 +4,4 @@ db/
 */src/cfg
 *.txt
 *.sh
+*.env
