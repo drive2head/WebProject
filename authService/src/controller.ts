@@ -27,7 +27,7 @@ export class AuthController {
     }
 
     @Post('signin')
-    @Middleware(loginValidation)
+    // @Middleware(loginValidation)
     private signIn(req: Request, res: Response) {
         const { body: { user } } = req;
         if(!user.username || !user.password) { return res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY) }
@@ -35,11 +35,37 @@ export class AuthController {
         UserModel.findOne({username: user.username}, (err, userFromDB) => {
             if (err) return res.status(StatusCodes.BAD_REQUEST).json(err)
             if (userFromDB) {
-                // if (userFromDB.validatePassword(user.password)) return res.json({user: userFromDB.toAuthJSON()})
-                // else return res.sendStatus(StatusCodes.BAD_REQUEST)
-
+                if (userFromDB.validatePassword(user.password)) return res.json({user: userFromDB.toAuthJSON()})
+                else return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
             else return res.sendStatus(StatusCodes.BAD_REQUEST)
+        })
+    }
+
+    @Post('refresh')
+    private refresh(req: Request, res: Response) {
+        const { body: { refreshToken } } = req;
+        RefreshTokenModel.findOne({token: refreshToken}, (err, token) => {
+            if (err) return res.sendStatus(StatusCodes.UNAUTHORIZED)
+            if (token) {
+                ClientModel.findOne({_id: token.clientId}, (err, client) => {
+                    if (err) return res.sendStatus(StatusCodes.UNAUTHORIZED)
+                    if (client) {
+                        const userId = token.userId
+                        RefreshTokenModel.deleteOne({clientId: token.clientId})
+                        AccessTokenModel.deleteOne({clientId: token.clientId})
+                        const tokenValue = client.generateJWT()
+                        const refreshTokenValue = crypto.randomBytes(32).toString('base64');
+                        const accessToken = new AccessTokenModel({ token: tokenValue, clientId: client.id, userId: userId })
+                        const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: client.id, userId: userId });
+                        refreshToken.save().then(refresh => {
+                            accessToken.save().then(token => res.json({token: token.token, refreshToken: refresh.token, client: userId}))
+                        });
+                    }
+                    return res.sendStatus(StatusCodes.BAD_REQUEST)
+                })
+            }
+            else res.sendStatus(StatusCodes.BAD_REQUEST)
         })
     }
 
@@ -59,8 +85,13 @@ export class AuthController {
                     ClientModel.findOne({name: client.name}, (err, clientFromDB) => {
                         if (err) return res.sendStatus(StatusCodes.BAD_REQUEST)
                         if (clientFromDB) {
-                            AccessTokenModel.findOne({ clientId: clientFromDB.id }, (err, token) => {
-                                if (token) res.json({token: token.token})
+                            RefreshTokenModel.findOne({ clientId: clientFromDB.id }, (err, refresh) => {
+                                if (refresh) {
+                                    AccessTokenModel.findOne({ clientId: clientFromDB.id }, (err, token) => {
+                                        if (token) res.json({token: token.token, refreshToken: refresh.token, client: clientFromDB})
+                                        else res.sendStatus(StatusCodes.BAD_REQUEST)
+                                    })
+                                } else res.sendStatus(StatusCodes.BAD_REQUEST)
                             })
                         }
                         else {
@@ -70,8 +101,9 @@ export class AuthController {
                                 const refreshTokenValue = crypto.randomBytes(32).toString('base64');
                                 const accessToken = new AccessTokenModel({ token: tokenValue, clientId: newClient.id, userId: userFromDB.id })
                                 const refreshToken = new RefreshTokenModel({ token: refreshTokenValue, clientId: newClient.id, userId: userFromDB.id });
-                                refreshToken.save();
-                                accessToken.save().then(token => res.json({token: token.token}))
+                                refreshToken.save().then(refresh => {
+                                    accessToken.save().then(token => res.json({token: token.token, refreshToken: refresh.token, client: newClient}))
+                                });
                             })
                         }
                     })

@@ -29,14 +29,14 @@ interface IClient extends mongoose.Document{
     toAuthJSON(): any
 }
 
-interface IAccessToken extends mongoose.Document{
+interface IToken extends mongoose.Document{
     userId: string
     clientId: string
     token: string
     created: string
 }
 
-export { IUser, IClient, IAccessToken }
+export { IUser, IClient, IToken }
 
 const NewUser = new Schema({
     username: {
@@ -146,7 +146,7 @@ const AccessToken = new Schema({
     }
 });
 
-const AccessTokenModel = mongoose.model<IAccessToken>('AccessToken', AccessToken);
+const AccessTokenModel = mongoose.model<IToken>('AccessToken', AccessToken);
 
 // RefreshToken
 const RefreshToken = new Schema({
@@ -169,6 +169,6 @@ const RefreshToken = new Schema({
     }
 });
 
-const RefreshTokenModel = mongoose.model('RefreshToken', RefreshToken);
+const RefreshTokenModel = mongoose.model<IToken>('RefreshToken', RefreshToken);
 
 export {UserModel, ClientModel, AccessTokenModel, RefreshTokenModel};
