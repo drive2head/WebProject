@@ -1,4 +1,3 @@
-// let entity = require("./entity.js"); /* only for debug */
 let cfg = require('./cfg');
 let SpeechDB = require("./speechDB.js");
 let RecordsDB = require("./recordsDB.js");
@@ -31,21 +30,21 @@ app.listen(port, () => console.log(`Port: ${port}`));
 
 /* УДАЛИТЬ НАХРЕН ПОТОМ */
 const jwt = require('jsonwebtoken');
-var storage = {};
-// var storage = {
-// 	"testService": {
-// 		token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdFNlcnZpY2UiLCJpZCI6IjYwMDk4ZmQ2MDJhZDk0MzIyNGU4ZTFiOCIsImV4cCI6MTYxMTIzOTM4OCwiaWF0IjoxNjExMjM5MzgyfQ.PM54uQO6zCdvJK88f_rfR4lsF-icTUBBv-jdjd_F6t59zNDRcR4HRcLwpaNGIQlgpiL17cncwMe-_Z-0ivon4sDlw7kzdLK6E_JiyWteuwuWu5jKKZFc2IqP8Ym7A8gYs_3iTzHsqzR6TY5Y5lrraT5K7R1iDjkCPraI22kE18w",
-// 		refreshToken: "8Tgfn6UEMUa8cyCguB7E8sxXsqYxLq0tKPt5F1HsLQk="
-// 	}
-// }
-const publicKEY  = fs.readFileSync('../../authService/src/public.key');
+// var storage = {};
+var storage = {
+	"testService": {
+		token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdFNlcnZpY2UiLCJpZCI6IjYwMDk4ZmQ2MDJhZDk0MzIyNGU4ZTFiOCIsImV4cCI6MTYxMTIzOTM4OCwiaWF0IjoxNjExMjM5MzgyfQ.PM54uQO6zCdvJK88f_rfR4lsF-icTUBBv-jdjd_F6t59zNDRcR4HRcLwpaNGIQlgpiL17cncwMe-_Z-0ivon4sDlw7kzdLK6E_JiyWteuwuWu5jKKZFc2IqP8Ym7A8gYs_3iTzHsqzR6TY5Y5lrraT5K7R1iDjkCPraI22kE18w",
+		refreshToken: "hVmtY6cOMVvsyYfsHrTmm3IVO2cUwmSlpatoid39ndM="
+	}
+}
+const publicKEY  = fs.readFileSync(__dirname + '/public.key');
 
 var _username = "test@test.test";
 var _password = "123456";
 
 function refreshToken(serviceName) {
 	const data = { refreshToken: storage[serviceName].refreshToken };
-	axios({ method: 'POST', url: cfg.auth_service_uri + '/refresh', data: data })
+	return axios({ method: 'POST', url: cfg.auth_service_uri + '/refresh', data: data })
 	.then(result => {
 		storage[serviceName] = { token: result.data.token, refreshToken: result.data.refreshToken }
 		console.log("\x1b[35mrefreshToken\x1b[0m");
@@ -60,36 +59,43 @@ function refreshToken(serviceName) {
 	})
 }
 
-function getNewToken(serviceName) {
-	const data = { user: { username: _username, password: _password}, client: { name: serviceName } };
-	axios({ method: 'POST', url: cfg.auth_service_uri + '/oauth', data: data })
-	.then(result => {
-		storage[serviceName] = { token: result.data.token, refreshToken: result.data.refreshToken }
+async function getNewToken(serviceName) {
+	try {
+		const data = { user: { username: _username, password: _password}, client: { name: serviceName } };
+		var result = await axios({ method: 'POST', url: cfg.auth_service_uri + '/oauth', data: data })
+		storage[serviceName] = { token: result.data.token, refreshToken: result.data.refreshToken };
 		console.log("\x1b[35mgetNewToken\x1b[0m");
 		console.log(`service name: \x1b[36m${serviceName}\x1b[0m`);
 		console.log(`token: \x1b[32m${result.data.token}\x1b[0m`);
 		console.log(`refreshToken: \x1b[33m${result.data.refreshToken}\x1b[0m`);
 		return result.data.token;
-	})
-	.catch(error => {
+	} catch (error) {
 		throw error;
-	})
+	}
 }
 
 function isTokenExpired(serviceName) {
 	try {
 		const token = storage[serviceName].token;
-		const tokenJSON = jwt.verify(token, publicKEY, { algorithm: 'RS256' });
+		const tokenJSON = jwt.verify(token, publicKEY);
 	} catch (_) {
 		return true;
 	}
 	return false;
 }
 
-function getToken(serviceName) {
+async function getToken(serviceName) {
 	try {
 		if (storage[serviceName] == undefined) {
-			return getNewToken(serviceName);
+			return getNewToken(serviceName)
+			.then(result => {
+				return result;
+			})
+			.catch(error => {
+				throw error;
+			})
+			// console.log("getToken (1) token:\n", token);
+			// return token;
 		}
 		var token = storage[serviceName].token;
 		if (isTokenExpired(serviceName) == true) {
@@ -101,9 +107,19 @@ function getToken(serviceName) {
 	}
 }
 
+// getToken("testService")
+// .then(token => {
+// 	console.log("ToKeN:\n", token);
+// 	const tokenJSON = jwt.verify(token, publicKEY);
+// 	console.log(tokenJSON);
+// })
+// .catch(err => {
+// 	console.log(err);
+// })
+
 /* УДАЛИТЬ НАХРЕН ПОТОМ */
 
-getToken("testService");
+// getToken("testService");
 
 
 function CheckOperationResult(res) {
@@ -292,17 +308,26 @@ app.post('/get_data', async (req, res) => {
 });
 
 
-function proxyRequest(method, route, url, serviceName="") {
+function proxyRequest(method, route, url, serviceName="", useToken = false) {
 
 	async function _proxyRequest(url, req, res) {
-		console.log("req.body: ", req.body);
-		return await axios({ method: req.method, url: url, data: req.body });
+		// console.log("req.body: ", req.body);
+		console.log("req:", req);
+		const request = { method: req.method, url: url, data: req.body };
+		if (useToken) {
+			await getToken(serviceName);
+			const token = await getToken(serviceName);
+			// request.headers = { "Authorization": "Bearer " + token }
+			request.headers = { "Authorization": token }
+			console.log("headers: ", request.headers);
+		}
+		return await axios(request);
 	};
 
 	async function obtainResult(req, res) {
 		_proxyRequest(url, req, res)
 		.then(result => {
-			console.log("RESULT:\n", result);
+			// console.log("RESULT:\n", result);
 			log.addLog(req.body.username, 'proxyRequest', '', result.status, result, req.route.path);
 			/* УДАЛИТЬ НАХРЕН ПОТОМ */
 			if (route == '/signin') {
@@ -313,7 +338,6 @@ function proxyRequest(method, route, url, serviceName="") {
 			res.send(result.data);
 		})
 		.catch(error => {
-			// console.log("ERROR: ", error.response);
 			console.log(error);
 			log.addLog(req.body.username, 'proxyRequest', '', false, error, req.headers.referer);
 			res.status(error.response.status).json(error.response.data);
@@ -327,7 +351,7 @@ function proxyRequest(method, route, url, serviceName="") {
 /* AUTHENTICATION AND ACCOUNT ACCESS */
 proxyRequest('POST', '/signin', cfg.auth_service_uri + '/signin', "authService");
 proxyRequest('POST', '/signup', cfg.auth_service_uri + '/signup', "authService");
-proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService");
+proxyRequest('POST', '/profile', cfg.auth_service_uri + '/profile', "authService", true);
 
 /*
 const CB = require("./CB.js");
