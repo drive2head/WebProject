@@ -21,7 +21,7 @@
     "documentation": "^12.3.0",
     "express": "^4.17.1",
     "http": "0.0.1-security",
-    "mocha": "^7.1.2",
+    "mocha": "^10.2.0",
     "mongoose": "^5.10.15",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4"
